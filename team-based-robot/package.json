@@ -1,0 +1,45 @@
+{
+  "name": "team-based-robot",
+  "main": "./lib/main",
+  "bin": {
+    "team-based-robot": "./bin/team-based.js"
+  },
+  "version": "1.0.0",
+  "description": "Robot Framework plugin for development team",
+  "keywords": [
+    "robot framework",
+    "team base plugin"
+  ],
+  "repository": "https://github.com/atom/team-based-robot",
+  "license": "MIT",
+  "engines": {
+    "atom": ">=1.0.0 <2.0.0"
+  },
+  "dependencies": {
+    "atom-package-deps": ">4.4.0",
+    "axios": "0.18.0",
+    "axios-retry": "3.1.1",
+    "base-64": "0.1.0",
+    "chalk": "^2.4.1",
+    "commander": "^2.18.0",
+    "etch": "0.14.0",
+    "fs-plus": "^3.0.2",
+    "fuzzaldrin-plus": "^0.1.0",
+    "git-clone": "^0.1.0",
+    "lodash": "^4.17.11",
+    "minimatch": "3.0.3",
+    "named-js-regexp": "1.3.1",
+    "opn": "^5.4.0",
+    "shelljs": "^0.8.2"
+  },
+  "package-deps": [
+    "language-robot-framework"
+  ],
+  "providedServices": {
+    "autocomplete.provider": {
+      "versions": {
+        "2.0.0": "getAutocompletePlusProvider"
+      }
+    }
+  }
+}

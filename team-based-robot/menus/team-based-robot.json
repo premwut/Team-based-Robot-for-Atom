@@ -1,0 +1,55 @@
+{
+  "context-menu": {
+    "atom-text-editor": [
+      {
+        "label": "TeamBased Robot",
+        "submenu": [
+          {
+            "label": "Test Connection to server",
+            "command": "team-based-robot:test-connection"
+          },
+          {
+            "label": "Run All",
+            "command": "team-based-robot:run-all"
+          },
+          {
+            "label": "Run Suite",
+            "command": "team-based-robot:run-suite"
+          },
+          {
+            "label": "Run with Tag",
+            "command": "team-based-robot:run-tag"
+          },
+          {
+            "label": "Add Keyword",
+            "command": "team-based-robot:keyword-add"
+          }
+        ]
+      }
+    ]
+  },
+  "menu": [
+    {
+      "label": "TeamBased Robot",
+      "submenu": [
+        {
+          "label": "New Project",
+          "submenu": [
+            {
+              "label": "Simple Project",
+              "command": "team-based-robot:new-project-simple"
+            },
+            {
+              "label": "Large Project",
+              "command": "team-based-robot:new-project-large"
+            }
+          ]
+        },
+        {
+          "label": "Reload Keywords",
+          "command": "team-based-robot:keyword-reload"
+        }
+      ]
+    }
+  ]
+}

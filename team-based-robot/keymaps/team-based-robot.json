@@ -1,0 +1,22 @@
+{
+  "atom-workspace": {
+    "alt-o": "team-based-robot:toggle",
+    "alt-c": "team-based-robot:test-connection",
+
+    "alt-a": "team-based-robot:run-all",
+    "alt-s": "team-based-robot:run-suite",
+    "alt-t": "team-based-robot:run-tag",
+
+    "alt-m": "team-based-robot:new-project-simple",
+    "alt-l": "team-based-robot:new-project-large",
+
+    "ctrl-alt-s": "team-based-robot:keyword-search",
+    "ctrl-alt-r": "team-based-robot:keyword-reload"
+  },
+  ".team-based-robot atom-text-editor": {
+    "ctrl-alt-a": "team-based-robot:keyword-add"
+  },
+  ".team-based-robot .save-keyword-view": {
+    "escape": "team-based-robot:close-save-keyword-view"
+  }
+}

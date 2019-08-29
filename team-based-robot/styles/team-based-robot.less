@@ -1,0 +1,384 @@
+// The ui-variables file is provided by base themes provided by Atom.
+//
+// See https://github.com/atom/atom-dark-ui/blob/master/styles/ui-variables.less
+// for a full listing of what's available.
+
+@import "ui-variables";
+@import "syntax-variables";
+
+atom-workspace.save-keyword-visible,
+atom-workspace.search-keyword-visible,
+atom-workspace.runner-visible {
+  z-index: 1;
+  atom-panel.modal {
+    max-width: 90em;
+  }
+}
+.tbr-tooltip {
+  z-index: 20;
+}
+.btn {
+  position: relative;
+  &.spinner {
+    color: transparent !important;
+  }
+}
+.clickable {
+  cursor: pointer;
+}
+
+@keyframes spinner {
+  to {transform: rotate(360deg);}
+}
+.spinner {
+  position: relative;
+}
+.spinner:before {
+  content: '';
+  box-sizing: border-box;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin-top: -10px;
+  margin-left: -10px;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+  border-top-color: #333;
+  animation: spinner .6s linear infinite;
+}
+.spinner.-warning::before {
+  border: 2px solid #333;
+  border-top-color: @background-color-warning;
+}
+
+.listed {
+  position: relative;
+  overflow-y: auto;
+  max-height: 100%;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  border: 1px solid #181a1f;
+  background-color: #292d35;
+  .list-item {
+    display: block;
+    padding: 0.75em 1em;
+    line-height: 1em;
+    border-bottom: 1px solid #181a1f;
+    .checkbox {
+      label {
+        width: 100%;
+      }
+      .title {
+        padding-top: 2px;
+        padding-left: 10px;
+        overflow: hidden;
+      }
+    }
+    &.--hover:hover {
+      background-color: #3a3f4b;
+    }
+    &.selected {
+      font-weight: normal;
+      color: #d7dae0;
+      background-color: #3a3f4b;
+    }
+  }
+}
+
+.search-keyword-view {
+  @keyword-section-width: 55%;
+  .close-button {
+    @size: 30px;
+    width: @size;
+    height: @size;
+    text-align: right;
+  }
+  .header-wrapper {
+    .title {
+      height: 3rem;
+      font-size: 1.5rem;
+      border-bottom: 1px dashed darken(white, 60%);
+    }
+  }
+  .content-wrapper {
+    display: flex;
+    width: 100%;
+    margin-top: 15px;
+    .keyword-block {
+      width: @keyword-section-width;
+      padding-right: 15px;
+      .keyword-list {
+        height: 300px;
+        .list-group {
+          .listed();
+          max-height: 270px;
+          .list-item {
+            display: flex;
+            padding: 0;
+            .title {
+              display: flex;
+              align-items: center;
+              height: 2em;
+              width: 85%;
+              padding: 1.5em 1em;
+              font-size: 1.2rem;
+              span {
+                display: inline-block;
+                width: 16px;
+                color: #636d83;
+                margin-right: 8px;
+                text-align: right;
+              }
+            }
+            .actions {
+              width: 20%;
+              display: flex;
+              align-items: center;
+              justify-content: flex-end;
+              padding-right: 15px;
+              .-verifying {
+                position: relative;
+                display: flex;
+                color: @background-color-warning;
+                .spinner {
+                  padding-right: 40px;
+                }
+              }
+              .-info {
+                color: @background-color-info;
+              }
+              .-edit {
+                color: @background-color-success;
+                &:hover {
+                  font-weight: bold;
+                }
+              }
+              .-delete {
+                padding-left: 20px;
+                color: @background-color-error;
+                &:hover {
+                  font-weight: bold;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    .detail-block {
+      width: 100% - @keyword-section-width;
+      border-left: 1px dashed darken(white, 60%);
+      padding-left: 15px;
+      margin-bottom: 15px;
+      .input-block {
+        padding-top: 10px;
+      }
+      .input-block .editor {
+        border: 1px solid darken(white, 75%);
+      }
+    }
+  }
+}
+
+.save-keyword-view {
+  @keyword-section-width: 65%;
+  .close-button {
+    @size: 30px;
+    width: @size;
+    height: @size;
+    text-align: right;
+  }
+  .header-wrapper {
+    .title {
+      height: 3rem;
+      font-size: 1.5rem;
+      border-bottom: 1px dashed darken(white, 60%);
+    }
+  }
+  .content-wrapper {
+    display: flex;
+    width: 100%;
+    margin-top: 15px;
+    .keyword-block {
+      width: @keyword-section-width;
+      padding-right: 15px;
+      .keyword-list {
+        height: 200px;
+        .list-group {
+          .listed();
+          max-height: 186px;
+          .list-item {
+            display: flex;
+            .title {
+              display: flex;;
+              align-items: center;
+              height: 2em;
+              width: 85%;
+              font-size: 1.2rem;
+              span {
+                display: inline-block;
+                width: 16px;
+                color: #636d83;
+                margin-right: 8px;
+                text-align: right;
+              }
+            }
+            .actions {
+              width: 15%;
+              display: flex;
+              align-items: center;
+              justify-content: flex-start;
+              .-verifying {
+                position: relative;
+                display: flex;
+                .spinner {
+                  padding-right: 40px;
+                }
+              }
+              .-create {
+                color: @background-color-success;
+              }
+              .-update {
+                color: @background-color-info;
+              }
+              .-duplicate {
+                color: @background-color-error;
+              }
+            }
+          }
+        }
+      }
+      .keyword-detail {
+        padding: 15px 0 0;
+        .form-wrapper {
+          padding-right: 0px;
+          .input-block {
+            padding-top: 10px;
+          }
+          .input-block .editor {
+            border: 1px solid darken(white, 75%);
+          }
+        }
+      }
+    }
+    .shared-block {
+      width: 100% - @keyword-section-width;
+      border-left: 1px dashed darken(white, 60%);
+      padding-left: 15px;
+      margin-bottom: 15px;
+      .keyword-actions {
+        display: flex;
+        justify-content: center;
+        padding-top: 80px;
+      }
+    }
+  }
+}
+
+.share-keyword-view {
+  .shared-types {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    height: 50px;
+    .btn {
+      width: 110px;
+    }
+  }
+  .shared-list {
+    @height: 300px;
+    height: @height;
+    .list-group {
+      .listed();
+      max-height: @height;
+      .list-item {
+        display: flex;
+        align-content: center;
+        padding: 0;
+        width: 100%;
+        .checkbox {
+          width: 90%;
+          margin: 0;
+          label {
+            height: 100%;
+            padding: 15px;
+            padding-left: 35px;
+          }
+          .title {
+            height: 100%;
+          }
+        }
+        .owner {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 10%;
+        }
+      }
+    }
+  }
+}
+
+.generate-view {
+  .header-wrapper {
+    .title {
+      height: 3rem;
+      font-size: 1.5rem;
+      border-bottom: 1px dashed darken(white, 60%);
+    }
+  }
+  .content-wrapper {
+    display: flex;
+    flex-flow: column wrap;
+    width: 100%;
+    margin-top: 15px;
+    .input-block {
+      width: 100%;
+    }
+    .radio-item {
+      display: inline-block;
+      padding: 0 15px 15px;
+      span {
+        padding-left: 5px;
+      }
+    }
+  }
+  .error-wrapper {
+    color: red;
+  }
+  .loading-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100px;
+    margin-top: -30px;
+    span {
+      padding-top: 60px;
+    }
+  }
+}
+
+.runner-view {
+  .header-wrapper {
+    .title {
+      height: 3rem;
+      font-size: 1.5rem;
+      border-bottom: 1px dashed darken(white, 60%);
+    }
+  }
+  .runner-content {
+    margin-top: 15px;
+    .error-wrapper {
+      display: none;
+      height: 30px;
+      color: red;
+    }
+  }
+  .runner-process {
+    margin-top: 15px;
+  }
+}
