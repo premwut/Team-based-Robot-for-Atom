@@ -1,0 +1,938 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generated="20180324 00:59:56.802" generator="Robot 3.0.2 (Python 2.7.13 on darwin)">
+<suite source="/Users/naros/Storage/workspace/MyHub/robot-website-testing/testcases" id="s1" name="Testcases">
+<suite source="/Users/naros/Storage/workspace/MyHub/robot-website-testing/testcases/login.robot" id="s1-s1" name="Login">
+<test id="s1-s1-t1" name="Desktop - Login by admin success">
+<kw name="Open Browser To Landing Page" library="common.keyword">
+<kw name="Open Browser" library="Selenium2Library">
+<doc>Opens a new browser instance to given URL.</doc>
+<arguments>
+<arg>${WEB_BASE_URL}</arg>
+<arg>${BROWSER}</arg>
+</arguments>
+<msg timestamp="20180324 00:59:57.011" level="INFO">Opening browser 'chrome' to base url 'https://robot-web-testing.herokuapp.com'</msg>
+<status status="PASS" endtime="20180324 01:00:04.439" starttime="20180324 00:59:57.011"></status>
+</kw>
+<kw name="Set Selenium Speed" library="Selenium2Library">
+<doc>Sets the delay in seconds that is waited after each Selenium command.</doc>
+<arguments>
+<arg>${SPEED}</arg>
+</arguments>
+<status status="PASS" endtime="20180324 01:00:04.441" starttime="20180324 01:00:04.440"></status>
+</kw>
+<status status="PASS" endtime="20180324 01:00:04.441" starttime="20180324 00:59:57.010"></status>
+</kw>
+<kw name="Change Resolution To Desktop" library="common.keyword">
+<kw name="Set Window Size" library="Selenium2Library">
+<doc>Sets the `width` and `height` of the current window to the specified values.</doc>
+<arguments>
+<arg>1400</arg>
+<arg>860</arg>
+</arguments>
+<status status="PASS" endtime="20180324 01:00:04.926" starttime="20180324 01:00:04.442"></status>
+</kw>
+<status status="PASS" endtime="20180324 01:00:04.926" starttime="20180324 01:00:04.441"></status>
+</kw>
+<kw name="Go To Login Page" library="login.keyword">
+<kw name="Go To" library="Selenium2Library">
+<doc>Navigates the active browser instance to the provided URL.</doc>
+<arguments>
+<arg>${WEB_BASE_URL}/login</arg>
+</arguments>
+<msg timestamp="20180324 01:00:04.928" level="INFO">Opening url 'https://robot-web-testing.herokuapp.com/login'</msg>
+<status status="PASS" endtime="20180324 01:00:05.809" starttime="20180324 01:00:04.927"></status>
+</kw>
+<kw name="Wait Until Element Is Visible" library="Selenium2Library">
+<doc>Waits until element specified with `locator` is visible.</doc>
+<arguments>
+<arg>${login_div_block}</arg>
+</arguments>
+<status status="PASS" endtime="20180324 01:00:06.446" starttime="20180324 01:00:05.810"></status>
+</kw>
+<status status="PASS" endtime="20180324 01:00:06.446" starttime="20180324 01:00:04.927"></status>
+</kw>
+<kw name="Fill Input Login Form" library="login.keyword">
+<arguments>
+<arg>${USERNAME_ADMIN}</arg>
+<arg>${PASSWORD_ADMIN}</arg>
+</arguments>
+<kw name="Input Text" library="Selenium2Library">
+<doc>Types the given `text` into text field identified by `locator`.</doc>
+<arguments>
+<arg>${login_input_username}</arg>
+<arg>${username}</arg>
+</arguments>
+<msg timestamp="20180324 01:00:06.447" level="INFO">Typing text 'admin' into text field 'id=username'</msg>
+<status status="PASS" endtime="20180324 01:00:07.496" starttime="20180324 01:00:06.447"></status>
+</kw>
+<kw name="Input Password" library="Selenium2Library">
+<doc>Types the given password into text field identified by `locator`.</doc>
+<arguments>
+<arg>${login_input_password}</arg>
+<arg>${password}</arg>
+</arguments>
+<msg timestamp="20180324 01:00:07.497" level="INFO">Typing password into text field 'id=password'</msg>
+<status status="PASS" endtime="20180324 01:00:08.557" starttime="20180324 01:00:07.497"></status>
+</kw>
+<kw name="Click Element" library="Selenium2Library">
+<doc>Click element identified by `locator`.</doc>
+<arguments>
+<arg>${login_button_submit}</arg>
+</arguments>
+<msg timestamp="20180324 01:00:08.558" level="INFO">Clicking element 'id=login-btn'.</msg>
+<status status="PASS" endtime="20180324 01:00:09.243" starttime="20180324 01:00:08.558"></status>
+</kw>
+<kw name="Sleep" library="BuiltIn">
+<doc>Pauses the test executed for the given time.</doc>
+<arguments>
+<arg>2</arg>
+</arguments>
+<msg timestamp="20180324 01:00:11.245" level="INFO">Slept 2 seconds</msg>
+<status status="PASS" endtime="20180324 01:00:11.245" starttime="20180324 01:00:09.243"></status>
+</kw>
+<status status="PASS" endtime="20180324 01:00:11.246" starttime="20180324 01:00:06.446"></status>
+</kw>
+<kw name="Verify Admin Page Is Visible" library="admin.keyword">
+<kw name="Wait Until Element Is Visible" library="Selenium2Library">
+<doc>Waits until element specified with `locator` is visible.</doc>
+<arguments>
+<arg>${admin_div_container}</arg>
+<arg>${TIMEOUT}</arg>
+</arguments>
+<status status="PASS" endtime="20180324 01:00:11.880" starttime="20180324 01:00:11.247"></status>
+</kw>
+<status status="PASS" endtime="20180324 01:00:11.880" starttime="20180324 01:00:11.246"></status>
+</kw>
+<kw type="teardown" name="Close All Browsers" library="Selenium2Library">
+<doc>Closes all open browsers and resets the browser cache.</doc>
+<status status="PASS" endtime="20180324 01:00:12.253" starttime="20180324 01:00:11.881"></status>
+</kw>
+<tags>
+<tag>desktop</tag>
+<tag>high</tag>
+<tag>login</tag>
+<tag>regression</tag>
+</tags>
+<status status="PASS" endtime="20180324 01:00:12.253" critical="yes" starttime="20180324 00:59:57.009"></status>
+</test>
+<test id="s1-s1-t2" name="Desktop - Login by admin failure">
+<kw name="Open Browser To Landing Page" library="common.keyword">
+<kw name="Open Browser" library="Selenium2Library">
+<doc>Opens a new browser instance to given URL.</doc>
+<arguments>
+<arg>${WEB_BASE_URL}</arg>
+<arg>${BROWSER}</arg>
+</arguments>
+<msg timestamp="20180324 01:00:12.256" level="INFO">Opening browser 'chrome' to base url 'https://robot-web-testing.herokuapp.com'</msg>
+<status status="PASS" endtime="20180324 01:00:20.556" starttime="20180324 01:00:12.256"></status>
+</kw>
+<kw name="Set Selenium Speed" library="Selenium2Library">
+<doc>Sets the delay in seconds that is waited after each Selenium command.</doc>
+<arguments>
+<arg>${SPEED}</arg>
+</arguments>
+<status status="PASS" endtime="20180324 01:00:20.557" starttime="20180324 01:00:20.557"></status>
+</kw>
+<status status="PASS" endtime="20180324 01:00:20.558" starttime="20180324 01:00:12.255"></status>
+</kw>
+<kw name="Change Resolution To Desktop" library="common.keyword">
+<kw name="Set Window Size" library="Selenium2Library">
+<doc>Sets the `width` and `height` of the current window to the specified values.</doc>
+<arguments>
+<arg>1400</arg>
+<arg>860</arg>
+</arguments>
+<status status="PASS" endtime="20180324 01:00:21.035" starttime="20180324 01:00:20.559"></status>
+</kw>
+<status status="PASS" endtime="20180324 01:00:21.035" starttime="20180324 01:00:20.558"></status>
+</kw>
+<kw name="Go To Login Page" library="login.keyword">
+<kw name="Go To" library="Selenium2Library">
+<doc>Navigates the active browser instance to the provided URL.</doc>
+<arguments>
+<arg>${WEB_BASE_URL}/login</arg>
+</arguments>
+<msg timestamp="20180324 01:00:21.036" level="INFO">Opening url 'https://robot-web-testing.herokuapp.com/login'</msg>
+<status status="PASS" endtime="20180324 01:00:22.126" starttime="20180324 01:00:21.036"></status>
+</kw>
+<kw name="Wait Until Element Is Visible" library="Selenium2Library">
+<doc>Waits until element specified with `locator` is visible.</doc>
+<arguments>
+<arg>${login_div_block}</arg>
+</arguments>
+<status status="PASS" endtime="20180324 01:00:22.763" starttime="20180324 01:00:22.127"></status>
+</kw>
+<status status="PASS" endtime="20180324 01:00:22.763" starttime="20180324 01:00:21.035"></status>
+</kw>
+<kw name="Fill Input Login Form" library="login.keyword">
+<arguments>
+<arg>${USERNAME_ADMIN}</arg>
+<arg>P@ssw0rd</arg>
+</arguments>
+<kw name="Input Text" library="Selenium2Library">
+<doc>Types the given `text` into text field identified by `locator`.</doc>
+<arguments>
+<arg>${login_input_username}</arg>
+<arg>${username}</arg>
+</arguments>
+<msg timestamp="20180324 01:00:22.765" level="INFO">Typing text 'admin' into text field 'id=username'</msg>
+<status status="PASS" endtime="20180324 01:00:23.799" starttime="20180324 01:00:22.764"></status>
+</kw>
+<kw name="Input Password" library="Selenium2Library">
+<doc>Types the given password into text field identified by `locator`.</doc>
+<arguments>
+<arg>${login_input_password}</arg>
+<arg>${password}</arg>
+</arguments>
+<msg timestamp="20180324 01:00:23.800" level="INFO">Typing password into text field 'id=password'</msg>
+<status status="PASS" endtime="20180324 01:00:24.829" starttime="20180324 01:00:23.799"></status>
+</kw>
+<kw name="Click Element" library="Selenium2Library">
+<doc>Click element identified by `locator`.</doc>
+<arguments>
+<arg>${login_button_submit}</arg>
+</arguments>
+<msg timestamp="20180324 01:00:24.830" level="INFO">Clicking element 'id=login-btn'.</msg>
+<status status="PASS" endtime="20180324 01:00:25.501" starttime="20180324 01:00:24.829"></status>
+</kw>
+<kw name="Sleep" library="BuiltIn">
+<doc>Pauses the test executed for the given time.</doc>
+<arguments>
+<arg>2</arg>
+</arguments>
+<msg timestamp="20180324 01:00:27.502" level="INFO">Slept 2 seconds</msg>
+<status status="PASS" endtime="20180324 01:00:27.503" starttime="20180324 01:00:25.501"></status>
+</kw>
+<status status="PASS" endtime="20180324 01:00:27.503" starttime="20180324 01:00:22.764"></status>
+</kw>
+<kw name="Verify Login Failure Dialog Is Visible" library="login.keyword">
+<arguments>
+<arg>Login Failure.</arg>
+</arguments>
+<kw name="Wait Until Element Is Visible" library="Selenium2Library">
+<doc>Waits until element specified with `locator` is visible.</doc>
+<arguments>
+<arg>${login_div_notify}</arg>
+<arg>${TIMEOUT}</arg>
+</arguments>
+<status status="PASS" endtime="20180324 01:00:28.142" starttime="20180324 01:00:27.504"></status>
+</kw>
+<kw name="Get Text" library="Selenium2Library">
+<doc>Returns the text value of element identified by `locator`.</doc>
+<arguments>
+<arg>${login_div_notify_text}</arg>
+</arguments>
+<assign>
+<var>${text}</var>
+</assign>
+<msg timestamp="20180324 01:00:28.783" level="INFO">${text} = Login Failure.</msg>
+<status status="PASS" endtime="20180324 01:00:28.783" starttime="20180324 01:00:28.142"></status>
+</kw>
+<kw name="Should Be Equal" library="BuiltIn">
+<doc>Fails if the given objects are unequal.</doc>
+<arguments>
+<arg>${text}</arg>
+<arg>${error_text}</arg>
+</arguments>
+<status status="PASS" endtime="20180324 01:00:28.784" starttime="20180324 01:00:28.783"></status>
+</kw>
+<status status="PASS" endtime="20180324 01:00:28.784" starttime="20180324 01:00:27.503"></status>
+</kw>
+<kw type="teardown" name="Close All Browsers" library="Selenium2Library">
+<doc>Closes all open browsers and resets the browser cache.</doc>
+<status status="PASS" endtime="20180324 01:00:29.147" starttime="20180324 01:00:28.785"></status>
+</kw>
+<tags>
+<tag>desktop</tag>
+<tag>high</tag>
+<tag>login</tag>
+<tag>regression</tag>
+</tags>
+<status status="PASS" endtime="20180324 01:00:29.148" critical="yes" starttime="20180324 01:00:12.255"></status>
+</test>
+<test id="s1-s1-t3" name="Mobile - Verify text input show required error message">
+<kw name="Open Browser To Landing Page" library="common.keyword">
+<kw name="Open Browser" library="Selenium2Library">
+<doc>Opens a new browser instance to given URL.</doc>
+<arguments>
+<arg>${WEB_BASE_URL}</arg>
+<arg>${BROWSER}</arg>
+</arguments>
+<msg timestamp="20180324 01:00:29.151" level="INFO">Opening browser 'chrome' to base url 'https://robot-web-testing.herokuapp.com'</msg>
+<status status="PASS" endtime="20180324 01:00:36.658" starttime="20180324 01:00:29.151"></status>
+</kw>
+<kw name="Set Selenium Speed" library="Selenium2Library">
+<doc>Sets the delay in seconds that is waited after each Selenium command.</doc>
+<arguments>
+<arg>${SPEED}</arg>
+</arguments>
+<status status="PASS" endtime="20180324 01:00:36.660" starttime="20180324 01:00:36.659"></status>
+</kw>
+<status status="PASS" endtime="20180324 01:00:36.661" starttime="20180324 01:00:29.150"></status>
+</kw>
+<kw name="Change Resolution To Mobile" library="common.keyword">
+<kw name="Set Window Size" library="Selenium2Library">
+<doc>Sets the `width` and `height` of the current window to the specified values.</doc>
+<arguments>
+<arg>375</arg>
+<arg>667</arg>
+</arguments>
+<status status="PASS" endtime="20180324 01:00:37.105" starttime="20180324 01:00:36.662"></status>
+</kw>
+<status status="PASS" endtime="20180324 01:00:37.105" starttime="20180324 01:00:36.661"></status>
+</kw>
+<kw name="Go To Login Page" library="login.keyword">
+<kw name="Go To" library="Selenium2Library">
+<doc>Navigates the active browser instance to the provided URL.</doc>
+<arguments>
+<arg>${WEB_BASE_URL}/login</arg>
+</arguments>
+<msg timestamp="20180324 01:00:37.106" level="INFO">Opening url 'https://robot-web-testing.herokuapp.com/login'</msg>
+<status status="PASS" endtime="20180324 01:00:38.046" starttime="20180324 01:00:37.106"></status>
+</kw>
+<kw name="Wait Until Element Is Visible" library="Selenium2Library">
+<doc>Waits until element specified with `locator` is visible.</doc>
+<arguments>
+<arg>${login_div_block}</arg>
+</arguments>
+<status status="PASS" endtime="20180324 01:00:38.678" starttime="20180324 01:00:38.047"></status>
+</kw>
+<status status="PASS" endtime="20180324 01:00:38.678" starttime="20180324 01:00:37.105"></status>
+</kw>
+<kw name="Simulate" library="Selenium2Library">
+<doc>Simulates `event` on element identified by `locator`.</doc>
+<arguments>
+<arg>${login_input_password}</arg>
+<arg>focus</arg>
+</arguments>
+<status status="PASS" endtime="20180324 01:00:39.317" starttime="20180324 01:00:38.679"></status>
+</kw>
+<kw name="Simulate" library="Selenium2Library">
+<doc>Simulates `event` on element identified by `locator`.</doc>
+<arguments>
+<arg>${login_input_username}</arg>
+<arg>focus</arg>
+</arguments>
+<status status="PASS" endtime="20180324 01:00:39.950" starttime="20180324 01:00:39.317"></status>
+</kw>
+<kw name="Element Should Be Visible" library="Selenium2Library">
+<doc>Verifies that the element identified by `locator` is visible.</doc>
+<arguments>
+<arg>${login_username_field_error}</arg>
+</arguments>
+<msg timestamp="20180324 01:00:39.951" level="INFO">Verifying element '//*[@id="login-block"]/div/form/div[1]/div[2]/div' is visible.</msg>
+<status status="PASS" endtime="20180324 01:00:40.587" starttime="20180324 01:00:39.951"></status>
+</kw>
+<kw name="Element Should Be Visible" library="Selenium2Library">
+<doc>Verifies that the element identified by `locator` is visible.</doc>
+<arguments>
+<arg>${login_password_field_error}</arg>
+</arguments>
+<msg timestamp="20180324 01:00:40.588" level="INFO">Verifying element '//*[@id="login-block"]/div/form/div[2]/div[2]/div' is visible.</msg>
+<status status="PASS" endtime="20180324 01:00:41.226" starttime="20180324 01:00:40.587"></status>
+</kw>
+<kw type="teardown" name="Close All Browsers" library="Selenium2Library">
+<doc>Closes all open browsers and resets the browser cache.</doc>
+<status status="PASS" endtime="20180324 01:00:41.588" starttime="20180324 01:00:41.227"></status>
+</kw>
+<tags>
+<tag>desktop</tag>
+<tag>high</tag>
+<tag>login</tag>
+<tag>regression</tag>
+</tags>
+<status status="PASS" endtime="20180324 01:00:41.588" critical="yes" starttime="20180324 01:00:29.149"></status>
+</test>
+<status status="PASS" endtime="20180324 01:00:41.589" starttime="20180324 00:59:56.825"></status>
+</suite>
+<suite source="/Users/naros/Storage/workspace/MyHub/robot-website-testing/testcases/user-management.robot" id="s1-s2" name="User-Management">
+<test id="s1-s2-t1" name="Verify user management page display table">
+<kw name="Logged In By Admin User" library="keyword">
+<kw name="Open Browser To Landing Page" library="common.keyword">
+<kw name="Open Browser" library="Selenium2Library">
+<doc>Opens a new browser instance to given URL.</doc>
+<arguments>
+<arg>${WEB_BASE_URL}</arg>
+<arg>${BROWSER}</arg>
+</arguments>
+<msg timestamp="20180324 01:00:41.616" level="INFO">Opening browser 'chrome' to base url 'https://robot-web-testing.herokuapp.com'</msg>
+<status status="PASS" endtime="20180324 01:00:49.396" starttime="20180324 01:00:41.615"></status>
+</kw>
+<kw name="Set Selenium Speed" library="Selenium2Library">
+<doc>Sets the delay in seconds that is waited after each Selenium command.</doc>
+<arguments>
+<arg>${SPEED}</arg>
+</arguments>
+<status status="PASS" endtime="20180324 01:00:49.398" starttime="20180324 01:00:49.397"></status>
+</kw>
+<status status="PASS" endtime="20180324 01:00:49.398" starttime="20180324 01:00:41.615"></status>
+</kw>
+<kw name="Change Resolution To Desktop" library="common.keyword">
+<kw name="Set Window Size" library="Selenium2Library">
+<doc>Sets the `width` and `height` of the current window to the specified values.</doc>
+<arguments>
+<arg>1400</arg>
+<arg>860</arg>
+</arguments>
+<status status="PASS" endtime="20180324 01:00:49.858" starttime="20180324 01:00:49.399"></status>
+</kw>
+<status status="PASS" endtime="20180324 01:00:49.858" starttime="20180324 01:00:49.398"></status>
+</kw>
+<kw name="Go To Login Page" library="login.keyword">
+<kw name="Go To" library="Selenium2Library">
+<doc>Navigates the active browser instance to the provided URL.</doc>
+<arguments>
+<arg>${WEB_BASE_URL}/login</arg>
+</arguments>
+<msg timestamp="20180324 01:00:49.860" level="INFO">Opening url 'https://robot-web-testing.herokuapp.com/login'</msg>
+<status status="PASS" endtime="20180324 01:00:50.840" starttime="20180324 01:00:49.859"></status>
+</kw>
+<kw name="Wait Until Element Is Visible" library="Selenium2Library">
+<doc>Waits until element specified with `locator` is visible.</doc>
+<arguments>
+<arg>${login_div_block}</arg>
+</arguments>
+<status status="PASS" endtime="20180324 01:00:51.484" starttime="20180324 01:00:50.841"></status>
+</kw>
+<status status="PASS" endtime="20180324 01:00:51.484" starttime="20180324 01:00:49.859"></status>
+</kw>
+<kw name="Fill Input Login Form" library="login.keyword">
+<arguments>
+<arg>${USERNAME_ADMIN}</arg>
+<arg>${PASSWORD_ADMIN}</arg>
+</arguments>
+<kw name="Input Text" library="Selenium2Library">
+<doc>Types the given `text` into text field identified by `locator`.</doc>
+<arguments>
+<arg>${login_input_username}</arg>
+<arg>${username}</arg>
+</arguments>
+<msg timestamp="20180324 01:00:51.486" level="INFO">Typing text 'admin' into text field 'id=username'</msg>
+<status status="PASS" endtime="20180324 01:00:52.520" starttime="20180324 01:00:51.485"></status>
+</kw>
+<kw name="Input Password" library="Selenium2Library">
+<doc>Types the given password into text field identified by `locator`.</doc>
+<arguments>
+<arg>${login_input_password}</arg>
+<arg>${password}</arg>
+</arguments>
+<msg timestamp="20180324 01:00:52.521" level="INFO">Typing password into text field 'id=password'</msg>
+<status status="PASS" endtime="20180324 01:00:53.581" starttime="20180324 01:00:52.520"></status>
+</kw>
+<kw name="Click Element" library="Selenium2Library">
+<doc>Click element identified by `locator`.</doc>
+<arguments>
+<arg>${login_button_submit}</arg>
+</arguments>
+<msg timestamp="20180324 01:00:53.582" level="INFO">Clicking element 'id=login-btn'.</msg>
+<status status="PASS" endtime="20180324 01:00:54.253" starttime="20180324 01:00:53.582"></status>
+</kw>
+<kw name="Sleep" library="BuiltIn">
+<doc>Pauses the test executed for the given time.</doc>
+<arguments>
+<arg>2</arg>
+</arguments>
+<msg timestamp="20180324 01:00:56.256" level="INFO">Slept 2 seconds</msg>
+<status status="PASS" endtime="20180324 01:00:56.257" starttime="20180324 01:00:54.254"></status>
+</kw>
+<status status="PASS" endtime="20180324 01:00:56.257" starttime="20180324 01:00:51.485"></status>
+</kw>
+<kw name="Verify Admin Page Is Visible" library="admin.keyword">
+<kw name="Wait Until Element Is Visible" library="Selenium2Library">
+<doc>Waits until element specified with `locator` is visible.</doc>
+<arguments>
+<arg>${admin_div_container}</arg>
+<arg>${TIMEOUT}</arg>
+</arguments>
+<status status="PASS" endtime="20180324 01:00:56.893" starttime="20180324 01:00:56.258"></status>
+</kw>
+<status status="PASS" endtime="20180324 01:00:56.893" starttime="20180324 01:00:56.257"></status>
+</kw>
+<status status="PASS" endtime="20180324 01:00:56.894" starttime="20180324 01:00:41.615"></status>
+</kw>
+<kw name="Go To User Management Page" library="user.keyword">
+<kw name="Go To" library="Selenium2Library">
+<doc>Navigates the active browser instance to the provided URL.</doc>
+<arguments>
+<arg>${WEB_BASE_URL}/admin/users</arg>
+</arguments>
+<msg timestamp="20180324 01:00:56.895" level="INFO">Opening url 'https://robot-web-testing.herokuapp.com/admin/users'</msg>
+<status status="PASS" endtime="20180324 01:00:57.852" starttime="20180324 01:00:56.895"></status>
+</kw>
+<kw name="Wait Until Element Is Visible" library="Selenium2Library">
+<doc>Waits until element specified with `locator` is visible.</doc>
+<arguments>
+<arg>${user_div_page}</arg>
+</arguments>
+<status status="PASS" endtime="20180324 01:00:58.486" starttime="20180324 01:00:57.852"></status>
+</kw>
+<status status="PASS" endtime="20180324 01:00:58.486" starttime="20180324 01:00:56.894"></status>
+</kw>
+<kw name="Verify User Table Is Visible" library="user.keyword">
+<kw name="Wait Until Element Is Visible" library="Selenium2Library">
+<doc>Waits until element specified with `locator` is visible.</doc>
+<arguments>
+<arg>${user_div_table_container}</arg>
+<arg>${TIMEOUT}</arg>
+</arguments>
+<status status="PASS" endtime="20180324 01:00:59.123" starttime="20180324 01:00:58.487"></status>
+</kw>
+<status status="PASS" endtime="20180324 01:00:59.123" starttime="20180324 01:00:58.487"></status>
+</kw>
+<kw type="teardown" name="Close All Browsers" library="Selenium2Library">
+<doc>Closes all open browsers and resets the browser cache.</doc>
+<status status="PASS" endtime="20180324 01:00:59.490" starttime="20180324 01:00:59.124"></status>
+</kw>
+<tags>
+<tag>desktop</tag>
+<tag>high</tag>
+<tag>regression</tag>
+<tag>user-management</tag>
+</tags>
+<status status="PASS" endtime="20180324 01:00:59.490" critical="yes" starttime="20180324 01:00:41.614"></status>
+</test>
+<test id="s1-s2-t2" name="Verify create new user success">
+<kw name="Logged In By Admin User" library="keyword">
+<kw name="Open Browser To Landing Page" library="common.keyword">
+<kw name="Open Browser" library="Selenium2Library">
+<doc>Opens a new browser instance to given URL.</doc>
+<arguments>
+<arg>${WEB_BASE_URL}</arg>
+<arg>${BROWSER}</arg>
+</arguments>
+<msg timestamp="20180324 01:00:59.494" level="INFO">Opening browser 'chrome' to base url 'https://robot-web-testing.herokuapp.com'</msg>
+<status status="PASS" endtime="20180324 01:01:07.647" starttime="20180324 01:00:59.494"></status>
+</kw>
+<kw name="Set Selenium Speed" library="Selenium2Library">
+<doc>Sets the delay in seconds that is waited after each Selenium command.</doc>
+<arguments>
+<arg>${SPEED}</arg>
+</arguments>
+<status status="PASS" endtime="20180324 01:01:07.649" starttime="20180324 01:01:07.648"></status>
+</kw>
+<status status="PASS" endtime="20180324 01:01:07.649" starttime="20180324 01:00:59.494"></status>
+</kw>
+<kw name="Change Resolution To Desktop" library="common.keyword">
+<kw name="Set Window Size" library="Selenium2Library">
+<doc>Sets the `width` and `height` of the current window to the specified values.</doc>
+<arguments>
+<arg>1400</arg>
+<arg>860</arg>
+</arguments>
+<status status="PASS" endtime="20180324 01:01:08.089" starttime="20180324 01:01:07.650"></status>
+</kw>
+<status status="PASS" endtime="20180324 01:01:08.089" starttime="20180324 01:01:07.649"></status>
+</kw>
+<kw name="Go To Login Page" library="login.keyword">
+<kw name="Go To" library="Selenium2Library">
+<doc>Navigates the active browser instance to the provided URL.</doc>
+<arguments>
+<arg>${WEB_BASE_URL}/login</arg>
+</arguments>
+<msg timestamp="20180324 01:01:08.091" level="INFO">Opening url 'https://robot-web-testing.herokuapp.com/login'</msg>
+<status status="PASS" endtime="20180324 01:01:08.989" starttime="20180324 01:01:08.090"></status>
+</kw>
+<kw name="Wait Until Element Is Visible" library="Selenium2Library">
+<doc>Waits until element specified with `locator` is visible.</doc>
+<arguments>
+<arg>${login_div_block}</arg>
+</arguments>
+<status status="PASS" endtime="20180324 01:01:09.625" starttime="20180324 01:01:08.989"></status>
+</kw>
+<status status="PASS" endtime="20180324 01:01:09.625" starttime="20180324 01:01:08.089"></status>
+</kw>
+<kw name="Fill Input Login Form" library="login.keyword">
+<arguments>
+<arg>${USERNAME_ADMIN}</arg>
+<arg>${PASSWORD_ADMIN}</arg>
+</arguments>
+<kw name="Input Text" library="Selenium2Library">
+<doc>Types the given `text` into text field identified by `locator`.</doc>
+<arguments>
+<arg>${login_input_username}</arg>
+<arg>${username}</arg>
+</arguments>
+<msg timestamp="20180324 01:01:09.626" level="INFO">Typing text 'admin' into text field 'id=username'</msg>
+<status status="PASS" endtime="20180324 01:01:10.666" starttime="20180324 01:01:09.626"></status>
+</kw>
+<kw name="Input Password" library="Selenium2Library">
+<doc>Types the given password into text field identified by `locator`.</doc>
+<arguments>
+<arg>${login_input_password}</arg>
+<arg>${password}</arg>
+</arguments>
+<msg timestamp="20180324 01:01:10.667" level="INFO">Typing password into text field 'id=password'</msg>
+<status status="PASS" endtime="20180324 01:01:11.723" starttime="20180324 01:01:10.667"></status>
+</kw>
+<kw name="Click Element" library="Selenium2Library">
+<doc>Click element identified by `locator`.</doc>
+<arguments>
+<arg>${login_button_submit}</arg>
+</arguments>
+<msg timestamp="20180324 01:01:11.724" level="INFO">Clicking element 'id=login-btn'.</msg>
+<status status="PASS" endtime="20180324 01:01:12.393" starttime="20180324 01:01:11.723"></status>
+</kw>
+<kw name="Sleep" library="BuiltIn">
+<doc>Pauses the test executed for the given time.</doc>
+<arguments>
+<arg>2</arg>
+</arguments>
+<msg timestamp="20180324 01:01:14.394" level="INFO">Slept 2 seconds</msg>
+<status status="PASS" endtime="20180324 01:01:14.395" starttime="20180324 01:01:12.393"></status>
+</kw>
+<status status="PASS" endtime="20180324 01:01:14.395" starttime="20180324 01:01:09.625"></status>
+</kw>
+<kw name="Verify Admin Page Is Visible" library="admin.keyword">
+<kw name="Wait Until Element Is Visible" library="Selenium2Library">
+<doc>Waits until element specified with `locator` is visible.</doc>
+<arguments>
+<arg>${admin_div_container}</arg>
+<arg>${TIMEOUT}</arg>
+</arguments>
+<status status="PASS" endtime="20180324 01:01:15.025" starttime="20180324 01:01:14.396"></status>
+</kw>
+<status status="PASS" endtime="20180324 01:01:15.025" starttime="20180324 01:01:14.395"></status>
+</kw>
+<status status="PASS" endtime="20180324 01:01:15.026" starttime="20180324 01:00:59.493"></status>
+</kw>
+<kw name="Go To User Management Page" library="user.keyword">
+<kw name="Go To" library="Selenium2Library">
+<doc>Navigates the active browser instance to the provided URL.</doc>
+<arguments>
+<arg>${WEB_BASE_URL}/admin/users</arg>
+</arguments>
+<msg timestamp="20180324 01:01:15.027" level="INFO">Opening url 'https://robot-web-testing.herokuapp.com/admin/users'</msg>
+<status status="PASS" endtime="20180324 01:01:16.061" starttime="20180324 01:01:15.026"></status>
+</kw>
+<kw name="Wait Until Element Is Visible" library="Selenium2Library">
+<doc>Waits until element specified with `locator` is visible.</doc>
+<arguments>
+<arg>${user_div_page}</arg>
+</arguments>
+<status status="PASS" endtime="20180324 01:01:16.695" starttime="20180324 01:01:16.061"></status>
+</kw>
+<status status="PASS" endtime="20180324 01:01:16.696" starttime="20180324 01:01:15.026"></status>
+</kw>
+<kw name="Show User Form" library="user.keyword">
+<kw name="Click Element" library="Selenium2Library">
+<doc>Click element identified by `locator`.</doc>
+<arguments>
+<arg>${user_btn_add}</arg>
+</arguments>
+<msg timestamp="20180324 01:01:16.697" level="INFO">Clicking element 'id=btn-new-user'.</msg>
+<status status="PASS" endtime="20180324 01:01:17.376" starttime="20180324 01:01:16.697"></status>
+</kw>
+<kw name="Wait Until Element Is Visible" library="Selenium2Library">
+<doc>Waits until element specified with `locator` is visible.</doc>
+<arguments>
+<arg>${user_form}</arg>
+</arguments>
+<status status="PASS" endtime="20180324 01:01:18.008" starttime="20180324 01:01:17.376"></status>
+</kw>
+<status status="PASS" endtime="20180324 01:01:18.008" starttime="20180324 01:01:16.696"></status>
+</kw>
+<kw name="Set Variable" library="BuiltIn">
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<arguments>
+<arg>testcreate1@test.com</arg>
+</arguments>
+<assign>
+<var>${email}</var>
+</assign>
+<msg timestamp="20180324 01:01:18.009" level="INFO">${email} = testcreate1@test.com</msg>
+<status status="PASS" endtime="20180324 01:01:18.009" starttime="20180324 01:01:18.008"></status>
+</kw>
+<kw name="Set Variable" library="BuiltIn">
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<arguments>
+<arg>testcreate1</arg>
+</arguments>
+<assign>
+<var>${username}</var>
+</assign>
+<msg timestamp="20180324 01:01:18.010" level="INFO">${username} = testcreate1</msg>
+<status status="PASS" endtime="20180324 01:01:18.010" starttime="20180324 01:01:18.009"></status>
+</kw>
+<kw name="Set Variable" library="BuiltIn">
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<arguments>
+<arg>testcreate</arg>
+</arguments>
+<assign>
+<var>${firstname}</var>
+</assign>
+<msg timestamp="20180324 01:01:18.011" level="INFO">${firstname} = testcreate</msg>
+<status status="PASS" endtime="20180324 01:01:18.011" starttime="20180324 01:01:18.010"></status>
+</kw>
+<kw name="Set Variable" library="BuiltIn">
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<arguments>
+<arg>tester</arg>
+</arguments>
+<assign>
+<var>${lastname}</var>
+</assign>
+<msg timestamp="20180324 01:01:18.011" level="INFO">${lastname} = tester</msg>
+<status status="PASS" endtime="20180324 01:01:18.011" starttime="20180324 01:01:18.011"></status>
+</kw>
+<kw name="Set Variable" library="BuiltIn">
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<arguments>
+<arg>TeamA</arg>
+</arguments>
+<assign>
+<var>${team}</var>
+</assign>
+<msg timestamp="20180324 01:01:18.012" level="INFO">${team} = TeamA</msg>
+<status status="PASS" endtime="20180324 01:01:18.012" starttime="20180324 01:01:18.012"></status>
+</kw>
+<kw name="Delete User By Email" library="db-users.keyword">
+<arguments>
+<arg>${email}</arg>
+</arguments>
+<kw name="Connect To Postgresql Database" library="common.keyword">
+<kw name="Connect To Database" library="DatabaseLibrary">
+<doc>Loads the DB API 2.0 module given `dbapiModuleName` then uses it to</doc>
+<arguments>
+<arg>psycopg2</arg>
+<arg>${DB_NAME}</arg>
+<arg>${DB_USERNAME}</arg>
+<arg>${DB_PASSWORD}</arg>
+<arg>${DB_HOSTNAME}</arg>
+<arg>${DB_PORT}</arg>
+</arguments>
+<msg timestamp="20180324 01:01:18.053" level="INFO">Connecting using : psycopg2.connect(database=de8l5buj6j3i1s, user=bnanpldhbmltdo, password=394471855cb890591b1cbc85c528724abb2691eb5c9414695cfa28d10843a7a2, host=ec2-54-83-192-68.compute-1.amazonaws.com, port=5432) </msg>
+<status status="PASS" endtime="20180324 01:01:20.083" starttime="20180324 01:01:18.013"></status>
+</kw>
+<status status="PASS" endtime="20180324 01:01:20.083" starttime="20180324 01:01:18.013"></status>
+</kw>
+<kw name="Execute Sql String" library="DatabaseLibrary">
+<doc>Executes the sqlString as SQL commands. Useful to pass arguments to your sql. Set optional input `sansTran` to</doc>
+<arguments>
+<arg>DELETE FROM users WHERE email = '${email}'</arg>
+</arguments>
+<msg timestamp="20180324 01:01:20.084" level="INFO">Executing : Execute SQL String  |  DELETE FROM users WHERE email = 'testcreate1@test.com' </msg>
+<status status="PASS" endtime="20180324 01:01:21.004" starttime="20180324 01:01:20.084"></status>
+</kw>
+<kw name="Log To Console" library="BuiltIn">
+<doc>Logs the given message to the console.</doc>
+<arguments>
+<arg>Delete user complete</arg>
+</arguments>
+<status status="PASS" endtime="20180324 01:01:21.005" starttime="20180324 01:01:21.005"></status>
+</kw>
+<kw name="Disconnect From Database" library="DatabaseLibrary">
+<doc>Disconnects from the database.</doc>
+<msg timestamp="20180324 01:01:21.006" level="INFO">Executing : Disconnect From Database</msg>
+<status status="PASS" endtime="20180324 01:01:21.006" starttime="20180324 01:01:21.006"></status>
+</kw>
+<status status="PASS" endtime="20180324 01:01:21.006" starttime="20180324 01:01:18.012"></status>
+</kw>
+<kw name="Fill Input Create User Form And Submit" library="user.keyword">
+<arguments>
+<arg>${email}</arg>
+<arg>${username}</arg>
+<arg>${firstname}</arg>
+<arg>${lastname}</arg>
+<arg>${team}</arg>
+</arguments>
+<kw name="Input Text" library="Selenium2Library">
+<doc>Types the given `text` into text field identified by `locator`.</doc>
+<arguments>
+<arg>${user_input_email}</arg>
+<arg>${email}</arg>
+</arguments>
+<msg timestamp="20180324 01:01:21.008" level="INFO">Typing text 'testcreate1@test.com' into text field 'id=email'</msg>
+<status status="PASS" endtime="20180324 01:01:22.158" starttime="20180324 01:01:21.008"></status>
+</kw>
+<kw name="Input Text" library="Selenium2Library">
+<doc>Types the given `text` into text field identified by `locator`.</doc>
+<arguments>
+<arg>${user_input_username}</arg>
+<arg>${username}</arg>
+</arguments>
+<msg timestamp="20180324 01:01:22.159" level="INFO">Typing text 'testcreate1' into text field 'id=username'</msg>
+<status status="PASS" endtime="20180324 01:01:23.199" starttime="20180324 01:01:22.158"></status>
+</kw>
+<kw name="Input Text" library="Selenium2Library">
+<doc>Types the given `text` into text field identified by `locator`.</doc>
+<arguments>
+<arg>${user_input_firstname}</arg>
+<arg>${firstname}</arg>
+</arguments>
+<msg timestamp="20180324 01:01:23.200" level="INFO">Typing text 'testcreate' into text field 'id=firstName'</msg>
+<status status="PASS" endtime="20180324 01:01:24.241" starttime="20180324 01:01:23.199"></status>
+</kw>
+<kw name="Input Text" library="Selenium2Library">
+<doc>Types the given `text` into text field identified by `locator`.</doc>
+<arguments>
+<arg>${user_input_lastname}</arg>
+<arg>${lastname}</arg>
+</arguments>
+<msg timestamp="20180324 01:01:24.242" level="INFO">Typing text 'tester' into text field 'id=lastName'</msg>
+<status status="PASS" endtime="20180324 01:01:25.281" starttime="20180324 01:01:24.241"></status>
+</kw>
+<kw name="Select Team In User Form" library="user.keyword">
+<arguments>
+<arg>${team}</arg>
+</arguments>
+<kw name="Input Text" library="Selenium2Library">
+<doc>Types the given `text` into text field identified by `locator`.</doc>
+<arguments>
+<arg>${user_input_team}</arg>
+<arg>${team}</arg>
+</arguments>
+<msg timestamp="20180324 01:01:25.282" level="INFO">Typing text 'TeamA' into text field 'id=team'</msg>
+<status status="PASS" endtime="20180324 01:01:26.294" starttime="20180324 01:01:25.282"></status>
+</kw>
+<kw name="Set Variable" library="BuiltIn">
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<arguments>
+<arg>//div[contains(@class,'menuable__content__active')]//a</arg>
+</arguments>
+<assign>
+<var>${firstItemMatchingTeamLocator}</var>
+</assign>
+<msg timestamp="20180324 01:01:26.295" level="INFO">${firstItemMatchingTeamLocator} = //div[contains(@class,'menuable__content__active')]//a</msg>
+<status status="PASS" endtime="20180324 01:01:26.295" starttime="20180324 01:01:26.295"></status>
+</kw>
+<kw name="Click Element" library="Selenium2Library">
+<doc>Click element identified by `locator`.</doc>
+<arguments>
+<arg>${firstItemMatchingTeamLocator}</arg>
+</arguments>
+<msg timestamp="20180324 01:01:26.296" level="INFO">Clicking element '//div[contains(@class,'menuable__content__active')]//a'.</msg>
+<status status="PASS" endtime="20180324 01:01:26.971" starttime="20180324 01:01:26.295"></status>
+</kw>
+<status status="PASS" endtime="20180324 01:01:26.971" starttime="20180324 01:01:25.281"></status>
+</kw>
+<kw name="Click Element" library="Selenium2Library">
+<doc>Click element identified by `locator`.</doc>
+<arguments>
+<arg>${user_btn_save_form}</arg>
+</arguments>
+<msg timestamp="20180324 01:01:26.972" level="INFO">Clicking element 'id=btn-save-form'.</msg>
+<status status="PASS" endtime="20180324 01:01:27.662" starttime="20180324 01:01:26.971"></status>
+</kw>
+<kw name="Wait Until Element Is Not Visible" library="Selenium2Library">
+<doc>Waits until element specified with `locator` is not visible.</doc>
+<arguments>
+<arg>${user_form}</arg>
+<arg>${TIMEOUT}</arg>
+</arguments>
+<status status="PASS" endtime="20180324 01:01:29.169" starttime="20180324 01:01:27.662"></status>
+</kw>
+<status status="PASS" endtime="20180324 01:01:29.169" starttime="20180324 01:01:21.007"></status>
+</kw>
+<kw name="Query User By Email" library="db-users.keyword">
+<arguments>
+<arg>${email}</arg>
+</arguments>
+<assign>
+<var>${result}</var>
+</assign>
+<kw name="Connect To Postgresql Database" library="common.keyword">
+<kw name="Connect To Database" library="DatabaseLibrary">
+<doc>Loads the DB API 2.0 module given `dbapiModuleName` then uses it to</doc>
+<arguments>
+<arg>psycopg2</arg>
+<arg>${DB_NAME}</arg>
+<arg>${DB_USERNAME}</arg>
+<arg>${DB_PASSWORD}</arg>
+<arg>${DB_HOSTNAME}</arg>
+<arg>${DB_PORT}</arg>
+</arguments>
+<msg timestamp="20180324 01:01:29.173" level="INFO">Connecting using : psycopg2.connect(database=de8l5buj6j3i1s, user=bnanpldhbmltdo, password=394471855cb890591b1cbc85c528724abb2691eb5c9414695cfa28d10843a7a2, host=ec2-54-83-192-68.compute-1.amazonaws.com, port=5432) </msg>
+<status status="PASS" endtime="20180324 01:01:31.451" starttime="20180324 01:01:29.171"></status>
+</kw>
+<status status="PASS" endtime="20180324 01:01:31.451" starttime="20180324 01:01:29.171"></status>
+</kw>
+<kw name="Query" library="DatabaseLibrary">
+<doc>Uses the input `selectStatement` to query for the values that will be returned as a list of tuples. Set optional</doc>
+<arguments>
+<arg>SELECT usr_id, email, username FROM users WHERE email = '${email}'</arg>
+</arguments>
+<assign>
+<var>${result}</var>
+</assign>
+<msg timestamp="20180324 01:01:31.452" level="INFO">Executing : Query  |  SELECT usr_id, email, username FROM users WHERE email = 'testcreate1@test.com' </msg>
+<msg timestamp="20180324 01:01:32.449" level="INFO">${result} = [(6, 'testcreate1@test.com', 'testcreate1')]</msg>
+<status status="PASS" endtime="20180324 01:01:32.449" starttime="20180324 01:01:31.451"></status>
+</kw>
+<kw name="Disconnect From Database" library="DatabaseLibrary">
+<doc>Disconnects from the database.</doc>
+<msg timestamp="20180324 01:01:32.450" level="INFO">Executing : Disconnect From Database</msg>
+<status status="PASS" endtime="20180324 01:01:32.450" starttime="20180324 01:01:32.449"></status>
+</kw>
+<kw name="Return From Keyword" library="BuiltIn">
+<doc>Returns from the enclosing user keyword.</doc>
+<arguments>
+<arg>${result[0]}</arg>
+</arguments>
+<msg timestamp="20180324 01:01:32.451" level="INFO">Returning from the enclosing user keyword.</msg>
+<status status="PASS" endtime="20180324 01:01:32.451" starttime="20180324 01:01:32.450"></status>
+</kw>
+<msg timestamp="20180324 01:01:32.452" level="INFO">${result} = (6, 'testcreate1@test.com', 'testcreate1')</msg>
+<status status="PASS" endtime="20180324 01:01:32.452" starttime="20180324 01:01:29.170"></status>
+</kw>
+<kw name="Should Be Equal" library="BuiltIn">
+<doc>Fails if the given objects are unequal.</doc>
+<arguments>
+<arg>${result[1]}</arg>
+<arg>${email}</arg>
+</arguments>
+<msg timestamp="20180324 01:01:32.453" level="INFO">Argument types are:
+&lt;type 'str'&gt;
+&lt;type 'unicode'&gt;</msg>
+<status status="PASS" endtime="20180324 01:01:32.453" starttime="20180324 01:01:32.452"></status>
+</kw>
+<kw name="Should Be Equal" library="BuiltIn">
+<doc>Fails if the given objects are unequal.</doc>
+<arguments>
+<arg>${result[2]}</arg>
+<arg>${username}</arg>
+</arguments>
+<msg timestamp="20180324 01:01:32.453" level="INFO">Argument types are:
+&lt;type 'str'&gt;
+&lt;type 'unicode'&gt;</msg>
+<status status="PASS" endtime="20180324 01:01:32.454" starttime="20180324 01:01:32.453"></status>
+</kw>
+<kw type="teardown" name="Close All Browsers" library="Selenium2Library">
+<doc>Closes all open browsers and resets the browser cache.</doc>
+<status status="PASS" endtime="20180324 01:01:32.816" starttime="20180324 01:01:32.454"></status>
+</kw>
+<tags>
+<tag>create</tag>
+<tag>desktop</tag>
+<tag>high</tag>
+<tag>regression</tag>
+<tag>user-management</tag>
+</tags>
+<status status="PASS" endtime="20180324 01:01:32.817" critical="yes" starttime="20180324 01:00:59.492"></status>
+</test>
+<status status="PASS" endtime="20180324 01:01:32.819" starttime="20180324 01:00:41.592"></status>
+</suite>
+<status status="PASS" endtime="20180324 01:01:32.821" starttime="20180324 00:59:56.805"></status>
+</suite>
+<statistics>
+<total>
+<stat fail="0" pass="5">Critical Tests</stat>
+<stat fail="0" pass="5">All Tests</stat>
+</total>
+<tag>
+<stat fail="0" pass="1">create</stat>
+<stat fail="0" pass="5">desktop</stat>
+<stat fail="0" pass="5">high</stat>
+<stat fail="0" pass="3">login</stat>
+<stat fail="0" pass="5">regression</stat>
+<stat fail="0" pass="2">user-management</stat>
+</tag>
+<suite>
+<stat fail="0" id="s1" name="Testcases" pass="5">Testcases</stat>
+<stat fail="0" id="s1-s1" name="Login" pass="3">Testcases.Login</stat>
+<stat fail="0" id="s1-s2" name="User-Management" pass="2">Testcases.User-Management</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>

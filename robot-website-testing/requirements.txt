@@ -1,0 +1,7 @@
+robotframework
+robotframework-selenium2library
+robotframework-databaselibrary
+robotframework-httplibrary
+robotframework-excellibrary
+robotframework-requests
+psycopg2-binary
