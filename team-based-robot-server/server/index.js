@@ -9,8 +9,8 @@ import dotenv from "dotenv"
 import express from "express"
 import expressValidator from "express-validator"
 import routers from "./routes"
-import SocketIO from 'socket.io'
-import http from 'http'
+import SocketIO from "socket.io"
+import http from "http"
 
 dotenv.load()
 const app = express()
@@ -61,7 +61,6 @@ app.use((err, req, res, next) => {
 // app.listen(port, host)
 const server = http.Server(app)
 const io = SocketIO(server)
-
 
 server.listen(port, host, () => {
   console.log("Server listening to whatever")
