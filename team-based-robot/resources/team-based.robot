@@ -7,9 +7,6 @@ TB Open Browser To Landing Page
 TB Change Resolution To Desktop
 	Set Window Size	1400	860
 
-TB Change Resolution To Tablet
-	Set Window Size	800	1024
-
 TB Change Resolution To Mobile
 	Set Window Size	375	667
 
