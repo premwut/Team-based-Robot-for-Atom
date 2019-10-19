@@ -29,3 +29,6 @@ TB Verify Login Failure Dialog Is Visible
 
 TB Verify Admin Page Is Visible
 	Wait Until Element Is Visible	${admin_div_container}	${TIMEOUT}
+
+TB Change Resolution To Tablet
+	Set Window Size	800	1024

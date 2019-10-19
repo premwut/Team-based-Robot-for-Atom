@@ -2,7 +2,6 @@
 
 import fs from "fs-plus"
 import opn from "opn"
-import io from "socket.io-client"
 import { CompositeDisposable } from 'atom'
 import { saveKeyword, searchKeyword } from './keywords'
 import { updateTeamBaseMenu } from './menu'
@@ -29,7 +28,7 @@ export default class TeamBasedRobot {
     this.autocomplete = autocomplete
     this.connectionConfig = { endpoint: state.endpoint, username: state.username, password: state.password }
     this.connection = new Connection(this.connectionConfig)
-    this.socket = io('http://localhost:3300')
+    this.socket = this.connection.socket
   }
 
   initialize() {
@@ -40,9 +39,7 @@ export default class TeamBasedRobot {
       runnerView: new RunnerView({}),
     }
 
-    this.socket.on('test', (data) => {
-      console.log(data)
-    })
+  
 
     this.subscriptions = new CompositeDisposable();
     this.subscriptions.add(atom.commands.add('atom-workspace', {

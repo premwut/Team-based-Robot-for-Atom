@@ -69,5 +69,10 @@ server.listen(port, host, () => {
 io.on("connection", function (socket) {
   console.log("connected")
   io.sockets.emit("test", {message: "test message from server"})
+
+  socket.on("keywordUpdated", (data) => {
+    io.sockets.emit("sendNotification", {message: "Someone just updated keyword(s)"})
+  })
+
 })
 console.log("Server listening on " + host + ":" + port) // eslint-disable-line no-console

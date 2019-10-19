@@ -3,6 +3,7 @@
 import axios from "axios"
 import axiosRetry from "axios-retry"
 import base64 from "base-64"
+import io from "socket.io-client"
 
 export default class Connection {
 
@@ -13,6 +14,7 @@ export default class Connection {
       baseURL: `${config.endpoint}/api`,
       timeout: 15000
     })
+    this.socket = io(config.endpoint)
     axiosRetry(this.axios, { retries: 1 })
   }
 
@@ -99,6 +101,7 @@ export default class Connection {
     try {
       const url = `/keyword/create`
       const { data: response } = await this.axios.post(url, keywordInfo, this.headerToken)
+      this.socket.emit('keywordUpdated', {})
       return [...response.data.keywords]
     } catch (e) {
       throw e
