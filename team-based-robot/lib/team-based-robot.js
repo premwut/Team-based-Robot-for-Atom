@@ -41,8 +41,13 @@ export default class TeamBasedRobot {
 
     this.socket.on('sendNotification', (data) => {
       console.table(data)
-      atom.notifications.addInfo(data.message)
-      this.reloadKeyword(true)
+      const {id, message} = data
+      // console.table({id: id, socketId: this.socket.id})
+      const isNotSaver = id !== this.socket.id
+      if (isNotSaver) {
+        atom.notifications.addInfo(data.message)
+        this.reloadKeyword(true)
+      }
     })
 
     this.subscriptions = new CompositeDisposable();

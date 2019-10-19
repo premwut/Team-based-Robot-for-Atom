@@ -68,10 +68,9 @@ server.listen(port, host, () => {
 
 io.on("connection", function (socket) {
   console.log("connected")
-  io.sockets.emit("test", {message: "test message from server"})
 
   socket.on("keywordUpdated", (data) => {
-    io.sockets.emit("sendNotification", {message: "Someone just updated keyword(s)"})
+    io.sockets.emit("sendNotification", {...data, message: "Someone just updated keyword(s)"})
   })
 
 })

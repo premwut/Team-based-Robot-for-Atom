@@ -101,7 +101,7 @@ export default class Connection {
     try {
       const url = `/keyword/create`
       const { data: response } = await this.axios.post(url, keywordInfo, this.headerToken)
-      this.socket.emit('keywordUpdated', {})
+      this.socket.emit('keywordUpdated', {id: this.socket.id})
       return [...response.data.keywords]
     } catch (e) {
       throw e
