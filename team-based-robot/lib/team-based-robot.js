@@ -39,7 +39,11 @@ export default class TeamBasedRobot {
       runnerView: new RunnerView({}),
     }
 
-  
+    this.socket.on('sendNotification', (data) => {
+      console.table(data)
+      atom.notifications.addInfo(data.message)
+      this.reloadKeyword(true)
+    })
 
     this.subscriptions = new CompositeDisposable();
     this.subscriptions.add(atom.commands.add('atom-workspace', {
