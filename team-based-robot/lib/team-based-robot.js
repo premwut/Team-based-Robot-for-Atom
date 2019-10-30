@@ -160,7 +160,6 @@ export default class TeamBasedRobot {
   }
 
   async testConnection() {
-    console.log("test", 123)
     try {
       await this.connection.login()
       atom.notifications.addSuccess("Server ready to use")
