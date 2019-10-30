@@ -66,7 +66,7 @@ export default class TeamBasedRobot {
       'team-based-robot:run-tag': () => this.views.runnerView.show({ type: RUN_TYPE.TAG }),
       'team-based-robot:manage-member': () => this.openBrowserManageTeamMember(),
       'team-based-robot:assign-team': () => this.openBrowserAssignTeamToProject(),
-      'team-based-robot:testcase': () => this.views.saveTestcaseView.show()
+      'team-based-robot:testcase': () => this.saveTestcase(this.views.saveTestcaseView)
      }));
 
     this.autocomplete.load()
@@ -198,6 +198,10 @@ export default class TeamBasedRobot {
     .catch(error => {
       console.log("Open browser failure ", error)
     })
+  }
+
+  saveTestcase(view) {
+    view.show()
   }
 
   toggle() {

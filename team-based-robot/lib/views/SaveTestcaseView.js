@@ -22,11 +22,16 @@ export default class {
   render() {
     return (
       <div>
-        <header>
-          <span className="icon icon-x clickable" onClick={() => this.modalPanel.hide()} />
-          <hr/>
+        <header className="header-wrapper">
+          <div ref="closeButton" className="close-button pull-right">
+            <span className="icon icon-x clickable" onClick={() => this.modalPanel.hide()} />
+          </div>
+
+          <div className="content-wrapper">
+            <h1> What the heck? </h1>
+          </div>
         </header>
-        <h1>SaveTestcaseView</h1>
+        <div className="title">SaveTestcaseView</div>
       </div>
     )
   }
