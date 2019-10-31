@@ -35,6 +35,7 @@ export const Tables = Object.freeze({
   ROLE: 'role',
   TEAM: 'team',
   USER: 'users',
+  TESTCASE: 'testcase',
 })
 
 export const Fields = Object.freeze({
