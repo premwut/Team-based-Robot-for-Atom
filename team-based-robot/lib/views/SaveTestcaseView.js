@@ -26,12 +26,13 @@ export default class {
           <div ref="closeButton" className="close-button pull-right">
             <span className="icon icon-x clickable" onClick={() => this.modalPanel.hide()} />
           </div>
-          <div className="title">Save Testcase to Server</div>
+          <div className="title">SaveTestcaseView</div>
         </header>
 
         <div className="content-wrapper">
           <h1> What the heck? </h1>
         </div>
+
       </div>
     )
   }
