@@ -78,6 +78,12 @@ export const Fields = Object.freeze({
   USERNAME: 'username',
   PASSWORD: 'password',
   EMAIL: 'email',
+
+  TC_ID: 'tc_id',
+  TC_NAME: 'tc_name',
+  TC_VERSION: 'tc_version',
+  TC_IS_PASSED: 'tc_is_passed',
+
 })
 
 export const Models = Object.freeze({
