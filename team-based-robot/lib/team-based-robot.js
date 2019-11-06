@@ -15,6 +15,7 @@ import SaveKeywordView from './views/SaveKeywordView'
 import SearchKeywordView from "./views/SearchKeywordView"
 import GenerateView from './views/GenerateView'
 import RunnerView from './views/RunnerView'
+import SaveTestcaseView from './views/SaveTestcaseView'
 
 export default class TeamBasedRobot {
 
@@ -37,6 +38,7 @@ export default class TeamBasedRobot {
       searchKeywordView: new SearchKeywordView({}, this),
       generateView: new GenerateView({}),
       runnerView: new RunnerView({}),
+      saveTestcaseView: new SaveTestcaseView({}, this)
     }
 
     this.socket.on('sendNotification', (data) => {
@@ -64,6 +66,7 @@ export default class TeamBasedRobot {
       'team-based-robot:run-tag': () => this.views.runnerView.show({ type: RUN_TYPE.TAG }),
       'team-based-robot:manage-member': () => this.openBrowserManageTeamMember(),
       'team-based-robot:assign-team': () => this.openBrowserAssignTeamToProject(),
+      'team-based-robot:testcase': () => this.saveTestcase(this.views.saveTestcaseView)
      }));
 
     this.autocomplete.load()
@@ -106,6 +109,7 @@ export default class TeamBasedRobot {
         workspaceView.classList.add(PACKAGE_NAME)
       }
       await this.syncKeywordsToTeamBaseRobotFile()
+      await this.syncTestcases()
     }
   }
 
@@ -157,12 +161,21 @@ export default class TeamBasedRobot {
   }
 
   async testConnection() {
-    console.log("test", 123)
     try {
       await this.connection.login()
       atom.notifications.addSuccess("Server ready to use")
     } catch (e) {
       atom.notifications.addError("Can't connect to server")
+    }
+  }
+
+  async syncTestcases() {
+    try {
+      const testcases = await this.connection.getTestcases()
+      this.testcases = [...testcases ]
+      console.log(testcases, 'syncTestcases')
+    } catch (e) {
+      console.error(e)
     }
   }
 
@@ -196,6 +209,10 @@ export default class TeamBasedRobot {
     .catch(error => {
       console.log("Open browser failure ", error)
     })
+  }
+
+  saveTestcase(view) {
+    view.show()
   }
 
   toggle() {
