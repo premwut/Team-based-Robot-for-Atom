@@ -6,7 +6,6 @@ import projectRouter from "./project.router"
 import roleRouter from "./role.router"
 import teamRouter from "./team.router"
 import userRouter from "./user.router"
-import testcaseRouter from "./testcase.router"
 
 const router = Router()
 
@@ -18,7 +17,6 @@ router.use(projectRouter)
 router.use(teamRouter)
 router.use(roleRouter)
 router.use(keywordRouter)
-router.use(testcaseRouter)
 
 router.use("/*", (req, res) => res.status(404).json({ error: "not found" }))
 

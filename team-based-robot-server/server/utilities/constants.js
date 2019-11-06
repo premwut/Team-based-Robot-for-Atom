@@ -30,12 +30,11 @@ export const Tables = Object.freeze({
   FEATURE_ROLE: 'feature_role',
   KEYWORD: 'keywords',
   KEYWORD_MAPPING: 'keyword_mapping',
-  PERMISSION: 'permission',
-  PROJECT: 'project',
-  ROLE: 'role',
-  TEAM: 'team',
-  USER: 'users',
-  TESTCASE: 'testcase',
+  PERMISSION: 'permission',  
+  PROJECT: 'project',  
+  ROLE: 'role',  
+  TEAM: 'team',  
+  USER: 'users',  
 })
 
 export const Fields = Object.freeze({
@@ -72,19 +71,13 @@ export const Fields = Object.freeze({
 
   TEAM_ID: 'team_id',
   TEAM_NAME: 'team_name',
-
+  
   USR_ID: 'usr_id',
   USR_FNAME: 'usr_fname',
   USR_LNAME: 'usr_lname',
   USERNAME: 'username',
   PASSWORD: 'password',
   EMAIL: 'email',
-
-  TC_ID: 'tc_id',
-  TC_NAME: 'tc_name',
-  TC_VERSION: 'tc_version',
-  TC_IS_PASSED: 'tc_is_passed',
-
 })
 
 export const Models = Object.freeze({
@@ -92,11 +85,11 @@ export const Models = Object.freeze({
   FEATURE_ROLE: 'FeatureRole',
   KEYWORD: 'Keyword',
   KEYWORD_MAPPING: 'KeywordMapping',
-  PERMISSION: 'Permission',
-  PROJECT: 'Project',
-  ROLE: 'Role',
-  TEAM: 'Team',
-  USER: 'User',
+  PERMISSION: 'Permission',  
+  PROJECT: 'Project',  
+  ROLE: 'Role',  
+  TEAM: 'Team',  
+  USER: 'User',  
 })
 
 
@@ -110,4 +103,3 @@ export const PERMISSION_API   = '/permission'
 export const PROJECT_API      = '/project'
 export const TEAM_API         = '/team'
 export const KEYWORD_API      = '/keyword'
-export const TESTCASE_API     = '/testcase'

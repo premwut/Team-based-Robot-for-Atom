@@ -67,18 +67,6 @@ export default class Connection {
     }
   }
 
-  async getTestcases() {
-    if(!this.token) return false;
-    try {
-      const url = `/testcase/list`
-      const { data: response } = await this.axios.get(url, this.headerToken)
-      console.log(response, 'data')
-      return [...response.data.testcases]
-    } catch (e) {
-      throw e
-    }
-  }
-
   async getProjects() {
     try {
       const url = `/project/shareable`

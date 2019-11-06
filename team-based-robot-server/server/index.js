@@ -70,7 +70,8 @@ io.on("connection", function (socket) {
   console.log("connected")
 
   socket.on("keywordUpdated", (data) => {
-    io.sockets.emit("sendNotification", { ...data, message: "Someone just updated keyword(s)" })
+    io.sockets.emit("sendNotification", {...data, message: "Someone just updated keyword(s)"})
   })
+
 })
 console.log("Server listening on " + host + ":" + port) // eslint-disable-line no-console
