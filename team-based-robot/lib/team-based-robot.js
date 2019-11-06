@@ -38,7 +38,7 @@ export default class TeamBasedRobot {
       searchKeywordView: new SearchKeywordView({}, this),
       generateView: new GenerateView({}),
       runnerView: new RunnerView({}),
-      saveTestcaseView: new SaveTestcaseView({})
+      saveTestcaseView: new SaveTestcaseView({}, this)
     }
 
     this.socket.on('sendNotification', (data) => {
@@ -109,6 +109,7 @@ export default class TeamBasedRobot {
         workspaceView.classList.add(PACKAGE_NAME)
       }
       await this.syncKeywordsToTeamBaseRobotFile()
+      await this.syncTestcases()
     }
   }
 
@@ -165,6 +166,16 @@ export default class TeamBasedRobot {
       atom.notifications.addSuccess("Server ready to use")
     } catch (e) {
       atom.notifications.addError("Can't connect to server")
+    }
+  }
+
+  async syncTestcases() {
+    try {
+      const testcases = await this.connection.getTestcases()
+      this.testcases = [...testcases ]
+      console.log(testcases, 'syncTestcases')
+    } catch (e) {
+      console.error(e)
     }
   }
 

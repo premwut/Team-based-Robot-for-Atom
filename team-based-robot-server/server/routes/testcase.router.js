@@ -7,7 +7,7 @@ import Testcase from "../controllers/testcase.controller"
 const router = Router()
 const ctrl = new Testcase()
 
-router.get(`${TESTCASE_API}/list`, ctrl.get.bind(ctrl))
+router.get(`${TESTCASE_API}/list`, authn, ctrl.get.bind(ctrl))
 router.post(`${TESTCASE_API}/create`, ctrl.create.bind(ctrl))
 
 export default router
