@@ -6,6 +6,7 @@ exports.up = function (knex, Promise) {
       table.increments("kwd_tc_id")
       table.integer("kwd_id").references("keywords.kwd_id")
       table.integer("tc_id").references("testcase.tc_id")
+      table.timestamps()
     }),
   ])
 }
