@@ -313,6 +313,9 @@ exports.seed = function (knex, Promise) {
           knex.schema.raw(`ALTER SEQUENCE feature_fea_id_seq RESTART WITH ${++featureData.length}`),
           knex.schema.raw(`ALTER SEQUENCE feature_role_fea_role_id_seq RESTART WITH ${++featureRoleData.length}`),
           knex.schema.raw(`ALTER SEQUENCE permission_pms_id_seq RESTART WITH ${++permissionData.length}`),
+          knex.schema.raw(`ALTER SEQUENCE keywords_kwd_id_seq RESTART WITH ${++keywordData.length}`),
+          knex.schema.raw(`ALTER SEQUENCE testcase_tc_id_seq RESTART WITH ${++testcaseData.length}`),
+          knex.schema.raw(`ALTER SEQUENCE keyword_testcase_kwd_tc_id_seq RESTART WITH ${++keywordTestcaseData.length}`),
         ])
       })
       .then(function() {
