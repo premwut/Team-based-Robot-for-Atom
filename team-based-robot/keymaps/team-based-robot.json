@@ -6,6 +6,7 @@
     "alt-a": "team-based-robot:run-all",
     "alt-s": "team-based-robot:run-suite",
     "alt-t": "team-based-robot:run-tag",
+    "alt-r": "team-based-robot:run-failed",
 
     "alt-m": "team-based-robot:new-project-simple",
     "alt-l": "team-based-robot:new-project-large",
