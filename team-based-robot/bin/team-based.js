@@ -50,6 +50,7 @@ program.command("run <script> [variables] [outputDir] [tags]")
   .option("-a --all", "Run all testcase")
   .option("-s --suite", "Run single test suite")
   .option("-t --tag", "Run width tag")
+  .option("-r --rerunfailed", "Rerun failed testcase(s)")
   .action((script, variables, outputDir, tags, options) => {
     // console.log("Run robot script ", script, variables, tags)
     let variableCommand = ""
@@ -66,7 +67,12 @@ program.command("run <script> [variables] [outputDir] [tags]")
     if (tags) tag = tags;
 
     if (options.all || options.suite) {
-      const command = `robot ${variableCommand} -d ${output} ${script}`
+      let command = ``
+      if (options.rerunfailed) {
+        command = `robot ${variableCommand} -d ${output} -R ${output}/output.xml ${script}`
+      } else {
+        command = `robot ${variableCommand} -d ${output} ${script}`
+      }
       console.log(chalk.green(`[Command] robot${variableCommand} ${script}`))
       shell.exec(command, (code, stdout, stderr) => {
         if (code === 0) console.log(chalk.green(`Run robot completed`))

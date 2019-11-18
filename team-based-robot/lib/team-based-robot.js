@@ -62,6 +62,7 @@ export default class TeamBasedRobot {
       'team-based-robot:run-all': () => this.views.runnerView.show({ type: RUN_TYPE.ALL }),
       'team-based-robot:run-suite': () => this.views.runnerView.show({ type: RUN_TYPE.SUITE }),
       'team-based-robot:run-tag': () => this.views.runnerView.show({ type: RUN_TYPE.TAG }),
+      'team-based-robot:run-failed': () => this.views.runnerView.show({ type: RUN_TYPE.SUITE, isRerunfailed: true}),
       'team-based-robot:manage-member': () => this.openBrowserManageTeamMember(),
       'team-based-robot:assign-team': () => this.openBrowserAssignTeamToProject(),
      }));

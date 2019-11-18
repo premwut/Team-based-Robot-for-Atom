@@ -183,6 +183,7 @@ export default class RunnerView {
         args.push(this.suiteFilePath)
         args.push(this.runnerVariable)
         args.push(outputPath)
+        if(this.props.isRerunfailed) args.push("-r")
         break
       case RUN_TYPE.TAG:
         args.push("-t")
@@ -193,8 +194,13 @@ export default class RunnerView {
         break
     }
 
-    const stderr = (output) => console.log(output)
+    const stderr = (output) => {
+      this.refs.editorProcess.element.focus()
+      this.processOutput = `${this.processOutput}${output}`
+      this.refs.editorProcess.setText(this.processOutput)
+    }
     const stdout = (output) => {
+      console.log(output, 'output')
       this.refs.editorProcess.element.focus()
       this.processOutput = `${this.processOutput}${output}`
       this.refs.editorProcess.setText(this.processOutput)

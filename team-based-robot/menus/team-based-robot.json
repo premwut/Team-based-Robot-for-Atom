@@ -21,6 +21,10 @@
             "command": "team-based-robot:run-tag"
           },
           {
+            "label": "Rerun failed testcases",
+            "command": "team-based-robot:run-failed"
+          },
+          {
             "label": "Add Keyword",
             "command": "team-based-robot:keyword-add"
           }
