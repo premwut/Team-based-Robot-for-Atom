@@ -69,7 +69,7 @@ program.command("run <script> [variables] [outputDir] [tags]")
     if (options.all || options.suite) {
       let command = ``
       if (options.rerunfailed) {
-        command = `robot ${variableCommand} -d ${output} -R ${output}/output.xml ${script}`
+        command = `robot ${variableCommand} -d ${output}(rerunfailed) -R ${output}(rerunfailed)/output.xml ${script}`
       } else {
         command = `robot ${variableCommand} -d ${output} ${script}`
       }

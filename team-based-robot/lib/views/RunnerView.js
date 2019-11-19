@@ -168,7 +168,14 @@ export default class RunnerView {
 
   runCommand() {
     this.processOutput = ""
-    const outputPath = fs.normalize(`${getRootDirPath()}${this.runnerOutputPath}`)
+    let outputPath = fs.normalize(`${getRootDirPath()}${this.runnerOutputPath}`)
+    console.log(outputPath, 'outputPath')
+    if (this.props.isRerunfailed) {
+      if (!fs.existsSync(outputPath + '(rerunfailed)')) {
+        outputPath += '(rerunfailed)'
+        console.log(outputPath, 'outputPath(rerunfailed)')
+      }
+    }
     const command = 'team-based-robot'
     const args = ["run"]
     switch (this.props.type) {
@@ -183,7 +190,10 @@ export default class RunnerView {
         args.push(this.suiteFilePath)
         args.push(this.runnerVariable)
         args.push(outputPath)
-        if(this.props.isRerunfailed) args.push("-r")
+        if(this.props.isRerunfailed) {
+          const rerunPathExist = fs.existsSync(`${outputPath}(rerunfailed)`)
+          if (rerunPathExist) args.push("-r")
+        }
         break
       case RUN_TYPE.TAG:
         args.push("-t")
