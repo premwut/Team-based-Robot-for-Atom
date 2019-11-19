@@ -75,9 +75,16 @@ program.command("run <script> [variables] [outputDir] [tags]")
       }
       console.log(chalk.green(`[Command] robot${variableCommand} ${script}`))
       shell.exec(command, (code, stdout, stderr) => {
-        if (code === 0) console.log(chalk.green(`Run robot completed`))
+        if (code === 0) {
+          console.log(chalk.green(`Run robot completed`))
+        }
         else console.log(chalk.red(`Run robot failure`))
+        let mergeCommand = `rebot -o ${output}(rerunfailed)/output.xml --merge ${output}/output.xml`
+        shell.exec(mergeCommand, (code, stdout, stderr) => {
+          console.log(code, 'code')
+        })
       })
+
 
     } else if (options.tag) {
       const command = `robot ${variableCommand} -i ${tag} -d ${output} ${script}`
