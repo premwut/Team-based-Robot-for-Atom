@@ -6,6 +6,7 @@ const chalk = require('chalk')
 const shell = require('shelljs')
 const clone = require('git-clone')
 const pathUtils = require('path')
+const convertXML = require('xml-js')
 
 const appName = 'Create Robot App'
 
@@ -79,12 +80,7 @@ program.command("run <script> [variables] [outputDir] [tags]")
           console.log(chalk.green(`Run robot completed`))
         }
         else console.log(chalk.red(`Run robot failure`))
-        if (options.rerunfailed) {
-          // let mergeCommand = `rebot -o ${output}(rerunfailed)/output.xml --merge ${output}/output.xml`
-          // shell.exec(mergeCommand, (code, stdout, stderr) => {
-          //   console.log(code, 'code')
-          // })
-        } else {
+        if (!options.rerunfailed) {
           let mergeCommand = `rebot -o ${output}(rerunfailed)/output.xml --merge ${output}/output.xml`
           shell.exec(mergeCommand, (code, stdout, stderr) => {
             console.log(code, 'code')
