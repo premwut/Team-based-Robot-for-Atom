@@ -1,6 +1,6 @@
 'use babel';
 
-import { parseKeywordSelection } from './autocomplete-robot/parse-robot'
+import { parseKeywordSelection, isRobot } from './autocomplete-robot/parse-robot'
 
 export const parseKeywordContent = strKeyword => {
   const keywordInfo = parseKeywordSelection(strKeyword)
@@ -11,11 +11,18 @@ export const parseKeywordContent = strKeyword => {
 export const saveKeyword = view => {
   const editor = atom.workspace.getActiveTextEditor()
   if (editor) {
-    let selection = editor.getSelectedText()
-    if (selection === "") {
-      selection = editor.getText()
+    // const grammar = editor.getGrammar()['name']
+    // const isRobotFile = grammar === 'Robot Framework'
+    const fileContent = editor.getText()
+    if (isRobot(fileContent)) {
+      let selection = editor.getSelectedText()
+      if (selection === "") {
+        selection = editor.getText()
+      }
+      editKeyword(view, selection)
+    } else {
+      atom.notifications.addError('This is not .robot file.')
     }
-    editKeyword(view, selection)
   }
 }
 
