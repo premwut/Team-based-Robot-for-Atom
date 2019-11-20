@@ -4,6 +4,7 @@
 import etch from "etch"
 import path from "path"
 import fs from "fs-plus"
+import convertXML from 'xml-js'
 import { TextEditor, CompositeDisposable, BufferedProcess } from "atom"
 import { PACKAGE_NAME, RUN_TYPE, getRootDirPath } from '../utils'
 import { isRobot } from '../autocomplete-robot/parse-robot'
@@ -169,14 +170,11 @@ export default class RunnerView {
   runCommand() {
     this.processOutput = ""
     let outputPath = fs.normalize(`${getRootDirPath()}${this.runnerOutputPath}`)
-    console.log(outputPath, 'outputPath')
-    console.log(atom.workspace.getActiveTextEditor().getPath())
-    // if (this.props.isRerunfailed) {
-    //   if (!fs.existsSync(outputPath + '(rerunfailed)')) {
-    //     outputPath += '(rerunfailed)'
-    //     console.log(outputPath, 'outputPath(rerunfailed)')
-    //   }
-    // }
+
+    const outputXML = fs.readFileSync('test-results/output.xml').toString()
+    const outputJSON = convertXML.xml2json(outputXML, {compact: true, space: 4})
+    console.log(JSON.parse(outputJSON)['robot'])
+    
     const command = 'team-based-robot'
     const args = ["run"]
     switch (this.props.type) {
