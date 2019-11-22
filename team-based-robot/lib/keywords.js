@@ -28,6 +28,8 @@ export const editKeyword = (view, content) => {
       original: `${x.name}${x.content}`
     }
   })
+  console.log("editKeyword in keywords.js ");
+  console.log(keywords);
   view.show({ keywords })
 }
 

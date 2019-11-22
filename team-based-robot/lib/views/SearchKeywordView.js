@@ -83,12 +83,16 @@ export default class SearchKeywordView {
     const sharingKeywords = keywords.map(k => {
       const content = k.kwd_doc === "" ? `${k.kwd_content}` : `\n\t[Documentation]\t${k.kwd_doc}${k.kwd_content}`
       const original = `${k.kwd_name}${content}`
+      console.log("In searchKey displaySharingKeyword Fn"); // new
+      console.log(k.kwd_review); // new
       return {
         id: k.kwd_id,
         name: k.kwd_name,
         doc: k.kwd_doc,
         desc: k.kwd_desc,
         content: k.kwd_content,
+        isAprv: k.kwd_is_approved, // new
+        review: k.kwd_review, // new
         isShared: true,
         original
       }
@@ -111,6 +115,7 @@ export default class SearchKeywordView {
 
   onKeywordSelected(keyword, index) {
     this.keywordSelectedIndex = index
+    console.log("onKeywordSelected =>" + JSON.stringify(keyword));
     if (keyword) {
       this.bufferContent.setText(keyword.original)
       this.bufferDesc.setText(keyword.desc)

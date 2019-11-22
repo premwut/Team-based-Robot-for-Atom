@@ -35,7 +35,6 @@ export const Tables = Object.freeze({
   ROLE: 'role',
   TEAM: 'team',
   USER: 'users',
-  KEYWORD_TESTCASE: 'keyword_testcase',
   TESTCASE: 'testcase',
 })
 
@@ -67,10 +66,10 @@ export const Fields = Object.freeze({
 
   TC_ID: 'tc_id',
   TC_NAME: 'tc_name',
-  TC_VERSION: 'tc_version',
   TC_IS_PASSED: 'tc_is_passed',
-
-  KWD_TC_ID: 'kwd_tc_id',
+  TC_RUN_START: 'tc_run_start',
+  TC_RUN_END: 'tc_run_end',
+  TC_RUN_DATE: 'tc_run_date',
 
   PROJ_ID: 'proj_id',
   PROJ_NAME: 'proj_name',
@@ -102,8 +101,6 @@ export const Models = Object.freeze({
   TEAM: 'Team',
   USER: 'User',
   TESTCASE: 'Testcase',
-  KEYWORD_TESTCASE: 'KeywordTestcase',
-
 })
 
 

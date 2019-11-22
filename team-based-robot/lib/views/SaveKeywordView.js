@@ -18,10 +18,12 @@ export default class SaveKeywordView {
     this.panel = atom.workspace.addModalPanel({ item: this.element, visible: false })
     this.bufferContent = this.refs.editorContent.buffer
     this.bufferDesc = this.refs.editorDesc.buffer
+    this.bufferReview = this.refs.editorReview.buffer // editText buffer
     this.subscriptions = new CompositeDisposable()
 
     this.editorDescSubscription = this.refs.editorDesc.onDidChange(this.onEditorDescChange.bind(this))
     this.editorContentSubscription = this.refs.editorContent.onDidChange(this.onEditorContentChange.bind(this))
+    this.editorReviewSubscription = this.refs.editorReview.onDidChange(this.onEditorReviewChange.bind(this)) // listen change on buffer then do the function
 
     // Set grammar to content editor
     const [robotGrammar] = atom.grammars.getGrammars().filter(x => x.name === "Robot Framework")
@@ -29,6 +31,7 @@ export default class SaveKeywordView {
       this.refs.editorContent.setGrammar(robotGrammar)
     }
     this.refs.editorContent.element.setHeight(220)
+    this.refs.editorReview.element.setHeight(110) // initialize review edittext height
 
     this.updateProps(props)
   }
@@ -45,11 +48,15 @@ export default class SaveKeywordView {
   }
 
   updateProps(props) {
+    console.log("updateProps(props) - this.keywords");
+    console.log(this.keywords);
     this.keywords = !props.keywords ? [] : props.keywords.map(k => {
       return { ...k, id: undefined, desc: "" }
     })
 
     const [keyword] = this.keywords
+    console.log("updateProps(props)");
+    console.log(keyword);
     if (keyword) {
       this.onKeywordSelected(keyword, 0)
     }
@@ -113,8 +120,12 @@ export default class SaveKeywordView {
         ])
 
         // Update keyword
+        console.log("verifyKeywordName() - this.keywords");
+        console.log(keywords);
+        console.log("this.keywords = ");
+        console.log(this.keywords);
         this.keywords = this.keywords.map((keyword, index) => {
-          const { kwd_id, kwd_desc, isExist, isOwner, shared: sharedServer } = keywords[index]
+          const { kwd_id, kwd_desc, kwd_review, isExist, isOwner, shared: sharedServer } = keywords[index]
           const verifyChecked = (x, type, key) => {
             const checked = x.checked || sharedServer[type].includes(x[key])
             return {...x, checked }
@@ -123,19 +134,30 @@ export default class SaveKeywordView {
           if (isExist && kwd_id > 0) { // exist keyword from server
             keyword.id = kwd_id
             keyword.desc = kwd_desc
+            keyword.review = kwd_review
             shared.projects = shared.projects.map(x => verifyChecked(x, "projects", "proj_id"))
             shared.teams = shared.teams.map(x => verifyChecked(x, "teams", "team_id"))
             shared.users = shared.users.map(x => verifyChecked(x, "users", "usr_id"))
           }
           return { ...keyword, isExist, isOwner, shared }
-        })
+        }) // Here a fucked keywords
         this.isVerified = true
+
         this.onKeywordSelected(this.keywords[0], 0)
       } else {
         etch.update(this)
       }
     } catch (e) {
       console.error("[SaveView] Verify keyword name failure", e)
+    }
+  }
+
+  async onApproveKeywordReviewClicked() {
+    try {
+      this.refs.editorReview.setText("")
+      etch.update(this)
+    } catch (e) {
+      console.error("[SaveView] Approve keyword failure", e)
     }
   }
 
@@ -154,6 +176,9 @@ export default class SaveKeywordView {
         }
         const keywordEditor = parseKeywordContent(keyword.original)
         console.log("keyword editor ", keywordEditor);
+        console.log("kwEditor = " + keywordEditor.contentWithoutDoc)
+        console.log("kw = " + keyword.contentWithoutDoc)
+        console.log("keyword.review = " + keyword.review);
         return {
           id: keyword.id,
           name: keyword.name,
@@ -161,6 +186,8 @@ export default class SaveKeywordView {
           doc: keywordEditor.documentation || keyword.documentation || "",
           desc: keyword.desc,
           deprecate: false,
+          review: keyword.review, // new
+          isAprv: keyword.review === "", // new
           shared: { teamIds, projectIds, userIds }
         }
       })
@@ -181,6 +208,11 @@ export default class SaveKeywordView {
     this.keywordSelectedIndex = index
     this.bufferContent.setText(keyword.original)
     this.bufferDesc.setText(keyword.desc)
+    console.log(keyword);
+    console.log("bufferDesc.setText(keyword.desc) = " + keyword.desc);
+    console.log("keyword.review = " + keyword.review);
+    console.log("Shit why error");
+    this.bufferReview.setText(keyword.review || "")
     etch.update(this)
   }
 
@@ -233,11 +265,15 @@ export default class SaveKeywordView {
     if (applyAllIndex >= 0) {
       const applyAllKeyword = this.keywords[applyAllIndex]
       const { projects, teams, users } = applyAllKeyword.shared
+      console.log("onApplyToAllChanged1");
+      console.log(this.keywords);
       this.keywords = this.keywords.map((keyword, index) => {
         let { shared } = keyword
         if (index !== applyAllIndex) { // set another keyword
           shared = { applyAll: false, projects, teams, users }
         }
+        console.log("onApplyToAllChanged2");
+        console.log(this.keywords);
         return {
           ...keyword,
           shared
@@ -257,6 +293,13 @@ export default class SaveKeywordView {
     const desc = this.refs.editorDesc.getText()
     const index = this.keywordSelectedIndex
     this.keywords[index].desc = desc
+  }
+
+  // get new text from editText then assign into keywords array
+  onEditorReviewChange() {
+    const review = this.refs.editorReview.getText()
+    const index = this.keywordSelectedIndex
+    this.keywords[index].review = review
   }
 
   get isVisible() {
@@ -304,6 +347,9 @@ export default class SaveKeywordView {
   render () {
     const iconButton = this.isLoading ? 'spinner' : 'icon icon-cloud-upload'
     const buttonClasses = `btn btn-lg btn-info ${iconButton}`
+    const buttonClassesAprv = `btn btn-lg btn-info`
+    console.log("Before render")
+    console.log(this.keywords);
     const keywordItems = this.keywords.map((keyword, i) => {
       const itemClass = `list-item ${ i === this.keywordSelectedIndex ? 'selected' : ''}`
 
@@ -375,10 +421,18 @@ export default class SaveKeywordView {
                   <label>Keyword Description</label>
                   <TextEditor ref="editorDesc" mini={true} placeholderText="Keyword Description" />
                 </div>
+                <div className="input-block">
+                  <label>Keyword Review</label>
+                  <TextEditor ref="editorReview" autoHeight={false} placeholderText="Keyword Review" />
+                </div>
               </div>
-            </section>
-          </section>
 
+            </section>
+            <div className="review-actions">
+              <button className={buttonClassesAprv}
+                onClick={() => this.onApproveKeywordReviewClicked()}>Approve Keyword</button>
+            </div>
+          </section>
           <section className="shared-block">
             <ShareKeywordView ref="shareView"
               type={this.shareType}
@@ -406,6 +460,7 @@ export default class SaveKeywordView {
     this.tooltipSubscriptions && this.tooltipSubscriptions.dispose()
     this.editorDescSubscription && this.editorDescSubscription.dispose()
     this.editorContentSubscription && this.editorContentSubscription.dispose()
+    this.editorReviewSubscription && this.editorReviewSubscription.dispose()
     return etch.destroy(this)
   }
 }

@@ -129,83 +129,12 @@ const featureRoleData = [
 const keywordMapping = 'keyword_mapping'
 
 const keywords = 'keywords'
-const keywordData = [
-  {
-    kwd_id: 1,
-    kwd_name: 'Open Browser To Landing Page',
-    kwd_content: '\r\n\t[Arguments]\t${BROWSER}=chrome\r\n\tOpen browser\t${WEB_BASE_URL}\t${BROWSER}\r\n\tSet Selenium Speed\t${SPEED}',
-    kwd_deprecate: false,
-    kwd_desc: '',
-    kwd_doc: '',
-    kwd_is_approved: false,
-    kwd_review: false,
-  },
-  {
-    kwd_id: 2,
-    kwd_name: 'Change Resolution To Desktop',
-    kwd_content: '\r\n\tSet Window Size\t1400\t860',
-    kwd_deprecate: false,
-    kwd_desc: '',
-    kwd_doc: '',
-    kwd_is_approved: false,
-    kwd_review: false,
-  },
-  {
-    kwd_id: 3,
-    kwd_name: 'Go To Login Page',
-    kwd_content: '\r\n\tGo To\t${WEB_BASE_URL}/login\r\n\tWait Until Element Is Visible\t${login_div_block}',
-    kwd_deprecate: false,
-    kwd_desc: '',
-    kwd_doc: '',
-    kwd_is_approved: false,
-    kwd_review: false,
-  },
-  {
-    kwd_id: 4,
-    kwd_name: 'Fill Input Login Form',
-    kwd_content: '\r\n\t[Arguments]\t${username}\t${password}\r\n\tInput Text\t${login_input_username}\t${username}\r\n\tInput Password\t${login_input_password}\t${password}\r\n\tClick Element\t${login_button_submit}\r\n\tSleep\t2',
-    kwd_deprecate: false,
-    kwd_desc: '',
-    kwd_doc: '',
-    kwd_is_approved: false,
-    kwd_review: false,
-  },
-  {
-    kwd_id: 5,
-    kwd_name: 'Verify Admin Page Is Visible',
-    kwd_content: '\r\n\tWait Until Element Is Visible\t${admin_div_container}\t${TIMEOUT}',
-    kwd_deprecate: false,
-    kwd_desc: '',
-    kwd_doc: '',
-    kwd_is_approved: false,
-    kwd_review: false,
-  },
-]
 
 const testcase = 'testcase'
-const testcaseData = [
-  {
-    tc_id: 1,
-    tc_name: 'Desktop - Login by admin success',
-    tc_tag: ' \n [Tags]    login     regression     high     desktop \n ',
-    tc_version: '1.1.1.1',
-    tc_is_passed: false,
-  },
-]
-
-const keywordTestcase = 'keyword_testcase'
-const keywordTestcaseData = [
-  { kwd_tc_id: 1 },
-  { kwd_tc_id: 2 },
-  { kwd_tc_id: 3 },
-  { kwd_tc_id: 4 },
-  { kwd_tc_id: 5 },
-]
 
 exports.seed = function (knex, Promise) {
 
   const deleteTables = [
-    keywordTestcase,
     testcase,
     keywordMapping,
     keywords,
@@ -225,9 +154,6 @@ exports.seed = function (knex, Promise) {
     { table: team, data: teamData },
     { table: user, data: userData },
     { table: featureRole, data: featureRoleData },
-    { table: keywords, data: keywordData},
-    { table: testcase, data: testcaseData},
-    { table: keywordTestcase, data: keywordTestcaseData},
   ]
 
   const deleteCommands = deleteTables.map(table => knex(table).del());
@@ -289,22 +215,6 @@ exports.seed = function (knex, Promise) {
         ])
       })
       .then(function() {
-        console.log('================ Update testcase')
-        return Promise.all([
-          knex(testcase).where({ tc_id: 1 }).update({ usr_id: 3 }) //Somchai ID ??
-        ])
-      })
-      .then(function() {
-        console.log('================ Update testcase_keyword')
-        return Promise.all([
-          knex(keywordTestcase).where({ kwd_tc_id: 1 }).update({ kwd_id: 1, tc_id: 1 }),
-          knex(keywordTestcase).where({ kwd_tc_id: 2 }).update({ kwd_id: 2, tc_id: 1 }),
-          knex(keywordTestcase).where({ kwd_tc_id: 3 }).update({ kwd_id: 3, tc_id: 1 }),
-          knex(keywordTestcase).where({ kwd_tc_id: 4 }).update({ kwd_id: 4, tc_id: 1 }),
-          knex(keywordTestcase).where({ kwd_tc_id: 5 }).update({ kwd_id: 5, tc_id: 1 }),
-        ])
-      })
-      .then(function() {
         console.log('================ Update sequence')
         return Promise.all([
           knex.schema.raw(`ALTER SEQUENCE team_team_id_seq RESTART WITH ${++teamData.length}`),
@@ -313,9 +223,6 @@ exports.seed = function (knex, Promise) {
           knex.schema.raw(`ALTER SEQUENCE feature_fea_id_seq RESTART WITH ${++featureData.length}`),
           knex.schema.raw(`ALTER SEQUENCE feature_role_fea_role_id_seq RESTART WITH ${++featureRoleData.length}`),
           knex.schema.raw(`ALTER SEQUENCE permission_pms_id_seq RESTART WITH ${++permissionData.length}`),
-          knex.schema.raw(`ALTER SEQUENCE keywords_kwd_id_seq RESTART WITH ${++keywordData.length}`),
-          knex.schema.raw(`ALTER SEQUENCE testcase_tc_id_seq RESTART WITH ${++testcaseData.length}`),
-          knex.schema.raw(`ALTER SEQUENCE keyword_testcase_kwd_tc_id_seq RESTART WITH ${++keywordTestcaseData.length}`),
         ])
       })
       .then(function() {
