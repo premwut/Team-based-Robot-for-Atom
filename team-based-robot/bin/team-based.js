@@ -87,10 +87,10 @@ program.command("run <script> [variables] [outputDir] [tags]")
             console.log(code, 'code')
           })
         } else {
-          // let mergeCommand = `rebot -d ${output}/output.xml --merge ${output}(rerunfailed)/output.xml`
-          // shell.exec(mergeCommand, (code, stdout, stderr) => {
-          //   console.log(code, 'code')
-          // })
+          let mergeCommand = `rebot -o ${output}/output.xml --merge ${output}(rerunfailed)/output.xml`
+          shell.exec(mergeCommand, (code, stdout, stderr) => {
+            console.log(code, 'code')
+          })
         }
       })
 

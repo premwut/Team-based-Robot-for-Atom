@@ -50,7 +50,7 @@ export default class ReportView {
       statItems = totalStat.map(item => {
         const attributes = item._attributes
               text = item._text
-        
+
         return (
           <div className="test-results">
             <div className="title"> {text} </div>
@@ -69,19 +69,26 @@ export default class ReportView {
           const statusClass = status === 'PASS' ? 'text-success' : 'text-error'
 
           const testcaseData = item.test
-          const testcaseItems = testcaseData.map(item => {
-            console.log(item, 'testcaseItems')
-            const attributes = item._attributes
-                  name = attributes.name
-                  tcStatus = item.status._attributes.status
-                  tcStatusClass = tcStatus === 'PASS' ? 'text-success' : 'text-error'
-            console.log(tcStatus, tcStatusClass)
-            return (
-                <li> {name} - <span className={tcStatusClass}> {tcStatus} </span> </li>
-            )
-          })
+          let testcaseItems
 
-          console.log(item, 'item')
+          if (Array.isArray(testcaseData)) {
+            testcaseItems = testcaseData.map(item => {
+              const attributes = item._attributes
+                    name = attributes.name
+                    tcStatus = item.status._attributes.status
+                    tcStatusClass = tcStatus === 'PASS' ? 'text-success' : 'text-error'
+              return (
+                  <li> {name} - <span className={tcStatusClass}> {tcStatus} </span> </li>
+              )
+            })
+          } else {
+            let attributes = testcaseData._attributes
+                name = attributes.name
+                tcStatus = testcaseData.status._attributes.status
+                tcStatusClass = tcStatus === 'PASS' ? 'text-success' : 'text-error'
+            testcaseItems = <li> { name } - <span className={tcStatusClass}> {tcStatus} </span></li>
+          }
+
           return (
             <div>
               <h3> {attributes.name} (Result: <span className={statusClass}>{status}</span>) </h3>
@@ -97,17 +104,25 @@ export default class ReportView {
               statusClass = status === 'PASS' ? 'text-success' : 'text-error'
               test = suite.test
 
-        testcaseItems = test.map(item => {
-          let attributes = item._attributes
+        if (Array.isArray(test)) {
+          testcaseItems = test.map(item => {
+            let attributes = item._attributes
+                name = attributes.name
+                tcStatus = item.status._attributes.status
+                tcStatusClass = tcStatus === 'PASS' ? 'text-success' : 'text-error'
+
+                return (
+                  <li> { name } - <span className={tcStatusClass}> {tcStatus} </span></li>
+                )
+
+          })
+        } else {
+          let attributes = test._attributes
               name = attributes.name
-              tcStatus = item.status._attributes.status
+              tcStatus = test.status._attributes.status
               tcStatusClass = tcStatus === 'PASS' ? 'text-success' : 'text-error'
-
-              return (
-                <li> { name } - <span className={tcStatusClass}> {tcStatus} </span></li>
-              )
-
-        })
+          testcaseItems = <li> { name } - <span className={tcStatusClass}> {tcStatus} </span></li>
+        }
 
 
         suiteItems =  (
