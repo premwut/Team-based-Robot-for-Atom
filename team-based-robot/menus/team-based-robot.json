@@ -52,6 +52,10 @@
         {
           "label": "Reload Keywords",
           "command": "team-based-robot:keyword-reload"
+        },
+        {
+          "label": "View Latest Test Results",
+          "command": "team-based-robot:show-report"
         }
       ]
     }

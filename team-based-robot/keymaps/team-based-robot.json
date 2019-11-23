@@ -12,7 +12,8 @@
     "alt-l": "team-based-robot:new-project-large",
 
     "ctrl-alt-s": "team-based-robot:keyword-search",
-    "ctrl-alt-r": "team-based-robot:keyword-reload"
+    "ctrl-alt-r": "team-based-robot:keyword-reload",
+    "ctrl-alt-l": "team-based-robot:show-report"
   },
   ".team-based-robot atom-text-editor": {
     "ctrl-alt-a": "team-based-robot:keyword-add"
