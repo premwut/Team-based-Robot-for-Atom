@@ -423,14 +423,14 @@ export default class SaveKeywordView {
                 </div>
                 <div className="input-block">
                   <label>Keyword Review</label>
-                  <TextEditor ref="editorReview" autoHeight={false} placeholderText="Keyword Review" />
+                  <TextEditor ref="editorReview" autoHeight={false} placeholderText="Add comment for reviewing this keyword" />
                 </div>
               </div>
 
             </section>
             <div className="review-actions">
               <button className={buttonClassesAprv}
-                onClick={() => this.onApproveKeywordReviewClicked()}>Approve Keyword</button>
+                onClick={() => this.onApproveKeywordReviewClicked()}>Approve and Clear</button>
             </div>
           </section>
           <section className="shared-block">
