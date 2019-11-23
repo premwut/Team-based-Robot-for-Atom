@@ -171,10 +171,11 @@ export default class RunnerView {
     this.processOutput = ""
     let outputPath = fs.normalize(`${getRootDirPath()}${this.runnerOutputPath}`)
 
-    const outputXML = fs.readFileSync('test-results/output.xml').toString()
-    const outputJSON = convertXML.xml2json(outputXML, {compact: true, space: 4})
-    console.log(JSON.parse(outputJSON)['robot'])
-    
+    // let outputXML
+    // if (fs.existsSync(outputPath)) outputXML = fs.readFileSync(`${outputPath}/output.xml`).toString()
+    // const outputJSON = convertXML.xml2json(outputXML, {compact: true, space: 4})
+    // console.log(JSON.parse(outputJSON)['robot'])
+
     const command = 'team-based-robot'
     const args = ["run"]
     switch (this.props.type) {
