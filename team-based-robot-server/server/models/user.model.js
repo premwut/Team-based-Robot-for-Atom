@@ -57,6 +57,12 @@ class User extends BaseModel {
     return this.hasMany(Models.KEYWORD_MAPPING, Fields.USR_ID)
   }
 
+  testcase () {
+    return this.hasMany(Models.TESTCASE, Fields.TC_ID)
+  }
+
+  static dependents = ["testcase"]
+
   static findByUsername (username) {
     return this.forge()
       .query({where: { username: username }})

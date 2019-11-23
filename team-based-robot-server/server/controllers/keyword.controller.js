@@ -27,6 +27,7 @@ export default class KeywordController extends BaseController {
 
   async getList (req, res) {
     try {
+      console.log("I'm in getList")
       const isPaging = isPagination(req)
       const { page, limit: pageSize } = req.query
       const keywords = await (isPaging ? Keyword.forge().fetchPage({ page, pageSize }) : Keyword.forge().fetchAll())
