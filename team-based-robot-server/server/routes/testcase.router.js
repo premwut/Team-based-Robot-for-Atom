@@ -16,9 +16,14 @@ const manageRead = [
   [FeatureType.MANAGE_USER, PermissionType.READ],
 ]
 
-// mapping route
-router.post(`${TESTCASE_API}/list`, authn, authz(manageWrite), ctrl.create.bind(ctrl))
-router.get(`${TESTCASE_API}/create`, authn, authz(manageRead), ctrl.getList.bind(ctrl))
-router.delete(`${TESTCASE_API}/list`, authn, authz(manageWrite), ctrl.delete.bind(ctrl))
+console.log("Here!, I'm in testcase router")
 
+// mapping route
+router.get(`${TESTCASE_API}/list`, ctrl.getList.bind(ctrl))
+router.post(`${TESTCASE_API}/create`, ctrl.create.bind(ctrl))
+router.delete(`${TESTCASE_API}/list`, ctrl.delete.bind(ctrl))
+// router.get(`${TESTCASE_API}/list`, authn, authz(manageRead), ctrl.getList.bind(ctrl))
+// router.post(`${TESTCASE_API}/create`, authn, authz(manageWrite), ctrl.create.bind(ctrl))
+// router.delete(`${TESTCASE_API}/list`, authn, authz(manageWrite), ctrl.delete.bind(ctrl))
+// router.get(`${TESTCASE_API}/hello`, ctrl.hello.bind(ctrl))
 export default router
