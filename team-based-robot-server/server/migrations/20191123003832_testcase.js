@@ -5,9 +5,9 @@ exports.up = function (knex, Promise) {
     knex.schema.createTable(tableName, (table) => {
       table.increments("tc_id")
       table.string("tc_name").unique()
-      table.boolean("tc_is_passed")
-      table.time("tc_start_run")
-      table.time("tc_end_run")
+      table.boolean("tc_run_result")
+      table.time("tc_run_start")
+      table.time("tc_run_end")
       table.date("tc_run_date")
       table.integer("usr_id").references("users.usr_id")
       table.timestamps()

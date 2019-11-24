@@ -66,7 +66,7 @@ export const Fields = Object.freeze({
 
   TC_ID: 'tc_id',
   TC_NAME: 'tc_name',
-  TC_IS_PASSED: 'tc_is_passed',
+  TC_RUN_RESULT: 'tc_run_result',
   TC_RUN_START: 'tc_run_start',
   TC_RUN_END: 'tc_run_end',
   TC_RUN_DATE: 'tc_run_date',

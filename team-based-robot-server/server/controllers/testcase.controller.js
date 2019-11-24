@@ -5,36 +5,54 @@ import BaseController from "./base.controller"
 import bookshelf from "../config/bookshelf"
 
 export default class TestcaseController extends BaseController {
-  async getList (req, res) {
+  async hello (req, rea) {
     try {
-      const isPaging = isPagination(req)
-      const { page, limit: pageSize } = req.query
-      const testcases = await (isPaging ? Testcase.forge().fetchPage({ page, pageSize }) : Testcase.forge().fetchAll())
-      this.success(res, { testcases, ...getPagination(testcases) })
+      console.log("Hello, world Aai Sussususus")
+      this.success(req)
     } catch (error) {
       this.failure(req, error)
     }
   }
 
+  async getList (req, res) {
+    try {
+      console.log("Here!, I'm in testcase controller get fn")
+      // const isPaging = isPagination(req)
+      // const { page, limit: pageSize } = req.query
+      // const testcases = await (isPaging ? Testcase.forge().fetchPage({ page, pageSize }) : Testcase.forge().fetchAll())
+      // this.success(res, { testcases, ...getPagination(testcases) })
+      const testcaseC = await Testcase.forge().fetchAll()
+      this.success(res, testcaseC)
+    } catch (error) {
+      this.failure(res, error)
+    }
+  }
+
   async create (req, res) {
     try {
+      console.log("Here!, I'm in testcase controller create fn")
+
       const errors = this.validateCreateRequest(req)
       if (errors) throw errors
+      console.log(JSON.stringify(req.body))
       const { testcases, usr_id } = req.body
-      const testcaseCollection = Testcases.forge({ usr_id })
+      const testcaseCollection = Testcases.forge()
+      console.log("testcasea = ")
+      console.log(testcases)
+      console.log("usr_id")
+      console.log(usr_id)
       testcases.forEach(item => {
-        const testcase = this.convertToKeyword(item)
+        const testcase = this.convertToTestcase(item, usr_id)
         testcaseCollection.push(testcase)
       })
-
       const data = await bookshelf.transaction(async (tx) => {
         const processList = [testcaseCollection.invokeThen("save", null, {transacting: tx})]
         const [testcaseSavedList] = await Promise.all(processList)
-        return { testcases: testcaseSavedList, usr_id: usr_id }
+        return {testcaseSavedList}
       })
       this.success(res, data)
     } catch (error) {
-      this.failure(req, error)
+      this.failure(res, error)
     }
   }
 
@@ -47,22 +65,22 @@ export default class TestcaseController extends BaseController {
     return req.validationErrors()
   }
 
-  convertToKeyword (data) {
+  convertToTestcase (data, usr_id) {
     if (!data) return undefined
     const {
-      id: tc_id,
       name: tc_name,
       result: tc_run_result,
       start: tc_run_start,
       end: tc_run_end,
       date: tc_run_date,
     } = data
-    return Testcase.forge({ tc_id, tc_name, tc_run_result, tc_run_start, tc_run_end, tc_run_date })
+    return Testcase.forge({ tc_name, tc_run_result, tc_run_start, tc_run_end, tc_run_date, usr_id })
   }
 
   async delete (req, res) {
     try {
-      const testcaseIdDeleteList = req.body.id_list
+      const [...testcaseIdDeleteList] = req.body.id_list
+      console.log(testcaseIdDeleteList)
       const data = await bookshelf.transaction(async (tx) => {
         testcaseIdDeleteList.forEach(async (tc_id) => {
           await Testcase.forge({ tc_id }).desytoy({ transacting: tx })
