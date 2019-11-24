@@ -55,7 +55,8 @@ export const saveTestcase = async (tbInstance) => {
   })
 
   console.log(outputData)
-
+  const { data: response } = await connection.saveTestcaseRun(outputData)
+  console.log(response, 'response')
 
   return outputData
 }
