@@ -123,8 +123,10 @@ export default class Connection {
     try {
       const url = `/testcase/create`
       const { data: response } = await this.axios.post(url, testcaseInfo, this.headerToken)
+      console.log(response, 'response')
       return [ ...response.data ]
     } catch (e) {
+      console.log(e)
       throw e
     }
   }

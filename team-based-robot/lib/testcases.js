@@ -29,7 +29,7 @@ export const saveTestcase = async (tbInstance) => {
     testResults = [ testResults ]
   }
 
-  let outputData = []
+  let outputData = { testcases: [], usr_id: currentUser.usr_id }
   testResults.map(suite => {
     console.log(suite, 'suite')
     let testcases = (Array.isArray(suite.test)) ? suite.test : [ suite.test ]
@@ -40,16 +40,13 @@ export const saveTestcase = async (tbInstance) => {
       [ tcRunDate[4], tcRunDate[5] ].join(''), [tcRunDate[6], tcRunDate[7]].join('') ].join('/')
 
       let input = {
-        testcases: {
           name: testcase._attributes.name,
           result: (tcStatus.status) === 'PASS' ? true : false,
           start: tcStatus.starttime.split(' ')[1],
           end: tcStatus.endtime.split(' ')[1],
           date: tcRunDate,
-        },
-        usr_id: currentUser.usr_id
       }
-      outputData.push(input)
+      outputData.testcases.push(input)
     })
 
   })
