@@ -6,7 +6,10 @@ import path from "path"
 import fs from "fs-plus"
 import convertXML from 'xml-js'
 import { TextEditor, CompositeDisposable, BufferedProcess } from "atom"
+
+
 import { PACKAGE_NAME, RUN_TYPE, getRootDirPath } from '../utils'
+import { saveTestcase } from '../testcases.js'
 import { isRobot } from '../autocomplete-robot/parse-robot'
 
 export default class RunnerView {
@@ -224,7 +227,9 @@ export default class RunnerView {
         this.processOutput = ""
         // this.refs.editorProcess.setText("")
         // this.hide()
+        saveTestcase(this.props.teambaseInstance)
       }
+
     }
     const process = new BufferedProcess({ command, args, stdout, stderr, exit })
   }
