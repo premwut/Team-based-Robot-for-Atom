@@ -2,8 +2,8 @@ import { Fields, Models, Tables } from "../utilities/constants"
 import bookshelf, { BaseModel } from "../config/bookshelf"
 
 class Testcase extends BaseModel {
-  get idAttribure () { return Fields.TC_ID }
-  get tableName () { return Tables.Testcase }
+  get idAttribute () { return Fields.TC_ID }
+  get tableName () { return Tables.TESTCASE }
   get hasTimestamps () { return true }
 
   initialize () {}
