@@ -97,12 +97,33 @@ export default class Connection {
     }
   }
 
+  async getProfile() {
+    try {
+      const url = `/user/profile`
+      const { data: response } = await this.axios.get(url, this.headerToken)
+      return response.data
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
   async saveKeywords(keywordInfo) {
     try {
       const url = `/keyword/create`
       const { data: response } = await this.axios.post(url, keywordInfo, this.headerToken)
       this.socket.emit('keywordUpdated', {id: this.socket.id})
+      console.log(response)
       return [...response.data.keywords]
+    } catch (e) {
+      throw e
+    }
+  }
+
+  async saveTestcaseRun(testcaseInfo) {
+    try {
+      const url = `/testcase/create`
+      const { data: response } = await this.axios.post(url, testcaseInfo, this.headerToken)
+      return [ ...response.data ]
     } catch (e) {
       throw e
     }
