@@ -31,7 +31,6 @@ export default class TestcaseController extends BaseController {
   async create (req, res) {
     try {
       console.log("Here!, I'm in testcase controller create fn")
-
       const errors = this.validateCreateRequest(req)
       if (errors) throw errors
       console.log(JSON.stringify(req.body))
@@ -79,12 +78,18 @@ export default class TestcaseController extends BaseController {
 
   async delete (req, res) {
     try {
-      const [...testcaseIdDeleteList] = req.body.id_list
-      console.log(testcaseIdDeleteList)
+      const { id_list } = req.body
+      const testcaseDeletingCollection = Testcases.forge()
+      id_list.forEach(async (tcId) => {
+        console.log(typeof (tcId))
+        testcaseDeletingCollection.push(Testcase.forge({ tc_id: tcId }))
+      })
+      console.log(testcaseDeletingCollection)
+      // const data = {}
       const data = await bookshelf.transaction(async (tx) => {
-        testcaseIdDeleteList.forEach(async (tc_id) => {
-          await Testcase.forge({ tc_id }).desytoy({ transacting: tx })
-        })
+        const processList = [testcaseDeletingCollection.invokeThen("destroy", null, {transacting: tx})]
+        const [testcaseDeletedList] = await Promise.all(processList)
+        return testcaseDeletedList
       })
       this.success(res, data)
     } catch (error) {
