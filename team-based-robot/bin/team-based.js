@@ -6,6 +6,7 @@ const chalk = require('chalk')
 const shell = require('shelljs')
 const clone = require('git-clone')
 const pathUtils = require('path')
+const convertXML = require('xml-js')
 
 const appName = 'Create Robot App'
 
@@ -50,6 +51,7 @@ program.command("run <script> [variables] [outputDir] [tags]")
   .option("-a --all", "Run all testcase")
   .option("-s --suite", "Run single test suite")
   .option("-t --tag", "Run width tag")
+  .option("-r --rerunfailed", "Rerun failed testcase(s)")
   .action((script, variables, outputDir, tags, options) => {
     // console.log("Run robot script ", script, variables, tags)
     let variableCommand = ""
@@ -66,12 +68,32 @@ program.command("run <script> [variables] [outputDir] [tags]")
     if (tags) tag = tags;
 
     if (options.all || options.suite) {
-      const command = `robot ${variableCommand} -d ${output} ${script}`
+      let command = ``
+      if (options.rerunfailed) {
+        command = `robot ${variableCommand} -d ${output}(rerunfailed) -R ${output}(rerunfailed)/output.xml ${script}`
+      } else {
+        command = `robot ${variableCommand} -d ${output} ${script}`
+      }
       console.log(chalk.green(`[Command] robot${variableCommand} ${script}`))
       shell.exec(command, (code, stdout, stderr) => {
-        if (code === 0) console.log(chalk.green(`Run robot completed`))
+        if (code === 0) {
+          console.log(chalk.green(`Run robot completed`))
+        }
         else console.log(chalk.red(`Run robot failure`))
+
+        if (!options.rerunfailed) {
+          let mergeCommand = `rebot -o ${output}(rerunfailed)/output.xml --merge ${output}/output.xml`
+          shell.exec(mergeCommand, (code, stdout, stderr) => {
+            console.log(code, 'code')
+          })
+        } else {
+          let mergeCommand = `rebot -o ${output}/output.xml --merge ${output}(rerunfailed)/output.xml`
+          shell.exec(mergeCommand, (code, stdout, stderr) => {
+            console.log(code, 'code')
+          })
+        }
       })
+
 
     } else if (options.tag) {
       const command = `robot ${variableCommand} -i ${tag} -d ${output} ${script}`

@@ -4,6 +4,7 @@
 import etch from "etch"
 import path from "path"
 import fs from "fs-plus"
+import convertXML from 'xml-js'
 import { TextEditor, CompositeDisposable, BufferedProcess } from "atom"
 import { PACKAGE_NAME, RUN_TYPE, getRootDirPath } from '../utils'
 import { isRobot } from '../autocomplete-robot/parse-robot'
@@ -168,7 +169,13 @@ export default class RunnerView {
 
   runCommand() {
     this.processOutput = ""
-    const outputPath = fs.normalize(`${getRootDirPath()}${this.runnerOutputPath}`)
+    let outputPath = fs.normalize(`${getRootDirPath()}${this.runnerOutputPath}`)
+
+    // let outputXML
+    // if (fs.existsSync(outputPath)) outputXML = fs.readFileSync(`${outputPath}/output.xml`).toString()
+    // const outputJSON = convertXML.xml2json(outputXML, {compact: true, space: 4})
+    // console.log(JSON.parse(outputJSON)['robot'])
+
     const command = 'team-based-robot'
     const args = ["run"]
     switch (this.props.type) {
@@ -183,6 +190,10 @@ export default class RunnerView {
         args.push(this.suiteFilePath)
         args.push(this.runnerVariable)
         args.push(outputPath)
+        if(this.props.isRerunfailed) {
+          const rerunPathExist = fs.existsSync(`${outputPath}(rerunfailed)`)
+          if (rerunPathExist) args.push("-r")
+        }
         break
       case RUN_TYPE.TAG:
         args.push("-t")
@@ -193,8 +204,13 @@ export default class RunnerView {
         break
     }
 
-    const stderr = (output) => console.log(output)
+    const stderr = (output) => {
+      this.refs.editorProcess.element.focus()
+      this.processOutput = `${this.processOutput}${output}`
+      this.refs.editorProcess.setText(this.processOutput)
+    }
     const stdout = (output) => {
+      console.log(output, 'output')
       this.refs.editorProcess.element.focus()
       this.processOutput = `${this.processOutput}${output}`
       this.refs.editorProcess.setText(this.processOutput)

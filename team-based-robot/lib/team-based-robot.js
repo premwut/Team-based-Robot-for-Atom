@@ -15,6 +15,7 @@ import SaveKeywordView from './views/SaveKeywordView'
 import SearchKeywordView from "./views/SearchKeywordView"
 import GenerateView from './views/GenerateView'
 import RunnerView from './views/RunnerView'
+import ReportView from './views/ReportView'
 
 export default class TeamBasedRobot {
 
@@ -37,6 +38,7 @@ export default class TeamBasedRobot {
       searchKeywordView: new SearchKeywordView({}, this),
       generateView: new GenerateView({}),
       runnerView: new RunnerView({}),
+      reportView: new ReportView({})
     }
 
     this.socket.on('sendNotification', (data) => {
@@ -62,8 +64,10 @@ export default class TeamBasedRobot {
       'team-based-robot:run-all': () => this.views.runnerView.show({ type: RUN_TYPE.ALL }),
       'team-based-robot:run-suite': () => this.views.runnerView.show({ type: RUN_TYPE.SUITE }),
       'team-based-robot:run-tag': () => this.views.runnerView.show({ type: RUN_TYPE.TAG }),
+      'team-based-robot:run-failed': () => this.views.runnerView.show({ type: RUN_TYPE.SUITE, isRerunfailed: true}),
       'team-based-robot:manage-member': () => this.openBrowserManageTeamMember(),
       'team-based-robot:assign-team': () => this.openBrowserAssignTeamToProject(),
+      'team-based-robot:show-report': () => this.views.reportView.show()
      }));
 
     this.autocomplete.load()

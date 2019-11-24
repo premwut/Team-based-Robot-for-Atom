@@ -6,12 +6,14 @@
     "alt-a": "team-based-robot:run-all",
     "alt-s": "team-based-robot:run-suite",
     "alt-t": "team-based-robot:run-tag",
+    "alt-r": "team-based-robot:run-failed",
 
     "alt-m": "team-based-robot:new-project-simple",
     "alt-l": "team-based-robot:new-project-large",
 
     "ctrl-alt-s": "team-based-robot:keyword-search",
-    "ctrl-alt-r": "team-based-robot:keyword-reload"
+    "ctrl-alt-r": "team-based-robot:keyword-reload",
+    "ctrl-alt-l": "team-based-robot:show-report"
   },
   ".team-based-robot atom-text-editor": {
     "ctrl-alt-a": "team-based-robot:keyword-add"
