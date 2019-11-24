@@ -127,11 +127,15 @@ const featureRoleData = [
 ]
 
 const keywordMapping = 'keyword_mapping'
+
 const keywords = 'keywords'
+
+const testcase = 'testcase'
 
 exports.seed = function (knex, Promise) {
 
   const deleteTables = [
+    testcase,
     keywordMapping,
     keywords,
     featureRole,

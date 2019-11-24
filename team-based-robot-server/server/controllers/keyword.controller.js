@@ -27,6 +27,7 @@ export default class KeywordController extends BaseController {
 
   async getList (req, res) {
     try {
+      console.log("I'm in getList")
       const isPaging = isPagination(req)
       const { page, limit: pageSize } = req.query
       const keywords = await (isPaging ? Keyword.forge().fetchPage({ page, pageSize }) : Keyword.forge().fetchAll())
@@ -74,11 +75,15 @@ export default class KeywordController extends BaseController {
           shared.projects = match.keywordMappings.map(x => x.proj_id).filter(x => x !== null)
           shared.teams = match.keywordMappings.map(x => x.team_id).filter(x => x !== null)
           shared.users = match.keywordMappings.map(x => x.usr_id).filter(x => x !== null)
-          const { kwd_id, kwd_name, kwd_desc } = match
+          const { kwd_id, kwd_name, kwd_desc, kwd_review, kwd_is_approved } = match
+          console.log("Match ---")
+          console.log(match)
           return {
             kwd_id,
             kwd_name,
             kwd_desc,
+            kwd_review,
+            kwd_is_approved,
             isExist: true,
             isOwner: ownerKeywords.length > 0,
             shared,
@@ -195,10 +200,15 @@ export default class KeywordController extends BaseController {
     if (!data) return undefined
     const {
       id: kwd_id,
-      name: kwd_name, content: kwd_content, desc: kwd_desc,
-      doc: kwd_doc, deprecate: kwd_deprecate,
+      name: kwd_name,
+      content: kwd_content,
+      desc: kwd_desc,
+      doc: kwd_doc,
+      deprecate: kwd_deprecate,
+      review: kwd_review, // new
+      isAprv: kwd_is_approved, // new
     } = data
-    return Keyword.forge({ kwd_id, kwd_name, kwd_content, kwd_desc, kwd_doc, kwd_deprecate })
+    return Keyword.forge({ kwd_id, kwd_name, kwd_content, kwd_desc, kwd_doc, kwd_deprecate, kwd_review, kwd_is_approved })
   }
 
   validateCreateRequest (req) {

@@ -39,6 +39,7 @@ export default {
       { text: "Keyword ID", align: "center", sortable: false },
       { text: "Keyword Name", align: "left", sortable: false },
       { text: "Keyword Description", align: "left", sortable: false },
+      { text: "Keyword Review", align: "center", sortable: false },
       { text: "Actions", align: "center", sortable: false },
     ],
     pagination: { rowsPerPage },
@@ -145,6 +146,12 @@ export default {
           <td class="text-xs-center">{{ props.item.kwd_id }}</td>
           <td class="text-xs-left">{{ props.item.kwd_name }}</td>
           <td class="text-xs-left">{{ props.item.kwd_desc }}</td>
+          <td class="text-xs-center">
+          <v-icon class="ma-2" color="teal" v-if="(props.item.kwd_is_approved)">thumb_up</v-icon>
+            <v-btn class="ma-2" text icon v-if="!(props.item.kwd_is_approved)">
+              <v-icon color="red">thumb_down</v-icon>
+            </v-btn>
+          </td>
           <td class="justify-center layout px-0">
             <v-btn :id="'edit-row-' + props.index" icon class="mx-0" @click="onInfoItemClicked(props.item)"
               :disabled="false">
