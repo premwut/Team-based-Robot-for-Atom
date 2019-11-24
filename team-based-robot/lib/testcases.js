@@ -40,12 +40,12 @@ export const saveTestcase = async (tbInstance) => {
       [ tcRunDate[4], tcRunDate[5] ].join(''), [tcRunDate[6], tcRunDate[7]].join('') ].join('/')
 
       let input = {
-        testcase: {
-          tc_name: testcase._attributes.name,
-          tc_is_passed: (tcStatus.status) === 'PASS' ? true : false,
-          tc_start_run: tcStatus.starttime.split(' ')[1],
-          tc_end_run: tcStatus.endtime.split(' ')[1],
-          tc_run_date: tcRunDate,
+        testcases: {
+          name: testcase._attributes.name,
+          result: (tcStatus.status) === 'PASS' ? true : false,
+          start: tcStatus.starttime.split(' ')[1],
+          end: tcStatus.endtime.split(' ')[1],
+          date: tcRunDate,
         },
         usr_id: currentUser.usr_id
       }
