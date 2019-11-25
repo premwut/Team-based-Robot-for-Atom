@@ -5,6 +5,7 @@ export const state = () => ({
 export const mutations = {
   // set testcases into store
   setTestcases (state, data) {
+    console.log("Hello world from setTestcases mutation", state)
     state.testcases = {
       ...data,
       list: [...data.data],
@@ -16,7 +17,9 @@ export const mutations = {
 export const actions = {
   async fetchTestcases ({ commit, dispatch }, { page = 1, limit = 10 } = {}) {
     try {
+      console.log(`/api/testcase/list?page=${page}&limit=${limit}`)
       const { data } = await this.$axios.$get(`/api/testcase/list?page=${page}&limit=${limit}`)
+      console.log(data, "data (fetchTestcases)")
       commit("setTestcases", data)
     } catch (error) {
       throw error
