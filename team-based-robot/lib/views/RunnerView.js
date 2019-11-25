@@ -183,7 +183,17 @@ export default class RunnerView {
     const args = ["run"]
     if(this.props.isRerunfailed) {
       const rerunPathExist = fs.existsSync(`${outputPath}(rerunfailed)`)
-      if (rerunPathExist) args.push("-r")
+      const { isRunSuite } = this.props
+      if (rerunPathExist) {
+        if (isRunSuite) {
+          args.push("-S")
+          console.log('rerun test suites')
+        }
+        else {
+          args.push("-R")
+          console.log('rerun testcases')
+        }
+      }
     }
 
     switch (this.props.type) {

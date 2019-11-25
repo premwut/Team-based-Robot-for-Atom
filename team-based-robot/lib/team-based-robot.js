@@ -64,8 +64,8 @@ export default class TeamBasedRobot {
       'team-based-robot:run-all': () => this.views.runnerView.show({ type: RUN_TYPE.ALL, teambaseInstance: this }),
       'team-based-robot:run-suite': () => this.views.runnerView.show({ type: RUN_TYPE.SUITE, teambaseInstance: this }),
       'team-based-robot:run-tag': () => this.views.runnerView.show({ type: RUN_TYPE.TAG, teambaseInstance: this }),
-      // 'team-based-robot:run-failed': () => this.views.runnerView.show({ type: RUN_TYPE.ALL, isRerunfailed: true, teambaseInstance: this}),
-      'team-based-robot:run-failed': () => this.checkRerun(this.previousRunType),
+      'team-based-robot:run-failed': () => this.checkRerun(this.previousRunType, false),
+      'team-based-robot:run-failed-suite': () => this.checkRerun(this.previousRunType, true),
       'team-based-robot:manage-member': () => this.openBrowserManageTeamMember(),
       'team-based-robot:assign-team': () => this.openBrowserAssignTeamToProject(),
       'team-based-robot:show-report': () => this.views.reportView.show()
@@ -149,9 +149,10 @@ export default class TeamBasedRobot {
     }
   }
 
-  checkRerun (previousRunType) {
+  checkRerun (previousRunType, isRunSuite) {
+    console.log(isRunSuite)
     if (previousRunType) {
-      this.views.runnerView.show({ type: previousRunType, isRerunfailed: true, teambaseInstance: this })
+      this.views.runnerView.show({ type: previousRunType, isRerunfailed: true, isRunSuite, teambaseInstance: this })
     } else {
       atom.notifications.addError('Please run test suite first')
     }

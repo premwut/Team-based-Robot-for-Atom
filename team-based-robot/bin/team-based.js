@@ -65,7 +65,8 @@ program.command("run <script> [variables] [outputDir] [tags]")
   .option("-a --all", "Run all testcase")
   .option("-s --suite", "Run single test suite")
   .option("-t --tag", "Run width tag")
-  .option("-r --rerunfailed", "Rerun failed testcase(s)")
+  .option("-R --rerunfailed", "Rerun failed testcases")
+  .option("-S --rerunfailedsuites", "Refun failed test suites")
   .action((script, variables, outputDir, tags, options) => {
     // console.log("Run robot script ", script, variables, tags)
     let variableCommand = ""
@@ -83,8 +84,15 @@ program.command("run <script> [variables] [outputDir] [tags]")
 
     if (options.all || options.suite) {
       let command = ``
+      let rerunOption
       if (options.rerunfailed) {
-        command = `robot ${variableCommand} -d ${output}(rerunfailed) -R ${output}(rerunfailed)/output.xml ${script}`
+        rerunOption = "-R"
+      } else if (options.rerunfailedsuites) {
+        rerunOption = "-S"
+      }
+      if (options.rerunfailed || options.rerunfailedsuites) {
+        command = `robot ${variableCommand} -d ${output}(rerunfailed) ${rerunOption} ${output}(rerunfailed)/output.xml ${script}`
+        console.log(command, 'command (from team-based.js)')
       } else {
         command = `robot ${variableCommand} -d ${output} ${script}`
       }
@@ -95,7 +103,7 @@ program.command("run <script> [variables] [outputDir] [tags]")
         }
         else console.log(chalk.red(`Run robot failure`))
 
-        mergeRunOutput(options.rerunfailed, output)
+        mergeRunOutput(options.rerunfailed || options.rerunfailedsuites, output)
         // if (!options.rerunfailed) {
         //   let mergeCommand = `rebot -o ${output}(rerunfailed)/output.xml --merge ${output}/output.xml`
         //   shell.exec(mergeCommand, (code, stdout, stderr) => {
