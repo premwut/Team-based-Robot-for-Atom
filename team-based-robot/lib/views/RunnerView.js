@@ -181,22 +181,25 @@ export default class RunnerView {
 
     const command = 'team-based-robot'
     const args = ["run"]
+    if(this.props.isRerunfailed) {
+      const rerunPathExist = fs.existsSync(`${outputPath}(rerunfailed)`)
+      if (rerunPathExist) args.push("-r")
+    }
+
     switch (this.props.type) {
       case RUN_TYPE.ALL:
         args.push("-a")
         args.push(this.testcasePath)
         args.push(this.runnerVariable)
         args.push(outputPath)
+        this.props.teambaseInstance.previousRunType = this.props.type
         break
       case RUN_TYPE.SUITE:
         args.push("-s")
         args.push(this.suiteFilePath)
         args.push(this.runnerVariable)
         args.push(outputPath)
-        if(this.props.isRerunfailed) {
-          const rerunPathExist = fs.existsSync(`${outputPath}(rerunfailed)`)
-          if (rerunPathExist) args.push("-r")
-        }
+        this.props.teambaseInstance.previousRunType = this.props.type
         break
       case RUN_TYPE.TAG:
         args.push("-t")
@@ -204,6 +207,7 @@ export default class RunnerView {
         args.push(this.runnerVariable)
         args.push(outputPath)
         args.push(this.tagSelected)
+        this.props.teambaseInstance.previousRunType = this.props.type
         break
     }
 
