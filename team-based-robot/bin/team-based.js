@@ -25,6 +25,20 @@ function createProject(repo, path) {
   })
 }
 
+function mergeRunOutput (isRerunfailed, output) {
+  if (!isRerunfailed) {
+    let mergeCommand = `rebot -o ${output}(rerunfailed)/output.xml --merge ${output}/output.xml`
+    shell.exec(mergeCommand, (code, stdout, stderr) => {
+      console.log(code, 'code')
+    })
+  } else {
+    let mergeCommand = `rebot -o ${output}/output.xml --merge ${output}(rerunfailed)/output.xml`
+    shell.exec(mergeCommand, (code, stdout, stderr) => {
+      console.log(code, 'code')
+    })
+  }
+}
+
 program.version(pkg.version)
   .action(options => {
     console.log("test commond ", options);
@@ -81,26 +95,45 @@ program.command("run <script> [variables] [outputDir] [tags]")
         }
         else console.log(chalk.red(`Run robot failure`))
 
-        if (!options.rerunfailed) {
-          let mergeCommand = `rebot -o ${output}(rerunfailed)/output.xml --merge ${output}/output.xml`
-          shell.exec(mergeCommand, (code, stdout, stderr) => {
-            console.log(code, 'code')
-          })
-        } else {
-          let mergeCommand = `rebot -o ${output}/output.xml --merge ${output}(rerunfailed)/output.xml`
-          shell.exec(mergeCommand, (code, stdout, stderr) => {
-            console.log(code, 'code')
-          })
-        }
+        mergeRunOutput(options.rerunfailed, output)
+        // if (!options.rerunfailed) {
+        //   let mergeCommand = `rebot -o ${output}(rerunfailed)/output.xml --merge ${output}/output.xml`
+        //   shell.exec(mergeCommand, (code, stdout, stderr) => {
+        //     console.log(code, 'code')
+        //   })
+        // } else {
+        //   let mergeCommand = `rebot -o ${output}/output.xml --merge ${output}(rerunfailed)/output.xml`
+        //   shell.exec(mergeCommand, (code, stdout, stderr) => {
+        //     console.log(code, 'code')
+        //   })
+        // }
       })
 
 
     } else if (options.tag) {
-      const command = `robot ${variableCommand} -i ${tag} -d ${output} ${script}`
+      let command = `robot ${variableCommand} -i ${tag} -d ${output} ${script}`
+
+      if (options.rerunfailed) {
+        command = `robot ${variableCommand} -i ${tag} -R ${output}(rerunfailed)/output.xml -d ${output}(rerunfailed) ${script}`
+      }
       console.log(chalk.green(`[Command] robot${variableCommand}  -i ${tag} ${script}`))
       shell.exec(command, (code, stdout, stderr) => {
         if (code === 0) console.log(chalk.green(`Run robot completed`))
         else console.log(chalk.red(`Run robot failure`))
+
+        console.log(options.rerunfailed, 'options.rerunfaile')
+        mergeRunOutput(options.rerunfailed, output)
+        // if (!options.rerunfailed) {
+        //   let mergeCommand = `rebot -o ${output}(rerunfailed)/output.xml --merge ${output}/output.xml`
+        //   shell.exec(mergeCommand, (code, stdout, stderr) => {
+        //     console.log(code, 'code')
+        //   })
+        // } else {
+        //   let mergeCommand = `rebot -o ${output}/output.xml --merge ${output}(rerunfailed)/output.xml`
+        //   shell.exec(mergeCommand, (code, stdout, stderr) => {
+        //     console.log(code, 'code')
+        //   })
+        // }
       })
 
     } else {
