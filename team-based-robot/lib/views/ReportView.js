@@ -7,6 +7,7 @@ import fs from 'fs'
 import opn from 'opn'
 
 import { PACKAGE_NAME, getRootDirPath } from '../utils.js'
+import { getTestResults } from '../testcases.js'
 
 export default class ReportView {
   constructor (props, children) {
@@ -18,10 +19,14 @@ export default class ReportView {
   initProps(props) {
     this.outputPath = atom.config.get(`${PACKAGE_NAME}.runnerOutputPath`)
     this.rootDir = getRootDirPath()
+
+    let outputData
     if (fs.existsSync(`.${this.outputPath}`)) {
-      var outputData = fs.readFileSync(`${getRootDirPath()}${this.outputPath}/output.xml`).toString()
+      // var outputData = fs.readFileSync(`${getRootDirPath()}${this.outputPath}/output.xml`).toString()
+      outputData = getTestResults()
     }
-    if (outputData) this.outputData = JSON.parse(convertXML.xml2json(outputData, {compact: true, space: 4}))
+    // if (outputData) this.outputData = JSON.parse(convertXML.xml2json(outputData, {compact: true, space: 4}))
+    if (outputData) this.outputData = outputData
 
   }
 
@@ -36,8 +41,8 @@ export default class ReportView {
   render() {
     let data
     if (this.outputData) data = this.outputData.robot
-    let statItems = <h1>statItems</h1>
-    let suiteItems = <div>test</div>
+    let statItems = <h1 style="margin-top: 10px">Oops! Something went wrong.....</h1>
+    let suiteItems = <div style="margin-bottom: 10px">Maybe you have not run a test yet.</div>
 
     if (data) {
       let suite
@@ -113,8 +118,7 @@ export default class ReportView {
 
   show(props) {
     this.update(props)
-    let outputData = fs.readFileSync(`${getRootDirPath()}${this.outputPath}/output.xml`).toString()
-    this.outputData = JSON.parse(convertXML.xml2json(outputData, { compact: true, space: 4 }))
+    this.outputData = getTestResults()
     return this.panel.isVisible() ? this.panel.hide() : this.panel.show()
   }
 

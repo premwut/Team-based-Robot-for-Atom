@@ -11,10 +11,14 @@ import { PACKAGE_NAME, getRootDirPath } from './utils.js'
 export const getTestResults = () => {
   let outputPath = atom.config.get(`${PACKAGE_NAME}.runnerOutputPath`)
   console.log(outputPath, outputPath)
-  let outputXML = fs.readFileSync(`${getRootDirPath()}${outputPath}/output.xml`).toString()
+  let outputXML
+  try {
+    outputXML = fs.readFileSync(`${getRootDirPath()}${outputPath}/output.xml`).toString()
+  } catch (e) {
+    return undefined
+  }
   let outputJSON = JSON.parse(convertXML.xml2json(outputXML, { compact: true, space: 4 }))
 
-  console.log(outputJSON)
   return outputJSON
 }
 
