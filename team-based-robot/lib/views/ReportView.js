@@ -62,76 +62,37 @@ export default class ReportView {
         )
       })
 
-      if (Array.isArray(suite)) {
-        suiteItems = suite.map(item => {
+      if (!Array.isArray(suite)) suite = [ suite ]
+
+      suiteItems = suite.map(item => {
+        const attributes = item._attributes
+        const {status} = item.status._attributes
+        const statusClass = status === 'PASS' ? 'text-success' : 'text-error'
+
+        let testcaseData = item.test
+        let testcaseItems
+
+        if (!Array.isArray(testcaseData)) testcaseData = [ testcaseData ]
+        console.log(testcaseData)
+        testcaseItems = testcaseData.map(item => {
           const attributes = item._attributes
-          const {status} = item.status._attributes
-          const statusClass = status === 'PASS' ? 'text-success' : 'text-error'
-
-          const testcaseData = item.test
-          let testcaseItems
-
-          if (Array.isArray(testcaseData)) {
-            testcaseItems = testcaseData.map(item => {
-              const attributes = item._attributes
-                    name = attributes.name
-                    tcStatus = item.status._attributes.status
-                    tcStatusClass = tcStatus === 'PASS' ? 'text-success' : 'text-error'
-              return (
-                  <li> {name} - <span className={tcStatusClass}> {tcStatus} </span> </li>
-              )
-            })
-          } else {
-            let attributes = testcaseData._attributes
-                name = attributes.name
-                tcStatus = testcaseData.status._attributes.status
-                tcStatusClass = tcStatus === 'PASS' ? 'text-success' : 'text-error'
-            testcaseItems = <li> { name } - <span className={tcStatusClass}> {tcStatus} </span></li>
-          }
-
-          return (
-            <div>
-              <h3> {attributes.name} (Result: <span className={statusClass}>{status}</span>) </h3>
-              <ul>
-                {testcaseItems}
-              </ul>
-            </div>
-          )
-        })
-      } else {
-        const attributes = suite._attributes
-              status  = suite.status._attributes.status
-              statusClass = status === 'PASS' ? 'text-success' : 'text-error'
-              test = suite.test
-
-        if (Array.isArray(test)) {
-          testcaseItems = test.map(item => {
-            let attributes = item._attributes
                 name = attributes.name
                 tcStatus = item.status._attributes.status
                 tcStatusClass = tcStatus === 'PASS' ? 'text-success' : 'text-error'
+          return (
+              <li> {name} - <span className={tcStatusClass}> {tcStatus} </span> </li>
+          )
+        })
 
-                return (
-                  <li> { name } - <span className={tcStatusClass}> {tcStatus} </span></li>
-                )
-
-          })
-        } else {
-          let attributes = test._attributes
-              name = attributes.name
-              tcStatus = test.status._attributes.status
-              tcStatusClass = tcStatus === 'PASS' ? 'text-success' : 'text-error'
-          testcaseItems = <li> { name } - <span className={tcStatusClass}> {tcStatus} </span></li>
-        }
-
-
-        suiteItems =  (
+        return (
           <div>
             <h3> {attributes.name} (Result: <span className={statusClass}>{status}</span>) </h3>
-            <ul> {testcaseItems} </ul>
+            <ul>
+              {testcaseItems}
+            </ul>
           </div>
         )
-      }
+      })
     }
 
     // render return
