@@ -22,8 +22,6 @@ export default class ReportView {
       var outputData = fs.readFileSync(`${getRootDirPath()}${this.outputPath}/output.xml`).toString()
     }
     if (outputData) this.outputData = JSON.parse(convertXML.xml2json(outputData, {compact: true, space: 4}))
-    // this.outputData = fs.readFileSync('test-results/output.xml').toString()
-    // console.log(this.outputData, 'this.outputPath')
 
   }
 
@@ -44,7 +42,7 @@ export default class ReportView {
     if (data) {
       let suite
       (data.suite.suite) ? suite = data.suite.suite : suite = data.suite
-      console.log(suite)
+
       const stats = data.statistics
             totalStat = stats.total.stat
       statItems = totalStat.map(item => {
@@ -71,9 +69,8 @@ export default class ReportView {
 
         let testcaseData = item.test
         let testcaseItems
-
         if (!Array.isArray(testcaseData)) testcaseData = [ testcaseData ]
-        console.log(testcaseData)
+
         testcaseItems = testcaseData.map(item => {
           const attributes = item._attributes
                 name = attributes.name
@@ -118,7 +115,6 @@ export default class ReportView {
     this.update(props)
     let outputData = fs.readFileSync(`${getRootDirPath()}${this.outputPath}/output.xml`).toString()
     this.outputData = JSON.parse(convertXML.xml2json(outputData, { compact: true, space: 4 }))
-    // console.log(this.outputData)
     return this.panel.isVisible() ? this.panel.hide() : this.panel.show()
   }
 
