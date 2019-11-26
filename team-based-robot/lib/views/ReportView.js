@@ -104,7 +104,7 @@ export default class ReportView {
         <div className="pull-right">
           <span className="icon icon-x clickable" onClick={() => this.panel.hide()} />
         </div>
-          <div className="title"> Report View </div>
+          <div className="title"> Test Summary </div>
           <span className="pull-right"><a onClick={this.openReportInBrowser}> View full report </a></span><br/>
         </header>
 

@@ -6,7 +6,6 @@ const chalk = require('chalk')
 const shell = require('shelljs')
 const clone = require('git-clone')
 const pathUtils = require('path')
-const convertXML = require('xml-js')
 
 const appName = 'Create Robot App'
 
@@ -27,14 +26,14 @@ function createProject(repo, path) {
 
 function mergeRunOutput (isRerunfailed, output) {
   if (!isRerunfailed) {
-    let mergeCommand = `rebot -o ${output}(rerunfailed)/output.xml --merge ${output}/output.xml`
+    let mergeCommand = `rebot -d ${output}(rerunfailed) -o ${output}(rerunfailed)/output.xml --merge ${output}/output.xml`
     shell.exec(mergeCommand, (code, stdout, stderr) => {
-      console.log(code, 'code')
+      console.log('Merge output completed')
     })
   } else {
-    let mergeCommand = `rebot -o ${output}/output.xml --merge ${output}(rerunfailed)/output.xml`
+    let mergeCommand = `rebot -d ${output} -o ${output}/output.xml --merge ${output}/output.xml ${output}(rerunfailed)/output.xml`
     shell.exec(mergeCommand, (code, stdout, stderr) => {
-      console.log(code, 'code')
+      console.log('Merge output completed')
     })
   }
 }
