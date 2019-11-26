@@ -143,6 +143,14 @@ export default class Connection {
     }
   }
 
+  async updateTestcases(testcaseInfo) {
+    console.log(testcaseInfo)
+    const url = `/testcase/edit`
+    const { data: response } = await this.axios.put(url, testcaseInfo, this.headerToken)
+    console.log(response, 'updateTestcases')
+    return 1
+  }
+
   async deleteKeyword(kdywordId) {
     try {
       const url = `/keyword/${kdywordId}/delete`
