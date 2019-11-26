@@ -5,15 +5,6 @@ import BaseController from "./base.controller"
 import bookshelf from "../config/bookshelf"
 
 export default class TestcaseController extends BaseController {
-  async hello (req, rea) {
-    try {
-      console.log("Hello, world Aai Sussususus")
-      this.success(req)
-    } catch (error) {
-      this.failure(req, error)
-    }
-  }
-
   async getList (req, res) {
     try {
       console.log("Here!, I'm in testcase controller get fn")
@@ -67,33 +58,68 @@ export default class TestcaseController extends BaseController {
   convertToTestcase (data, usr_id) {
     if (!data) return undefined
     const {
+      id: tc_id,
       name: tc_name,
       result: tc_run_result,
       start: tc_run_start,
       end: tc_run_end,
       date: tc_run_date,
     } = data
-    return Testcase.forge({ tc_name, tc_run_result, tc_run_start, tc_run_end, tc_run_date, usr_id })
+    if (tc_id === undefined) {
+      console.log("tc_id =", tc_id)
+      return Testcase.forge({ tc_name, tc_run_result, tc_run_start, tc_run_end, tc_run_date, usr_id })
+    } else {
+      console.log("tc_id =", tc_id)
+      return Testcase.forge({ tc_id, tc_name, tc_run_result, tc_run_start, tc_run_end, tc_run_date, usr_id })
+    }
   }
 
   async delete (req, res) {
     try {
+      const deletedKwIdList = []
       const { id_list } = req.body
       const testcaseDeletingCollection = Testcases.forge()
       id_list.forEach(async (tcId) => {
         console.log(typeof (tcId))
         testcaseDeletingCollection.push(Testcase.forge({ tc_id: tcId }))
+        deletedKwIdList.push(tcId)
       })
       console.log(testcaseDeletingCollection)
-      // const data = {}
       const data = await bookshelf.transaction(async (tx) => {
+        // const deleteKwId =
         const processList = [testcaseDeletingCollection.invokeThen("destroy", null, {transacting: tx})]
-        const [testcaseDeletedList] = await Promise.all(processList)
-        return testcaseDeletedList
+        // const [testcaseDeletedList] = await Promise.all(processList)
+        await Promise.all(processList)
+        return deletedKwIdList
       })
       this.success(res, data)
     } catch (error) {
       this.failure(res, error)
     }
   }
+
+  // async edit (req, res) {
+  //   try {
+  //     console.log("In edit now")
+  //     const errors = req.validationErrors()
+  //     if (errors) throw errors
+  //     const { testcases, usr_id } = req.body
+  //     const savedTestcase = []
+  //     // const testcaseCollection = Testcases.forge()
+  //     const testcaseCollection = []
+  //     testcases.forEach(item => {
+  //       const testcase = this.convertToTestcase(item, usr_id)
+  //       testcaseCollection.push(testcase)
+  //     })
+  //     testcaseCollection.forEach(async (tc) => {
+  //       const tc_id = tc.tc_id
+  //       delete tc.tc_id
+  //       console.log("tc =", tc)
+  //       savedTestcase.push(await Testcase.update(tc.toJSON(), { tc_id }))
+  //     })
+  //     this.success(res, savedTestcase)
+  //   } catch (error) {
+  //     this.failure(res, error)
+  //   }
+  // }
 }
