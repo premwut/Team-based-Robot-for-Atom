@@ -21,8 +21,17 @@
             "command": "team-based-robot:run-tag"
           },
           {
-            "label": "Rerun failed testcases",
-            "command": "team-based-robot:run-failed"
+            "label": "Rerun failed",
+            "submenu": [
+              {
+                "label": "Rerun failed testcases",
+                "command": "team-based-robot:run-failed"
+              },
+              {
+                "label": "Rerun failed test suites",
+                "command": "team-based-robot:run-failed-suite"
+              }
+            ]
           },
           {
             "label": "Add Keyword",

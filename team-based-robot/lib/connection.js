@@ -61,7 +61,19 @@ export default class Connection {
     try {
       const url = `/keyword/shared`
       const { data: response } = await this.axios.get(url, this.headerToken)
+      console.log([...response.data.keywords], 'reload keywords data')
       return [...response.data.keywords]
+    } catch (e) {
+      throw e
+    }
+  }
+
+  async getTestcase() {
+    if (this.token == "") return false;
+    try {
+      const url = `/testcase/list`
+      const { data: testcases } = await this.axios.get(url, this.headerToken)
+      return testcases
     } catch (e) {
       throw e
     }

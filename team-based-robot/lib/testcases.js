@@ -11,10 +11,14 @@ import { PACKAGE_NAME, getRootDirPath } from './utils.js'
 export const getTestResults = () => {
   let outputPath = atom.config.get(`${PACKAGE_NAME}.runnerOutputPath`)
   console.log(outputPath, outputPath)
-  let outputXML = fs.readFileSync(`${getRootDirPath()}${outputPath}/output.xml`).toString()
+  let outputXML
+  try {
+    outputXML = fs.readFileSync(`${getRootDirPath()}${outputPath}/output.xml`).toString()
+  } catch (e) {
+    return undefined
+  }
   let outputJSON = JSON.parse(convertXML.xml2json(outputXML, { compact: true, space: 4 }))
 
-  console.log(outputJSON)
   return outputJSON
 }
 
@@ -22,38 +26,99 @@ export const saveTestcase = async (tbInstance) => {
   let testResults = getTestResults().robot
   const connection = tbInstance.connection
   const currentUser = await connection.getProfile()
-  console.log(currentUser)
   testResults = (testResults.suite.suite) ? testResults.suite.suite : testResults.suite
+
+  const test = await connection.getTestcase()
+  const testcaseData = test.data.testcases //fetched from database
 
   if (!Array.isArray(testResults)) {
     testResults = [ testResults ]
   }
 
+  let { saveList, editList } = mapTestcases(testResults, testcaseData)
+  
+  // let resultTestcase = []
+  //     saveList = []
+  //     editList = []
+  // testResults.map(suite => {
+  //   let { test } = suite
+  //   if (!Array.isArray(test)) test = [ test ]
+  //   test.map(testcase => resultTestcase.push(testcase))
+  // })
+  // console.log(resultTestcase)
+  // resultTestcase.map(result => {
+  //   let resultName = result._attributes.name
+  //   let isDuplicated = false
+  //   testcaseData.map(data => {
+  //     let dataName = data.tc_name
+  //     if (dataName === resultName) {
+  //       isDuplicated = true
+  //     }
+  //   })
+  //
+  //   if (isDuplicated) {
+  //     editList.push(result)
+  //   } else {
+  //     saveList.push(result)
+  //   }
+  // })
+
+  console.log(testResults, 'testResults')
+  console.log(testcaseData, 'testcaseData')
+  console.log(saveList, 'saveList')
+  console.log(editList, 'editList')
+
   let outputData = { testcases: [], usr_id: currentUser.usr_id }
-  testResults.map(suite => {
-    console.log(suite, 'suite')
-    let testcases = (Array.isArray(suite.test)) ? suite.test : [ suite.test ]
-    testcases.forEach(testcase => {
-      let tcStatus = testcase.status._attributes
-      let tcRunDate = tcStatus.starttime.split('')
-      tcRunDate = [ [tcRunDate[0], tcRunDate[1], tcRunDate[2], tcRunDate[3]].join(''),
-      [ tcRunDate[4], tcRunDate[5] ].join(''), [tcRunDate[6], tcRunDate[7]].join('') ].join('/')
+  saveList = saveList.map(testcase => {
+    let tcStatus = testcase.status._attributes
+    let tcRunDate = tcStatus.starttime.split('')
+    tcRunDate = [ [tcRunDate[0], tcRunDate[1], tcRunDate[2], tcRunDate[3]].join(''),
+    [ tcRunDate[4], tcRunDate[5] ].join(''), [tcRunDate[6], tcRunDate[7]].join('') ].join('/')
 
-      let input = {
-          name: testcase._attributes.name,
-          result: (tcStatus.status) === 'PASS' ? true : false,
-          start: tcStatus.starttime.split(' ')[1],
-          end: tcStatus.endtime.split(' ')[1],
-          date: tcRunDate,
-      }
-      outputData.testcases.push(input)
-    })
-
+        let input = {
+            name: testcase._attributes.name,
+            result: (tcStatus.status) === 'PASS' ? true : false,
+            start: tcStatus.starttime.split(' ')[1],
+            end: tcStatus.endtime.split(' ')[1],
+            date: tcRunDate,
+        }
+        outputData.testcases.push(input)
   })
 
   console.log(outputData)
+
+
   const { data: response } = await connection.saveTestcaseRun(outputData)
-  console.log(response, 'response')
 
   return outputData
+}
+
+const mapTestcases = function (testResults, testcaseData) {
+  let resultTestcase = []
+      saveList = []
+      editList = []
+  testResults.map(suite => {
+    let { test } = suite
+    if (!Array.isArray(test)) test = [ test ]
+    test.map(testcase => resultTestcase.push(testcase))
+  })
+  console.log(resultTestcase)
+  resultTestcase.map(result => {
+    let resultName = result._attributes.name
+    let isDuplicated = false
+    testcaseData.map(data => {
+      let dataName = data.tc_name
+      if (dataName === resultName) {
+        isDuplicated = true
+      }
+    })
+
+    if (isDuplicated) {
+      editList.push(result)
+    } else {
+      saveList.push(result)
+    }
+  })
+
+  return { saveList, editList }
 }

@@ -7,6 +7,7 @@ import fs from 'fs'
 import opn from 'opn'
 
 import { PACKAGE_NAME, getRootDirPath } from '../utils.js'
+import { getTestResults } from '../testcases.js'
 
 export default class ReportView {
   constructor (props, children) {
@@ -18,12 +19,14 @@ export default class ReportView {
   initProps(props) {
     this.outputPath = atom.config.get(`${PACKAGE_NAME}.runnerOutputPath`)
     this.rootDir = getRootDirPath()
+
+    let outputData
     if (fs.existsSync(`.${this.outputPath}`)) {
-      var outputData = fs.readFileSync(`${getRootDirPath()}${this.outputPath}/output.xml`).toString()
+      // var outputData = fs.readFileSync(`${getRootDirPath()}${this.outputPath}/output.xml`).toString()
+      outputData = getTestResults()
     }
-    if (outputData) this.outputData = JSON.parse(convertXML.xml2json(outputData, {compact: true, space: 4}))
-    // this.outputData = fs.readFileSync('test-results/output.xml').toString()
-    // console.log(this.outputData, 'this.outputPath')
+    // if (outputData) this.outputData = JSON.parse(convertXML.xml2json(outputData, {compact: true, space: 4}))
+    if (outputData) this.outputData = outputData
 
   }
 
@@ -38,13 +41,13 @@ export default class ReportView {
   render() {
     let data
     if (this.outputData) data = this.outputData.robot
-    let statItems = <h1>statItems</h1>
-    let suiteItems = <div>test</div>
+    let statItems = <h1 style="margin-top: 10px">Oops! Something went wrong.....</h1>
+    let suiteItems = <div style="margin-bottom: 10px">Maybe you have not run a test yet.</div>
 
     if (data) {
       let suite
       (data.suite.suite) ? suite = data.suite.suite : suite = data.suite
-      console.log(suite)
+
       const stats = data.statistics
             totalStat = stats.total.stat
       statItems = totalStat.map(item => {
@@ -62,76 +65,36 @@ export default class ReportView {
         )
       })
 
-      if (Array.isArray(suite)) {
-        suiteItems = suite.map(item => {
+      if (!Array.isArray(suite)) suite = [ suite ]
+
+      suiteItems = suite.map(item => {
+        const attributes = item._attributes
+        const {status} = item.status._attributes
+        const statusClass = status === 'PASS' ? 'text-success' : 'text-error'
+
+        let testcaseData = item.test
+        let testcaseItems
+        if (!Array.isArray(testcaseData)) testcaseData = [ testcaseData ]
+
+        testcaseItems = testcaseData.map(item => {
           const attributes = item._attributes
-          const {status} = item.status._attributes
-          const statusClass = status === 'PASS' ? 'text-success' : 'text-error'
-
-          const testcaseData = item.test
-          let testcaseItems
-
-          if (Array.isArray(testcaseData)) {
-            testcaseItems = testcaseData.map(item => {
-              const attributes = item._attributes
-                    name = attributes.name
-                    tcStatus = item.status._attributes.status
-                    tcStatusClass = tcStatus === 'PASS' ? 'text-success' : 'text-error'
-              return (
-                  <li> {name} - <span className={tcStatusClass}> {tcStatus} </span> </li>
-              )
-            })
-          } else {
-            let attributes = testcaseData._attributes
-                name = attributes.name
-                tcStatus = testcaseData.status._attributes.status
-                tcStatusClass = tcStatus === 'PASS' ? 'text-success' : 'text-error'
-            testcaseItems = <li> { name } - <span className={tcStatusClass}> {tcStatus} </span></li>
-          }
-
-          return (
-            <div>
-              <h3> {attributes.name} (Result: <span className={statusClass}>{status}</span>) </h3>
-              <ul>
-                {testcaseItems}
-              </ul>
-            </div>
-          )
-        })
-      } else {
-        const attributes = suite._attributes
-              status  = suite.status._attributes.status
-              statusClass = status === 'PASS' ? 'text-success' : 'text-error'
-              test = suite.test
-
-        if (Array.isArray(test)) {
-          testcaseItems = test.map(item => {
-            let attributes = item._attributes
                 name = attributes.name
                 tcStatus = item.status._attributes.status
                 tcStatusClass = tcStatus === 'PASS' ? 'text-success' : 'text-error'
+          return (
+              <li> {name} - <span className={tcStatusClass}> {tcStatus} </span> </li>
+          )
+        })
 
-                return (
-                  <li> { name } - <span className={tcStatusClass}> {tcStatus} </span></li>
-                )
-
-          })
-        } else {
-          let attributes = test._attributes
-              name = attributes.name
-              tcStatus = test.status._attributes.status
-              tcStatusClass = tcStatus === 'PASS' ? 'text-success' : 'text-error'
-          testcaseItems = <li> { name } - <span className={tcStatusClass}> {tcStatus} </span></li>
-        }
-
-
-        suiteItems =  (
+        return (
           <div>
             <h3> {attributes.name} (Result: <span className={statusClass}>{status}</span>) </h3>
-            <ul> {testcaseItems} </ul>
+            <ul>
+              {testcaseItems}
+            </ul>
           </div>
         )
-      }
+      })
     }
 
     // render return
@@ -141,7 +104,7 @@ export default class ReportView {
         <div className="pull-right">
           <span className="icon icon-x clickable" onClick={() => this.panel.hide()} />
         </div>
-          <div className="title"> Report View </div>
+          <div className="title"> Test Summary </div>
           <span className="pull-right"><a onClick={this.openReportInBrowser}> View full report </a></span><br/>
         </header>
 
@@ -155,9 +118,7 @@ export default class ReportView {
 
   show(props) {
     this.update(props)
-    let outputData = fs.readFileSync(`${getRootDirPath()}${this.outputPath}/output.xml`).toString()
-    this.outputData = JSON.parse(convertXML.xml2json(outputData, { compact: true, space: 4 }))
-    // console.log(this.outputData)
+    this.outputData = getTestResults()
     return this.panel.isVisible() ? this.panel.hide() : this.panel.show()
   }
 
