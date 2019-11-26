@@ -73,7 +73,6 @@ export default class Connection {
     try {
       const url = `/testcase/list`
       const { data: testcases } = await this.axios.get(url, this.headerToken)
-      console.log(testcases)
       return testcases
     } catch (e) {
       throw e

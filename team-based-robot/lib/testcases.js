@@ -28,7 +28,6 @@ export const saveTestcase = async (tbInstance) => {
   const currentUser = await connection.getProfile()
   testResults = (testResults.suite.suite) ? testResults.suite.suite : testResults.suite
 
-  let nonDuplicateTc
   const test = await connection.getTestcase()
   const testcaseData = test.data.testcases //fetched from database
 
@@ -36,32 +35,33 @@ export const saveTestcase = async (tbInstance) => {
     testResults = [ testResults ]
   }
 
-  let resultTestcase = []
-      saveList = []
-      editList = []
-  testResults.map(suite => {
-    let { test } = suite
-    if (!Array.isArray(test)) test = [ test ]
-    test.map(testcase => resultTestcase.push(testcase))
-  })
-  console.log(resultTestcase)
-  resultTestcase.map(result => {
-    let resultName = result._attributes.name
-    let isDuplicated = false
-    testcaseData.map(data => {
-      let dataName = data.tc_name
-      if (dataName === resultName) {
-        isDuplicated = true
-      }
-      console.log(`${dataName} === ${resultName}`, dataName === resultName)
-    })
-
-    if (isDuplicated) {
-      editList.push(result)
-    } else {
-      saveList.push(result)
-    }
-  })
+  let { saveList, editList } = mapTestcases(testResults, testcaseData)
+  
+  // let resultTestcase = []
+  //     saveList = []
+  //     editList = []
+  // testResults.map(suite => {
+  //   let { test } = suite
+  //   if (!Array.isArray(test)) test = [ test ]
+  //   test.map(testcase => resultTestcase.push(testcase))
+  // })
+  // console.log(resultTestcase)
+  // resultTestcase.map(result => {
+  //   let resultName = result._attributes.name
+  //   let isDuplicated = false
+  //   testcaseData.map(data => {
+  //     let dataName = data.tc_name
+  //     if (dataName === resultName) {
+  //       isDuplicated = true
+  //     }
+  //   })
+  //
+  //   if (isDuplicated) {
+  //     editList.push(result)
+  //   } else {
+  //     saveList.push(result)
+  //   }
+  // })
 
   console.log(testResults, 'testResults')
   console.log(testcaseData, 'testcaseData')
@@ -84,11 +84,41 @@ export const saveTestcase = async (tbInstance) => {
         }
         outputData.testcases.push(input)
   })
-  
+
   console.log(outputData)
 
 
   const { data: response } = await connection.saveTestcaseRun(outputData)
 
   return outputData
+}
+
+const mapTestcases = function (testResults, testcaseData) {
+  let resultTestcase = []
+      saveList = []
+      editList = []
+  testResults.map(suite => {
+    let { test } = suite
+    if (!Array.isArray(test)) test = [ test ]
+    test.map(testcase => resultTestcase.push(testcase))
+  })
+  console.log(resultTestcase)
+  resultTestcase.map(result => {
+    let resultName = result._attributes.name
+    let isDuplicated = false
+    testcaseData.map(data => {
+      let dataName = data.tc_name
+      if (dataName === resultName) {
+        isDuplicated = true
+      }
+    })
+
+    if (isDuplicated) {
+      editList.push(result)
+    } else {
+      saveList.push(result)
+    }
+  })
+
+  return { saveList, editList }
 }
