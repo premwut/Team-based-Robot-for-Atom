@@ -102,7 +102,6 @@ const featureData = [
   { fea_id: 6, fea_name: 'MANAGE_TEAM_MEMBER', fea_title: 'Manage Team Member', fea_is_sys: true, fea_desc: 'for manage team' },
   { fea_id: 7, fea_name: 'MANAGE_KEYWORD', fea_title: 'Manage Keyword', fea_is_sys: true, fea_desc: 'for manage keyword' },
   { fea_id: 8, fea_name: 'MANAGE_ROLE', fea_title: 'Manage Role', fea_is_sys: true, fea_desc: 'for manage role' },
-  { fea_id: 9, fea_name: 'MANAGE_TESTCASE', fea_title: 'Manage Testcase', fea_is_sys: true, fea_desc: 'for manage testcase' },
 ]
 
 const permission = 'permission'
@@ -125,8 +124,6 @@ const featureRoleData = [
   { fea_role_id: 10, fea_role_active: true },
   { fea_role_id: 11, fea_role_active: true },
   { fea_role_id: 12, fea_role_active: true },
-  { fea_role_id: 13, fea_role_active: true },
-  { fea_role_id: 14, fea_role_active: true },
 ]
 
 const keywordMapping = 'keyword_mapping'
@@ -184,20 +181,18 @@ exports.seed = function (knex, Promise) {
 
           // team leader
           knex(featureRole).where({ fea_role_id: 2 }).update({ role_id: 2, fea_id: 7, pms_id: 2 }),   // write keyword
-          knex(featureRole).where({ fea_role_id: 3 }).update({ role_id: 2, fea_id: 9, pms_id: 2 }),   // write testcase
-          knex(featureRole).where({ fea_role_id: 4 }).update({ role_id: 2, fea_id: 6, pms_id: 2 }),   // write team member
-          knex(featureRole).where({ fea_role_id: 5 }).update({ role_id: 2, fea_id: 2, pms_id: 1 }),   // read user
-          knex(featureRole).where({ fea_role_id: 6 }).update({ role_id: 2, fea_id: 3, pms_id: 1 }),   // read project
-          knex(featureRole).where({ fea_role_id: 7 }).update({ role_id: 2, fea_id: 4, pms_id: 1 }),   // read team
-          knex(featureRole).where({ fea_role_id: 8 }).update({ role_id: 2, fea_id: 8, pms_id: 1 }),   // read role
+          knex(featureRole).where({ fea_role_id: 3 }).update({ role_id: 2, fea_id: 6, pms_id: 2 }),   // write team member
+          knex(featureRole).where({ fea_role_id: 4 }).update({ role_id: 2, fea_id: 2, pms_id: 1 }),   // read user
+          knex(featureRole).where({ fea_role_id: 5 }).update({ role_id: 2, fea_id: 3, pms_id: 1 }),   // read project
+          knex(featureRole).where({ fea_role_id: 6 }).update({ role_id: 2, fea_id: 4, pms_id: 1 }),   // read team
+          knex(featureRole).where({ fea_role_id: 7 }).update({ role_id: 2, fea_id: 8, pms_id: 1 }),   // read role
 
           // team member
-          knex(featureRole).where({ fea_role_id: 9 }).update({ role_id: 3, fea_id: 7, pms_id: 2 }),    // write keyword
-          knex(featureRole).where({ fea_role_id: 10 }).update({ role_id: 3, fea_id: 9, pms_id: 2 }),    // write testcase
-          knex(featureRole).where({ fea_role_id: 11 }).update({ role_id: 3, fea_id: 2, pms_id: 1 }),    // read user
-          knex(featureRole).where({ fea_role_id: 12 }).update({ role_id: 3, fea_id: 3, pms_id: 1 }),   // read project
-          knex(featureRole).where({ fea_role_id: 13 }).update({ role_id: 3, fea_id: 4, pms_id: 1 }),   // read team
-          knex(featureRole).where({ fea_role_id: 14 }).update({ role_id: 3, fea_id: 8, pms_id: 1 }),   // read role
+          knex(featureRole).where({ fea_role_id: 8 }).update({ role_id: 3, fea_id: 7, pms_id: 2 }),    // write keyword
+          knex(featureRole).where({ fea_role_id: 9 }).update({ role_id: 3, fea_id: 2, pms_id: 1 }),    // read user
+          knex(featureRole).where({ fea_role_id: 10 }).update({ role_id: 3, fea_id: 3, pms_id: 1 }),   // read project
+          knex(featureRole).where({ fea_role_id: 11 }).update({ role_id: 3, fea_id: 4, pms_id: 1 }),   // read team
+          knex(featureRole).where({ fea_role_id: 12 }).update({ role_id: 3, fea_id: 8, pms_id: 1 }),   // read role
         ])
       })
       .then(function() {
