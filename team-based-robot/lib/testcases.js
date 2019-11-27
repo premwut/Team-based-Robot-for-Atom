@@ -98,6 +98,7 @@ export const saveTestcase = async (tbInstance) => {
             start: tcStatus.starttime.split(' ')[1],
             end: tcStatus.endtime.split(' ')[1],
             date: tcRunDate,
+            id: testcase.tc_id
         }
         editOutput.testcases.push(input)
   })
@@ -128,6 +129,7 @@ const mapTestcases = function (testResults, testcaseData) {
       let dataName = data.tc_name
       if (dataName === resultName) {
         isDuplicated = true
+        result.tc_id = data.tc_id
       }
     })
 
