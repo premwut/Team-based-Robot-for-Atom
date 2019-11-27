@@ -60,7 +60,16 @@
         },
         {
           "label": "Reload Keywords",
-          "command": "team-based-robot:keyword-reload"
+          "submenu": [
+            {
+              "label": "Reload All Keywords",
+              "command": "team-based-robot:keyword-reload"
+            },
+            {
+              "label": "Reload Approved Keywords",
+              "command": "team-based-robot:keyword-reload-approved"
+            }
+          ]
         },
         {
           "label": "View Latest Test Results",

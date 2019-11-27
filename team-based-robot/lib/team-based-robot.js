@@ -57,7 +57,8 @@ export default class TeamBasedRobot {
       'team-based-robot:toggle': () => this.toggle(),
       'team-based-robot:new-project-simple': () => this.views.generateView.show({ type: PROJECT_TYPE.SIMPLE }),
       'team-based-robot:new-project-large': () => this.views.generateView.show({ type: PROJECT_TYPE.LARGE }),
-      'team-based-robot:keyword-reload': () => this.reloadKeyword(true),
+      'team-based-robot:keyword-reload': () => this.reloadKeyword(true, true),
+      'team-based-robot:keyword-reload-approved': () => this.reloadKeyword(true),
       'team-based-robot:test-connection': () => this.testConnection(),
       'team-based-robot:keyword-add': () => saveKeyword(this.views.saveKeywordView),
       'team-based-robot:keyword-search': () => searchKeyword(this.views.searchKeywordView),
@@ -102,7 +103,7 @@ export default class TeamBasedRobot {
     })
   }
 
-  async reloadKeyword(isGenerateRobotFile = false) {
+  async reloadKeyword(isGenerateRobotFile = false, isReloadAll) {
     const isTeamBase = isTeamBaseProject()
     if (isTeamBase || isGenerateRobotFile) {
       // sync keyword to robot file
@@ -110,7 +111,7 @@ export default class TeamBasedRobot {
       if (!workspaceView.className.includes(PACKAGE_NAME)) {
         workspaceView.classList.add(PACKAGE_NAME)
       }
-      await this.syncKeywordsToTeamBaseRobotFile()
+      await this.syncKeywordsToTeamBaseRobotFile(isReloadAll)
     }
   }
 
@@ -129,16 +130,24 @@ export default class TeamBasedRobot {
     }
   }
 
-  async syncKeywordsToTeamBaseRobotFile() {
+  async syncKeywordsToTeamBaseRobotFile(isReloadAll) {
     if (!this.LoggedIn) {
       await this.authenticate()
     }
 
     try {
       const keywords = await this.connection.getKeywords()
+      let approvedKeywords, approvedContent
+      if (!isReloadAll) {
+        approvedKeywords = keywords.filter(keyword => keyword.kwd_is_approved === true)
+        approvedContent = this.transformKeywords(approvedKeywords)
+      }
+      console.log(keywords, 'keywords')
       const robotFilePath = getTeamBaseRobotFilePath()
-      const content = this.transformKeywords(keywords)
+      const content = this.transformKeywords((isReloadAll) ? keywords : approvedKeywords)
       this.sharingKeywords = [...keywords]
+
+      console.log(this.sharingKeywords, 'sharingkeywords')
       fs.writeFileSync(robotFilePath, content)
       console.log("[TeamBaseRobot] Sync keyword to robot file completed")
       this.autocomplete.reload()
