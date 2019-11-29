@@ -7,13 +7,14 @@ import bookshelf from "../config/bookshelf"
 export default class TestcaseController extends BaseController {
   async getList (req, res) {
     try {
-      console.log("Here!, I'm in testcase controller get fn")
+      console.log("[Testcase Controller] - getList Function")
       const isPaging = isPagination(req)
       const { page, limit: pageSize } = req.query
+      console.log("[Testcase Controller] - Await ")
       const testcases = await (isPaging ? Testcase.forge().fetchPage({ page, pageSize }) : Testcase.forge().fetchAll())
+      // const testcases = await Testcase.forge().fetchAll()
+      console.log("After Await\n", testcases)
       this.success(res, { testcases, ...getPagination(testcases) })
-      // const testcaseC = await Testcase.forge().fetchAll()
-      // this.success(res, testcaseC)
     } catch (error) {
       this.failure(res, error)
     }

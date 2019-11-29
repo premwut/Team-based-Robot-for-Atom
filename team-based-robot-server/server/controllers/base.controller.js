@@ -3,7 +3,6 @@ export default class BaseController {
   success (res, data) {
     return res.status(200).json({ data })
   }
-
   badRequest (res, data) {
     console.error(`[BadRequest] => ${data}`)
     return res.status(400).json({ error: data })

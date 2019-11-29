@@ -5,12 +5,14 @@ export const state = () => ({
 export const mutations = {
   // set testcases into store
   setTestcases (state, data) {
-    console.log("Hello world from setTestcases mutation", state)
+    console.log("In setTestcase Mutation", data)
     state.testcases = {
       ...data,
-      list: [...data.data],
+      list: [...data.testcases],
     }
+    console.log("After set state = ", state.testcases)
     delete state.testcases.data
+    console.log("[store->testcase->mutation] :\n", state.testcases.list)
   },
 }
 // get testcases from database then [setTestcases]
@@ -19,7 +21,7 @@ export const actions = {
     try {
       console.log(`/api/testcase/list?page=${page}&limit=${limit}`)
       const { data } = await this.$axios.$get(`/api/testcase/list?page=${page}&limit=${limit}`)
-      console.log(data, "data (fetchTestcases)")
+      console.log("[store->testcase->action] :\n", data)
       commit("setTestcases", data)
     } catch (error) {
       throw error

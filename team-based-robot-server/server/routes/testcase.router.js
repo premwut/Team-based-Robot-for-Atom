@@ -9,11 +9,11 @@ const router = Router()
 const ctrl = new TestcaseController()
 const manageWrite = [
   [FeatureType.ALL, PermissionType.WRITE],
-  [FeatureType.MANAGE_USER, PermissionType.WRITE],
+  [FeatureType.MANAGE_TESTCASE, PermissionType.WRITE],
 ]
 const manageRead = [
   ...manageWrite,
-  [FeatureType.MANAGE_USER, PermissionType.READ],
+  [FeatureType.MANAGE_TESTCASE, PermissionType.READ],
 ]
 
 console.log("Here!, I'm in testcase router")

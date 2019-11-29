@@ -13,11 +13,12 @@ export default {
       this.isLoading = true
       const process = []
       const isTestcaseEmpty = store.state.testcase.testcases.list.length === 0
+      console.log("isTestcaseEmpty", isTestcaseEmpty)
       console.log(this.isLoading, "isLoading")
       isTestcaseEmpty && process.push(store.dispatch("testcase/fetchTestcases", { page: 1, limit: rowsPerPage }))
       await Promise.all(process)
       this.isLoading = false
-      console.log(this.isLoading, "what the fuck")
+      console.log("what the fuck", this.isLoading)
     } catch (error) {
       this.isLoading = false
       this.isLoadingFail = true
@@ -40,8 +41,8 @@ export default {
       { text: "Start", align: "center", sortable: false },
       { text: "End", align: "center", sortable: false },
       { text: "Duration", align: "center", sortable: false },
-      { text: "Date Run", align: "center", sortable: false },
-      { text: "Run result", align: "center", sortable: false },
+      { text: "Run Date", align: "center", sortable: false },
+      { text: "Run Result", align: "center", sortable: false },
     ],
     pagination: { rowsPerPage },
     editedItem: undefined,
@@ -116,7 +117,7 @@ export default {
   <v-flex md12>
     <div class="table-container">
       <v-data-table id="user-table-container"
-        :headers="headers" :items="testcases.data"
+        :headers="headers" :items="testcases.list"
         :loading="isLoading"
         :pagination.sync="pagination"
         :total-items="paging.totalItems"
@@ -125,11 +126,12 @@ export default {
         <v-progress-linear slot="progress" color="primary" height="3" indeterminate></v-progress-linear>
         <template slot="items" slot-scope="props">
           <td class="text-xs-center">{{ props.item.tc_id }}</td>
-          <td class="text-xs-left">{{ props.item.tc_name }}</td>
-          <td class="text-xs-left">{{ props.item.tc_run_start }}</td>
+          <td class="text-xs-center">{{ props.item.tc_name }}</td>
+          <td class="text-xs-center">{{ props.item.tc_run_start }}</td>
           <td class="text-xs-center">{{ props.item.tc_run_end }}</td>
-          <td class="text-xs-left">{{ props.item.tc_run_date }}</td>
-          <td class="text-xs-left">{{ props.item.tc_run_result }}</td>
+          <td class="text-xs-center">{{ props.item.tc_run_end }}</td>
+          <td class="text-xs-center">{{ props.item.tc_run_date }}</td>
+          <td class="text-xs-center">{{ props.item.tc_run_result }}</td>
         </template>
         <template slot="no-data">
           <div>
