@@ -14,10 +14,19 @@ const teamMemberMenu = [
       }
     ]
   },
-  {
-    "label": "Reload Keywords",
-    "command": "team-based-robot:keyword-reload"
-  },
+  // {
+  //   "label": "Reload Keywords",
+  //   "submenu": [
+  //     {
+  //       "label": "Reload All Keywords",
+  //       "command": "team-based-robot:keyword-reload"
+  //     },
+  //     {
+  //       "label": "Reload Approved Keywords",
+  //       "command": "team-based-robot:keyword-reload-approved"
+  //     }
+  //   ]
+  // },
   {
     "label": "Search Keywords",
     "command": "team-based-robot:keyword-search"
