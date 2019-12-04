@@ -152,9 +152,11 @@ export default class SaveKeywordView {
     }
   }
 
-  async onApproveKeywordReviewClicked() {
+  async onApproveKeywordReviewClicked(isAprv) {
     try {
-      this.refs.editorReview.setText("")
+      if (isAprv) {
+        // this.refs.editorReview.setText("")
+      }
       etch.update(this)
     } catch (e) {
       console.error("[SaveView] Approve keyword failure", e)
@@ -346,8 +348,11 @@ export default class SaveKeywordView {
 
   render () {
     const iconButton = this.isLoading ? 'spinner' : 'icon icon-cloud-upload'
+    const iconAprvButton = this.isLoading ? 'spinner' : 'icon icon-check'
+    const iconUnAprvButton = this.isLoading ? 'spinner' : 'icon icon-x'
     const buttonClasses = `btn btn-lg btn-info ${iconButton}`
-    const buttonClassesAprv = `btn btn-lg btn-info`
+    const buttonClassesAprv = `btn btn-lg btn-success ${iconAprvButton}`
+    const buttonClassesUnAprv = `btn btn-lg btn-error ${iconUnAprvButton}`
     console.log("Before render")
     console.log(this.keywords);
     const keywordItems = this.keywords.map((keyword, i) => {
@@ -428,10 +433,12 @@ export default class SaveKeywordView {
               </div>
 
             </section>
-            <div className="review-actions">
+            <span className="review-actions">
               <button className={buttonClassesAprv}
-                onClick={() => this.onApproveKeywordReviewClicked()}>Approve and Clear</button>
-            </div>
+                onClick={() => this.onApproveKeywordReviewClicked(true)}>Approve</button>
+              <button className={buttonClassesUnAprv}
+                onClick={() => this.onApproveKeywordReviewClicked(false)}>Disapprove</button>
+            </span>
           </section>
           <section className="shared-block">
             <ShareKeywordView ref="shareView"
