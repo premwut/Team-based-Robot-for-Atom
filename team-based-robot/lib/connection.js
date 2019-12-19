@@ -154,6 +154,7 @@ export default class Connection {
   async deleteKeyword(kdywordId) {
     try {
       const url = `/keyword/${kdywordId}/delete`
+      this.socket.emit('keywordUpdated', {id: this.socket.id})
       const { data: response } = await this.axios.delete(url, this.headerToken)
       return response.data.keywordId
     } catch (e) {
