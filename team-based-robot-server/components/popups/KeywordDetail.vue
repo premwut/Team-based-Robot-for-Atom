@@ -72,6 +72,13 @@ export default {
                 </v-textarea>
               </v-flex>
             </v-layout>
+          <v-layout row>
+              <v-flex xs12 class="mx-2">
+                <v-textarea label="Keyword Review"
+                  id="keyword-review" type="text" v-model="formData.kwd_review" readonly>
+                </v-textarea>
+              </v-flex>
+            </v-layout>
         </v-card-text>
 
         <v-card-actions class="px-3 py-3">

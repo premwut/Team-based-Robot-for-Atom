@@ -12,6 +12,7 @@ export const FeatureType = Object.freeze({
   MANAGE_ROLE: 'MANAGE_ROLE',
   MANAGE_TEAM_MEMBER: 'MANAGE_TEAM_MEMBER',
   MANAGE_KEYWORD: 'MANAGE_KEYWORD',
+  MANAGE_TESTCASE: 'MANAGE_TESTCASE',
 })
 
 export const PermissionType = Object.freeze({
