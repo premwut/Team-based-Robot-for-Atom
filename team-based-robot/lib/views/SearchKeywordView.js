@@ -189,6 +189,7 @@ export default class SearchKeywordView {
     const keywordItems = this.searchKeywords.map((keyword, i) => {
       const itemClass = `list-item ${ i === this.keywordSelectedIndex ? 'selected' : ''}`
       let actionType = <div className="-verifying"><div className="spinner -warning"/>Verifying</div>
+      let reviewClass = keyword.isAprv ? "icon icon-thumbsup" : "icon icon-thumbsdown"
       if (this.isVerified && keyword.isShared) {
         if (keyword.isOwner) {
           actionType = <div className="actions-botton">
@@ -204,7 +205,7 @@ export default class SearchKeywordView {
       return (
         <li key={i} className={itemClass}>
           <div className="title" onClick={() => this.onKeywordSelected(keyword, i)}>
-            { keyword.name }
+            { keyword.name } <div style="margin-left: 5px" class={reviewClass}></div>
           </div>
           <div className="actions">
             { actionType }
