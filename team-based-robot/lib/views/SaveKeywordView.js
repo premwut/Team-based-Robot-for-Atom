@@ -155,7 +155,9 @@ export default class SaveKeywordView {
   async onApproveKeywordReviewClicked(isAprv) {
     try {
       if (isAprv) {
-        // this.refs.editorReview.setText("")
+        this.refs.editorReview.setText("")
+      } else {
+        this.refs.editorReview.setText("*** Please type your comment ***.")
       }
       etch.update(this)
     } catch (e) {
