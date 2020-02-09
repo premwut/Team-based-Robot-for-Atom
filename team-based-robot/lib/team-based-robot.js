@@ -42,11 +42,13 @@ export default class TeamBasedRobot {
     }
 
     this.socket.on('sendNotification', (data) => {
+      const isAutoReload = atom.config.get(`${PACKAGE_NAME}.autoReload`)
+      // const isAutoReload = this.state.isAutoReload
       console.table(data)
       const {id, message} = data
       // console.table({id: id, socketId: this.socket.id})
       const isNotSaver = id !== this.socket.id
-      if (isNotSaver) {
+      if (isNotSaver && isAutoReload) {
         atom.notifications.addInfo(data.message)
         this.reloadKeyword(true)
       }

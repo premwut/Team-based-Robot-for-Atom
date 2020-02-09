@@ -48,6 +48,12 @@ const Setting = {
     type: 'boolean',
     default: false,
     order: 200
+  },
+  autoReload: {
+    title: 'Enable Auto-reload keywords',
+    type: 'boolean',
+    default: true,
+    order:200
   }
 };
 
