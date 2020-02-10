@@ -40,6 +40,10 @@ export default class Connection {
       const { data: response } = await this.axios.post(url, {}, { headers: { authorization: basicAuth } })
       this.user = { ...response.data }
       this.token = this.user.token
+
+      this.socket.emit('joinTeamroom', this.user.team_id)
+      atom.notifications.addWarning("Team ID:" + this.user.team_id)
+
       return this.user
     } catch (error) {
       console.error("[Connection] Login failure ", error)
@@ -123,7 +127,11 @@ export default class Connection {
     try {
       const url = `/keyword/create`
       const { data: response } = await this.axios.post(url, keywordInfo, this.headerToken)
+      const { data: user } = await this.axios.get('/user/profile', this.headerToken)
+            userData = user.data
+      console.log(userData)
       this.socket.emit('keywordUpdated', {id: this.socket.id})
+
       console.log(response)
       return [...response.data.keywords]
     } catch (e) {

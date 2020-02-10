@@ -68,9 +68,20 @@ server.listen(port, host, () => {
 
 io.on("connection", function (socket) {
   console.log("connected")
-
-  socket.on("keywordUpdated", (data) => {
-    io.sockets.emit("sendNotification", {...data, message: "Someone just updated keyword(s)"})
+  let roomName
+  socket.on("joinTeamroom", (data) => {
+    roomName = data
+    socket.join(roomName)
+    // socket.join("2")
+    socket.on("keywordUpdated", (data) => {
+      io.to(roomName).emit("sendNotification", {...data, message: "Keyword was updated"})
+      // io.sockets.emit("sendNotification", {...data, message: "Someone just updated keyword(s)"})
+    })
   })
+
+  // socket.on("keywordUpdated", (data) => {
+  //   io.to(roomName).emit("sendNotification", {...data, message: "Keyword was updated"})
+  //   // io.sockets.emit("sendNotification", {...data, message: "Someone just updated keyword(s)"})
+  // })
 })
 console.log("Server listening on " + host + ":" + port) // eslint-disable-line no-console
