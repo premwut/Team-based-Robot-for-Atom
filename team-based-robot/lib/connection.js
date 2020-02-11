@@ -42,7 +42,6 @@ export default class Connection {
       this.token = this.user.token
 
       this.socket.emit('joinTeamroom', this.user.team_id)
-      atom.notifications.addWarning("Team ID:" + this.user.team_id)
 
       return this.user
     } catch (error) {
@@ -130,7 +129,7 @@ export default class Connection {
       const { data: user } = await this.axios.get('/user/profile', this.headerToken)
             userData = user.data
       console.log(userData)
-      this.socket.emit('keywordUpdated', {id: this.socket.id})
+      this.socket.emit('keywordUpdated', {id: this.socket.id, username: userData.usr_fname})
 
       console.log(response)
       return [...response.data.keywords]
