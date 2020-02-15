@@ -54,7 +54,13 @@ const Setting = {
     type: 'boolean',
     default: true,
     order:200
-  }
+  },
+  showNotify: {
+    title: 'Show notifications from your team',
+    type: 'boolean',
+    default: true,
+    order: 200
+  },
 };
 
 export default Setting;
