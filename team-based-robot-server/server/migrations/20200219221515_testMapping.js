@@ -1,13 +1,12 @@
-const tableName = "test_history"
+const tableName = "test_mapping"
 
 exports.up = function(knex, Promise) {
     return Promise.all([
         knex.schema.createTable(tableName, (table) => {
-          table.increments("th_id")
-          table.integer("no_of_tc")
-          table.integer("passed")
-          table.integer("failed")
-          table.integer("usr_id").references("users.usr_id")
+          table.increments("test_map_id")
+          table.string("test_kwd_name")
+          table.integer("test_id").references("tests.test_id")
+          table.integer("kwd_id").references("keywords.kwd_id")
           table.timestamps()
         }),
       ])

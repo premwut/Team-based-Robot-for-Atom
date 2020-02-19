@@ -65,13 +65,16 @@ export const Fields = Object.freeze({
   KWD_DEPRECATE: 'kwd_deprecate',
   KWD_PARENT_ID: 'kwd_parent_id',
 
-  TH_ID: 'th_id',
-  NO_OF_TC: 'no_of_tc',
-  TH_PASSED: 'th_passed',
-  TH_FAILED: 'th_failed',
+  TEST_MAP_ID: 'test_map_id',
+  TEST_ID: 'test_id',
+  TEST_TC_NO: 'test_tc_no',
+  TEST_PASSED: 'test_passed',
+  TEST_FAILED: 'test_failed',
+  TEST_KWD_NAME: 'test_kwd_name',
 
-  KWD_TC_ID: 'kwd_th_id',
-  KWD_TH_OTHER_KWD: 'other_kwd',
+  RW_ID: 'rw_id',
+  RW_STATUS: 'rw_status',
+  RW_COMMENT: 'rw_comment',
 
   PROJ_ID: 'proj_id',
   PROJ_NAME: 'proj_name',
@@ -102,7 +105,9 @@ export const Models = Object.freeze({
   ROLE: 'Role',
   TEAM: 'Team',
   USER: 'User',
-  TESTCASE: 'Testcase',
+  TEST: 'Test',
+  TEST_MAPPING: 'TestMapping',
+  REVIEW: 'Review',
 })
 
 
@@ -116,4 +121,5 @@ export const PERMISSION_API   = '/permission'
 export const PROJECT_API      = '/project'
 export const TEAM_API         = '/team'
 export const KEYWORD_API      = '/keyword'
-export const TESTCASE_API     = '/testcase'
+export const TEST_API         = '/test'
+export const REVIEW_API       = '/review'
