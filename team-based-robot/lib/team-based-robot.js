@@ -51,7 +51,7 @@ export default class TeamBasedRobot {
       const isNotSaver = id !== this.socket.id
       if (isNotSaver && isAutoReload) {
         if (isAutoReload) {
-            this.reloadKeyword(true, true, isAutoReload)
+            this.reloadKeyword(true, true, true)
         }
         if (isShowNoti) {
             atom.notifications.addInfo(data.message)
