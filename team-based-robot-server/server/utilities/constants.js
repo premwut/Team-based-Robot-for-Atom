@@ -37,7 +37,8 @@ export const Tables = Object.freeze({
   ROLE: 'role',
   TEAM: 'team',
   USER: 'users',
-  TEST_HISTORY: 'test_history',
+  TEST: 'tests',
+  TEST_MAPPING: 'test_mapping',
   REVIEW: 'reviews'
 })
 
