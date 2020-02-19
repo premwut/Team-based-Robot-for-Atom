@@ -153,11 +153,16 @@ export default class SaveKeywordView {
   }
 
   async onApproveKeywordReviewClicked(isAprv) {
+    const index = this.keywordSelectedIndex
     try {
       if (isAprv) {
-        this.refs.editorReview.setText("")
+        // this.refs.editorReview.setText("")
+        this.keywords[index].isAprv = true
+        console.log("this.kwd.isAprv =", this.keywords[index].isAprv);
       } else {
-        this.refs.editorReview.setText("*** Please type your comment ***.")
+        this.keywords[index].isAprv = false
+        console.log("this.kwd.isAprv =", this.keywords[index].isAprv);
+        // this.refs.editorReview.setText("*** Please type your comment ***.")
       }
       etch.update(this)
     } catch (e) {
@@ -191,13 +196,13 @@ export default class SaveKeywordView {
           desc: keyword.desc,
           deprecate: false,
           review: keyword.review, // new
-          isAprv: keyword.review === "", // new
+          isAprv: keyword.isAprv, // new
           shared: { teamIds, projectIds, userIds }
         }
       })
       this.isLoading = true
       etch.update(this)
-      console.log("keywords : ", keywords);
+      console.log("I sus see here -> keywords : ", keywords);
       await this.connection.saveKeywords({ keywords })
       atom.notifications.addSuccess("Save keyword complete")
       this.hide()
