@@ -21,13 +21,6 @@ const userData = [
     email: 'naros.develop@gmail.com',
   },
   {
-    username: 'narospol2',
-    password: '$2a$10$u3tvNXYvjWb6jjKIO0sH7e1TvyM06bTT7XzPpNCCvVAvyZVi9CQLK',  // narospol
-    usr_fname: 'narospol2',
-    usr_lname: 'pathong2',
-    email: 'naros.develop2@gmail.com',
-  },
-  {
     username: 'somchai',
     password: '$2a$10$8EjHMzIbFmeSYIufLp1SL.VMvfwOSIjMrT7Ns4PbEFH1e1yqo/SFO',  // somchai
     usr_fname: 'somchai',
@@ -140,15 +133,12 @@ const keywordMapping = 'keyword_mapping'
 
 const keywords = 'keywords'
 
-const testHistory = 'test_history'
-
-const keywordTestHistory = 'keyword_test_history'
+const testcase = 'testcase'
 
 exports.seed = function (knex, Promise) {
 
   const deleteTables = [
-    testHistory,
-    keywordTestHistory,
+    testcase,
     keywordMapping,
     keywords,
     featureRole,
@@ -225,7 +215,6 @@ exports.seed = function (knex, Promise) {
           knex(user).where({ username: 'admin' }).update('role_id', 1),
           knex(user).where({ username: 'somchai' }).update({ role_id: 2, team_id: 1 }),
           knex(user).where({ username: 'narospol' }).update({ role_id: 3, team_id: 1 }),
-          knex(user).where({ username: 'narospol2' }).update({ role_id: 3, team_id: 1 }), // another member
           knex(user).where({ username: 'somsak' }).update({ role_id: 2, team_id: 3 }),
           knex(user).where({ username: 'puwadon' }).update({ role_id: 3, team_id: 3 }),
         ])
