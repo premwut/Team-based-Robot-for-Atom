@@ -10,8 +10,6 @@ exports.up = function (knex, Promise) {
       table.text("kwd_desc").nullable()
       table.boolean("kwd_deprecate").defaultTo(false)
       table.integer("kwd_parent_id").references("keywords.kwd_id")
-      table.boolean("kwd_is_approved").defaultTo(false)
-      table.string("kwd_review")
       table.timestamps()
     }),
   ])
