@@ -51,7 +51,7 @@ export default class TeamBasedRobot {
       const isNotSaver = id !== this.socket.id
       if (isNotSaver && isAutoReload) {
         if (isAutoReload) {
-            this.reloadKeyword(true, true, true)
+            this.reloadKeyword(true)
         }
         if (isShowNoti) {
             atom.notifications.addInfo(data.message)
@@ -110,7 +110,7 @@ export default class TeamBasedRobot {
     })
   }
 
-  async reloadKeyword(isGenerateRobotFile = false, isReloadAll = true, isAutoReload) {
+  async reloadKeyword(isGenerateRobotFile = false, isReloadAll) {
     const isTeamBase = isTeamBaseProject()
     if (isTeamBase || isGenerateRobotFile) {
       // sync keyword to robot file
@@ -118,7 +118,7 @@ export default class TeamBasedRobot {
       if (!workspaceView.className.includes(PACKAGE_NAME)) {
         workspaceView.classList.add(PACKAGE_NAME)
       }
-      await this.syncKeywordsToTeamBaseRobotFile(isReloadAll, isAutoReload)
+      await this.syncKeywordsToTeamBaseRobotFile(isReloadAll)
     }
   }
 
@@ -137,7 +137,7 @@ export default class TeamBasedRobot {
     }
   }
 
-  async syncKeywordsToTeamBaseRobotFile(isReloadAll = true, isAutoReload) {
+  async syncKeywordsToTeamBaseRobotFile(isReloadAll = true) {
     if (!this.LoggedIn) {
       await this.authenticate()
     }
@@ -157,8 +157,7 @@ export default class TeamBasedRobot {
       fs.writeFileSync(robotFilePath, content)
       console.log("[TeamBaseRobot] Sync keyword to robot file completed")
       this.autocomplete.reload()
-      if (!isAutoReload)
-        atom.notifications.addSuccess("Sync keyword completed")
+      atom.notifications.addSuccess("Sync keyword completed")
     } catch (e) {
       console.error("[TeamBaseRobot] Sync keyword failure ", e)
       atom.notifications.addError("Sync keyword failure")
