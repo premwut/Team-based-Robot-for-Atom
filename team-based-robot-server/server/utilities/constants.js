@@ -65,6 +65,14 @@ export const Fields = Object.freeze({
   KWD_DEPRECATE: 'kwd_deprecate',
   KWD_PARENT_ID: 'kwd_parent_id',
 
+  TH_ID: 'th_id',
+  NO_OF_TC: 'no_of_tc',
+  TH_PASSED: 'th_passed',
+  TH_FAILED: 'th_failed',
+
+  KWD_TC_ID: 'kwd_th_id',
+  KWD_TH_OTHER_KWD: 'other_kwd',
+
   PROJ_ID: 'proj_id',
   PROJ_NAME: 'proj_name',
   PROJ_DESC: 'proj_desc',
