@@ -67,10 +67,13 @@ export const Fields = Object.freeze({
   KWD_PARENT_ID: 'kwd_parent_id',
 
   TEST_MAP_ID: 'test_map_id',
+  TEST_MAP_TC_ID: 'test_map_tc_id',
+  TEST_MAP_TC_NAME: 'test_map_tc_name',
   TEST_ID: 'test_id',
   TEST_TC_NO: 'test_tc_no',
   TEST_PASSED: 'test_passed',
   TEST_FAILED: 'test_failed',
+  TEST_FILE_LINK: 'test_file_link',
   TEST_KWD_NAME: 'test_kwd_name',
 
   RW_ID: 'rw_id',
