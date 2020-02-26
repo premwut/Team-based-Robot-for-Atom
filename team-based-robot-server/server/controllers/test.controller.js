@@ -22,17 +22,18 @@ export default class TestController extends BaseController {
             }
             const test = await Test.forge(testData).save()
             const testMapCollection = TestMappings.forge()
-            test_result.forEach(testcase, tcId => {
-
-                const testId = test.get(Fields.TEST_ID)
+            const testId = test.get(Fields.TEST_ID)
+            test_result.forEach((testcase, tcId) => {
+                console.log(tcId, testcase)
                 const { kwd_list } = testcase
                 const keywordNames = R.uniq(kwd_list)
                 const queryKeyword = q => q.where(Fields.KWD_NAME, "in", R.uniq(keywordNames))
 
-                const keywords = Keywords.query(queryKeyword).fetch([require=false])
-
-                keywords.forEach(kwd => {
-                    const testMapping = this.convertToTestMappings(kwd, testId, tcId, testcase)
+                const keywords =  Keywords.query(queryKeyword).fetch([require=false])
+                // console.log(keywords)
+                keywords.each(kwd => {
+                    console.log(kwd)
+                    const testMapping = this.convertToTestMapping(kwd, testId, tcId, testcase)
                     testMapCollection.push(testMapping)
                 })
             })
@@ -41,6 +42,7 @@ export default class TestController extends BaseController {
                 const savedTestdMapping = testMapCollection.invokeThen("save", null, {transacting: tx})
                 return savedTestdMapping
             })
+            // const data = {}
           this.success(res, data)
         } catch (error) {
           this.failure(res, error)
@@ -63,7 +65,7 @@ export default class TestController extends BaseController {
 
     }
 
-    convertToTestMappings (kwd, testId, tcId, testcase) {
+    convertToTestMapping (kwd, testId, tcId, testcase) {
         let kwdId = null
         let kwdName = null
         const { tc_name, tc_passed } = testcase
