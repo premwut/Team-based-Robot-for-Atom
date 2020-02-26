@@ -20,46 +20,52 @@ export default class TestController extends BaseController {
                 test_file_link,
                 usr_id,
             }
-            const testMapCollection = TestMappings.forge(testData).save()
-            .then(result => {
-                const testMapCollection = TestMappings.forge()
-                test_result.forEach(testcase, tcId => {
-                    const testId = result.get(Fields.TEST_ID)
-                    const { kwd_list } = testcase
-                    const keywordNames = R.uniq(kwd_list)
-                    const queryKeyword = q => q.where(Fields.KWD_NAME, "in", R.uniq(keywordNames))
-                    const keywords = Keywords.query(queryKeyword).fetch([require=false])
-                    keywords.forEach(kwd => {
-                        const testMapping = this.convertToTestMappings(kwd, testId, tcId, testcase)
-                        testMapCollection.push(testMapping)
-                    })
+            const test = await Test.forge(testData).save()
+            const testMapCollection = TestMappings.forge()
+            test_result.forEach(testcase, tcId => {
+
+                const testId = test.get(Fields.TEST_ID)
+                const { kwd_list } = testcase
+                const keywordNames = R.uniq(kwd_list)
+                const queryKeyword = q => q.where(Fields.KWD_NAME, "in", R.uniq(keywordNames))
+
+                const keywords = Keywords.query(queryKeyword).fetch([require=false])
+
+                keywords.forEach(kwd => {
+                    const testMapping = this.convertToTestMappings(kwd, testId, tcId, testcase)
+                    testMapCollection.push(testMapping)
                 })
-                const savedTestdMapping = await testMapCollection.invokeThen("save", null, {transacting: tx})
+            })
+
+            const data = await bookshelf.transaction( async (tx) => {
+                const savedTestdMapping = testMapCollection.invokeThen("save", null, {transacting: tx})
                 return savedTestdMapping
             })
+          this.success(res, data)
         } catch (error) {
-            console.log(error)
+          this.failure(res, error)
         }
     }
 
-    async getList (req, res) {
-        try {
-            const { usr_id, team_id } = req.currentUser.toJSON()
-            const { date } = req.query
-            const date = new Date(date)
-            console.log('Date =', date)
-            const tests = await Test.forge()
-        } catch (error) {
-            this.failure(res, error)
-        }
-    }
+    // async getList (req, res) {
+    //     try {
+    //         const { usr_id, team_id } = req.currentUser.toJSON()
+    //         const { date } = req.query
+    //         const date = new Date(date)
+    //         console.log('Date =', date)
+    //         const tests = await Test.forge()
+    //     } catch (error) {
+    //         this.failure(res, error)
+    //     }
+    // }
 
     async saveTestMapping(tx, testCollection) {
 
     }
 
     convertToTestMappings (kwd, testId, tcId, testcase) {
-        const kwdId, kwdName = null
+        let kwdId = null
+        let kwdName = null
         const { tc_name, tc_passed } = testcase
         if (kwd.get(Fields.KWD_NAME) != null) {
             kwdName = kwd.get(Fields.KWD_NAME)
