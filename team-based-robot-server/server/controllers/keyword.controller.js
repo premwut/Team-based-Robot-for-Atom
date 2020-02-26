@@ -206,10 +206,8 @@ export default class KeywordController extends BaseController {
       desc: kwd_desc,
       doc: kwd_doc,
       deprecate: kwd_deprecate,
-      review: kwd_review, // new
-      isAprv: kwd_is_approved, // new
     } = data
-    return Keyword.forge({ kwd_id, kwd_name, kwd_content, kwd_desc, kwd_doc, kwd_deprecate, kwd_review, kwd_is_approved })
+    return Keyword.forge({ kwd_id, kwd_name, kwd_content, kwd_desc, kwd_doc, kwd_deprecate })
   }
 
   validateCreateRequest (req) {

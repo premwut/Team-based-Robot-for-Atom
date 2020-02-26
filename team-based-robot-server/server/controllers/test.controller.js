@@ -14,18 +14,28 @@ export default class TestController extends BaseController {
             const { test_tc_no, test_passed, test_failed, test_file_link, test_result } = req.body
             const { usr_id } = req.currentUser
             const testData = {
-                usr_id,
                 test_tc_no,
+                test_passed,
                 test_failed,
-                test_file_link
+                test_file_link,
+                usr_id,
             }
             const testMapCollection = TestMappings.forge(testData).save()
             .then(result => {
                 const testMapCollection = TestMappings.forge()
-                test_result.forEach(kwd, index => {
-                    const { tc_name, tc_passed, kwd_list } = element
-                    const test = await this.convertToTest(index, element)  
-                });
+                test_result.forEach(testcase, tcId => {
+                    const testId = result.get(Fields.TEST_ID)
+                    const { kwd_list } = testcase
+                    const keywordNames = R.uniq(kwd_list)
+                    const queryKeyword = q => q.where(Fields.KWD_NAME, "in", R.uniq(keywordNames))
+                    const keywords = Keywords.query(queryKeyword).fetch([require=false])
+                    keywords.forEach(kwd => {
+                        const testMapping = this.convertToTestMappings(kwd, testId, tcId, testcase)
+                        testMapCollection.push(testMapping)
+                    })
+                })
+                const savedTestdMapping = await testMapCollection.invokeThen("save", null, {transacting: tx})
+                return savedTestdMapping
             })
         } catch (error) {
             console.log(error)
@@ -48,13 +58,20 @@ export default class TestController extends BaseController {
 
     }
 
-    convertToTest (index, data) {
-        if (!data) return undefined
-        const {
-            tc_name,
-            tc_passed,
-            kwd_list
-        } = data
-        return Test
+    convertToTestMappings (kwd, testId, tcId, testcase) {
+        const kwdId, kwdName = null
+        const { tc_name, tc_passed } = testcase
+        if (kwd.get(Fields.KWD_NAME) != null) {
+            kwdName = kwd.get(Fields.KWD_NAME)
+            kwdId = kwd.get(Fields.KWD_ID)
+        }
+        return TestMapping.forge({ 
+             kwd_id: kwdId,
+             test_id: testId, 
+             test_map_tc_id: tcId, 
+             test_map_tc_name: tc_name,
+             test_map_tc_passed: tc_passed,
+             test_kwd_name: kwdName,
+             })
     }
 }

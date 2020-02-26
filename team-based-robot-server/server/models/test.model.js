@@ -11,6 +11,9 @@ class Test extends BaseModel {
     user () {
       return this.belongsTo(Models.USER, Fields.USR_ID)
     }
+    testMapping () {
+      return this.hasMany(Models.TEST_MAPPING, Fields.TEST_ID)
+    }
 }
 
 export const Tests = bookshelf.Collection.extend({model: Test})
