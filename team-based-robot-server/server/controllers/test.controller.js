@@ -13,6 +13,8 @@ export default class TestController extends BaseController {
         try {
             const { test_tc_no, test_passed, test_failed, test_file_link, test_result } = req.body
             const { usr_id } = req.currentUser
+            const testMapCollection = TestMappings.forge()
+            console.log("usr_id =", usr_id)
             const testData = {
                 test_tc_no,
                 test_passed,
@@ -21,27 +23,34 @@ export default class TestController extends BaseController {
                 usr_id,
             }
             const test = await Test.forge(testData).save()
-            const testMapCollection = TestMappings.forge()
             const testId = test.get(Fields.TEST_ID)
-            test_result.forEach((testcase, tcId) => {
-                console.log(tcId, testcase)
-                const { kwd_list } = testcase
+
+            const list = await test_result.map( async (testcase, tcId) => { 
+                testcase.tc_id = tcId + 1
+                const { tc_id, kwd_list } = testcase
                 const keywordNames = R.uniq(kwd_list)
                 const queryKeyword = q => q.where(Fields.KWD_NAME, "in", R.uniq(keywordNames))
 
-                const keywords =  Keywords.query(queryKeyword).fetch([require=false])
-                // console.log(keywords)
-                keywords.each(kwd => {
-                    console.log(kwd)
-                    const testMapping = this.convertToTestMapping(kwd, testId, tcId, testcase)
-                    testMapCollection.push(testMapping)
+                const keywords =  await Keywords.query(queryKeyword).fetch() //[require=true]
+                // keywords.map((kwd) => console.log("kwd.length =", kwd.get(Fields.KWD_NAME)))
+
+                await keywords.map( (kwd) => {
+                    const testMapping = this.convertToTestMapping(kwd, testId, tc_id, testcase)
+                    this.logTestMapping(testMapping)
+                    testMapCollection.add(testMapping)
                 })
             })
-
             const data = await bookshelf.transaction( async (tx) => {
-                const savedTestdMapping = testMapCollection.invokeThen("save", null, {transacting: tx})
-                return savedTestdMapping
+                console.log("testMapColl =", testMapCollection)
+                const process = [testMapCollection.invokeThen("save", null, {transacting: tx})]
+                const [savedTestMapping] = await Promise.all(process)
+                return savedTestMapping 
             })
+
+            // const data = await bookshelf.transaction( async (tx) => {
+            //     const savedTestMapping = await testMapCollection.invokeThen("save", null, {transacting: tx})
+            //     return savedTestMapping 
+            // })
             // const data = {}
           this.success(res, data)
         } catch (error) {
@@ -61,11 +70,12 @@ export default class TestController extends BaseController {
     //     }
     // }
 
-    async saveTestMapping(tx, testCollection) {
+    // async saveTestMapping(tx, testCollection) {
 
-    }
+    // }
 
     convertToTestMapping (kwd, testId, tcId, testcase) {
+        // console.log(`In convertTestMap tcId = ${tcId}`)
         let kwdId = null
         let kwdName = null
         const { tc_name, tc_passed } = testcase
@@ -81,5 +91,14 @@ export default class TestController extends BaseController {
              test_map_tc_passed: tc_passed,
              test_kwd_name: kwdName,
              })
+    }
+
+    logTestMapping(testMapping) {
+        let tcId = testMapping.get(Fields.TEST_MAP_TC_ID)
+        let tcName = testMapping.get(Fields.TEST_MAP_TC_NAME)
+        let tcPassed = testMapping.get(Fields.TEST_MAP_TC_PASSED)
+        let tcKwdId = testMapping.get(Fields.KWD_ID)
+        let tcKwdName = testMapping.get(Fields.TEST_KWD_NAME)
+        console.log(`testMapping => id:${tcId}, name:${tcName}, passed:${tcPassed}, kwdId:${tcKwdId}, kwdName:${tcKwdName}`)
     }
 }

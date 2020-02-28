@@ -5,8 +5,10 @@ import bookshelf from "../config/bookshelf"
 export const verifyAuthorization = (featurePermission = [[]]) => async (req, res, next) => {
   const { role_id } = req.currentUser.toJSON()
   const { features = [] } = await getFeaturesByRole(role_id)
+  // console.log("feature =", features)
   const featureMap = features.map(item => [item.feature, item.permission])
   const isValid = R.intersection(featureMap, featurePermission).length
+  // console.log("isValid =", isValid)
   if (isValid) {
     next()
   } else {

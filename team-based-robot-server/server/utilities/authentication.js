@@ -42,6 +42,7 @@ export const verifyAuthentication = async (req, res, next) => {
     const currentUser = sub ? await User.findById(sub.uid) : undefined
     if (rest && currentUser) {
       req.currentUser = currentUser // assign user model to request
+      // console.log("currentUser =", req.currentUser)
       next()
     } else {
       throw new Error("verify token failure.")
