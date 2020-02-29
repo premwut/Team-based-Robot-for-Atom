@@ -4,7 +4,7 @@ import Keyword, { Keywords } from "../models/keyword.model"
 
 import BaseController from "./base.controller"
 import { Fields } from "../utilities/constants"
-import R from "ramda"
+import R, { flatten } from "ramda"
 import { Users } from "../models/user.model"
 import bookshelf from "../config/bookshelf"
 
@@ -25,33 +25,67 @@ export default class TestController extends BaseController {
             const test = await Test.forge(testData).save()
             const testId = test.get(Fields.TEST_ID)
 
-            const list = await test_result.map( async (testcase, tcId) => { 
+            // await Promise.all(test_result.map( async (testcase, tcId) => { 
+            //     testcase.tc_id = tcId + 1
+            //     const { tc_id, kwd_list } = testcase
+            //     const keywordNames = R.uniq(kwd_list)
+            //     const queryKeyword = q => q.where(Fields.KWD_NAME, "in", R.uniq(keywordNames))
+
+            //     const keywords =  await Keywords.query(queryKeyword).fetch() //[require=true]
+
+            //     keywords.map((kwd) => console.log("kwd.length =", kwd.get(Fields.KWD_NAME)))
+
+            //     keywords.map((kwd) => {
+            //         const testMapping = this.convertToTestMapping(kwd, testId, tc_id, testcase)
+            //         this.logTestMapping(testMapping)
+            //         testMapCollection.push(testMapping)
+            //     })
+            // }))
+            // console.log('list ==> ', list)
+            // await Promise.all(list)
+
+            // Lab by P'Golf Yossapol
+            const promiseKeywords = test_result
+                .map(({kwd_list}) =>  R.uniq(kwd_list))
+                .map(keywordName => q => q.where(Fields.KWD_NAME, "in", R.uniq(keywordName)))
+                .map((queryKeyword) => Keywords.query(queryKeyword).fetch({require: false}))
+
+            const fetchKeywords = await Promise.all(promiseKeywords)
+
+            const fetchKeywordMapping = fetchKeywords.reduce((acc, fetchKeyword) => {
+                fetchKeyword.forEach(kwd => {
+                    const kwdName = kwd.get(Fields.KWD_NAME)
+
+                    if (!R.isNil(kwdName)) {
+                        acc[kwdName] = kwd
+                    }
+                })
+                return acc
+            }, {})
+
+            const testMapCollection3 = test_result.reduce((acc, testcase, tcId) => {
                 testcase.tc_id = tcId + 1
                 const { tc_id, kwd_list } = testcase
                 const keywordNames = R.uniq(kwd_list)
-                const queryKeyword = q => q.where(Fields.KWD_NAME, "in", R.uniq(keywordNames))
 
-                const keywords =  await Keywords.query(queryKeyword).fetch() //[require=true]
-                // keywords.map((kwd) => console.log("kwd.length =", kwd.get(Fields.KWD_NAME)))
+                const testMap = R.flatten(keywordNames.map((kwdName) => {
+                    const kwd = fetchKeywordMapping[kwdName]
+                    return this.convertToTestMapping(kwd, testId, tc_id, testcase, kwdName)
+                }))
 
-                await keywords.map( (kwd) => {
-                    const testMapping = this.convertToTestMapping(kwd, testId, tc_id, testcase)
-                    this.logTestMapping(testMapping)
-                    testMapCollection.add(testMapping)
-                })
-            })
+                return acc.push(testMap)
+            }, TestMappings.forge())
+
+
+
             const data = await bookshelf.transaction( async (tx) => {
-                console.log("testMapColl =", testMapCollection)
-                const process = [testMapCollection.invokeThen("save", null, {transacting: tx})]
-                const [savedTestMapping] = await Promise.all(process)
-                return savedTestMapping 
+                // console.log("testMapColl =", testMapCollection)
+                testMapCollection3.forEach(testMap => this.logTestMapping(testMap))
+                const results = await testMapCollection3.invokeThen("save", null, {transacting: tx})
+                console.log('results ===> ', results.length)
+                return results 
             })
 
-            // const data = await bookshelf.transaction( async (tx) => {
-            //     const savedTestMapping = await testMapCollection.invokeThen("save", null, {transacting: tx})
-            //     return savedTestMapping 
-            // })
-            // const data = {}
           this.success(res, data)
         } catch (error) {
           this.failure(res, error)
@@ -74,12 +108,16 @@ export default class TestController extends BaseController {
 
     // }
 
-    convertToTestMapping (kwd, testId, tcId, testcase) {
+    convertToTestMapping (kwd, testId, tcId, testcase, name) {
         // console.log(`In convertTestMap tcId = ${tcId}`)
         let kwdId = null
         let kwdName = null
         const { tc_name, tc_passed } = testcase
-        if (kwd.get(Fields.KWD_NAME) != null) {
+
+        if(R.isNil(kwd)) {
+            kwdName = name
+        }
+        else if (kwd.get(Fields.KWD_NAME) != null) {
             kwdName = kwd.get(Fields.KWD_NAME)
             kwdId = kwd.get(Fields.KWD_ID)
         }
@@ -90,7 +128,7 @@ export default class TestController extends BaseController {
              test_map_tc_name: tc_name,
              test_map_tc_passed: tc_passed,
              test_kwd_name: kwdName,
-             })
+        })
     }
 
     logTestMapping(testMapping) {
@@ -99,6 +137,7 @@ export default class TestController extends BaseController {
         let tcPassed = testMapping.get(Fields.TEST_MAP_TC_PASSED)
         let tcKwdId = testMapping.get(Fields.KWD_ID)
         let tcKwdName = testMapping.get(Fields.TEST_KWD_NAME)
+
         console.log(`testMapping => id:${tcId}, name:${tcName}, passed:${tcPassed}, kwdId:${tcKwdId}, kwdName:${tcKwdName}`)
     }
 }
