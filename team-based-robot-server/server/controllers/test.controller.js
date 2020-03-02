@@ -13,8 +13,8 @@ export default class TestController extends BaseController {
   async create (req, res) {
     try {
       const { test_tc_no, test_passed, test_failed, test_file_link, test_result } = req.body
-      const { usr_id } = req.currentUser
-      console.log("usr_id =", usr_id)
+      const usr_id = req.currentUser.get(Fields.USR_ID)
+      console.log("usr_id ===>", usr_id)
       const testData = {
         test_tc_no,
         test_passed,
@@ -32,7 +32,6 @@ export default class TestController extends BaseController {
         .map((queryKeyword) => Keywords.query(queryKeyword).fetch({require: false}))
 
       const fetchKeywords = await Promise.all(promiseKeywords)
-      console.log("fetchKeywords ==>", fetchKeywords)
 
       const fetchKeywordMapping = fetchKeywords.reduce((acc, fetchKeyword) => {
         fetchKeyword.forEach(kwd => {
@@ -65,24 +64,28 @@ export default class TestController extends BaseController {
         console.log("results ===> ", results.length)
         return results
       })
-
       this.success(res, data)
     } catch (error) {
       this.failure(res, error)
     }
   }
 
-  // async getList (req, res) {
-  //     try {
-  //         const { usr_id, team_id } = req.currentUser.toJSON()
-  //         const { date } = req.query
-  //         const date = new Date(date)
-  //         console.log('Date =', date)
-  //         const tests = await Test.forge()
-  //     } catch (error) {
-  //         this.failure(res, error)
-  //     }
-  // }
+  async getList (req, res) {
+      try {
+          // console.log("I'm in getList");
+          const { date } = req.query
+          const { usr_id, team_id } = req.currentUser.toJSON()
+          const created_at = new Date(date)
+          console.log(`Date = ${created_at}, usr_id = ${usr_id}`)
+          // const queryTestsByDate = q => q.where(Fields.)
+
+          // const tests = await Test.forge()
+          const data = { created_at }
+          this.success(res, data)
+      } catch (error) {
+          this.failure(res, error)
+      }
+  }
 
   convertToTestMapping (kwd, testId, tcId, testcase, name) {
     // console.log(`In convertTestMap tcId = ${tcId}`)

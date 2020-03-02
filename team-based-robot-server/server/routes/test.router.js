@@ -19,7 +19,7 @@ const manageRead = [
 console.log("Here!, I'm in test router")
 
 // mapping route
-// router.get(`${TEST_API}/:date`, ctrl.getList.bind(ctrl))
+router.get(`${TEST_API}/list`, authn, authz(manageRead), ctrl.getList.bind(ctrl))
 router.post(`${TEST_API}/create`, authn, authz(manageWrite), ctrl.create.bind(ctrl))
 // router.post(`${TEST_API}/list/delete`, ctrl.delete.bind(ctrl))
 // router.put(`${TEST_API}/edit`, authn, authz(manageRead), ctrl.create.bind(ctrl))
