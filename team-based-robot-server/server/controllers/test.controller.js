@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars */
+ /* eslint-disable no-unused-vars */
 import Test, { Tests } from "../models/test.model"
 import TestMapping, { TestMappings } from "../models/testMapping.model"
 import Keyword, { Keywords } from "../models/keyword.model"
@@ -32,6 +32,7 @@ export default class TestController extends BaseController {
         .map((queryKeyword) => Keywords.query(queryKeyword).fetch({require: false}))
 
       const fetchKeywords = await Promise.all(promiseKeywords)
+      console.log("fetchKeywords ==>", fetchKeywords)
 
       const fetchKeywordMapping = fetchKeywords.reduce((acc, fetchKeyword) => {
         fetchKeyword.forEach(kwd => {
