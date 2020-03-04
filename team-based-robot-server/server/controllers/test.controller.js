@@ -1,7 +1,9 @@
- /* eslint-disable no-unused-vars */
+/* eslint-disable no-unused-vars */
 import Test, { Tests } from "../models/test.model"
 import TestMapping, { TestMappings } from "../models/testMapping.model"
 import Keyword, { Keywords } from "../models/keyword.model"
+import Team from "../models/team.model"
+import { getPagination, isPagination } from "../utilities/utils"
 
 import BaseController from "./base.controller"
 import { Fields } from "../utilities/constants"
@@ -58,7 +60,6 @@ export default class TestController extends BaseController {
       }, TestMappings.forge())
 
       const data = await bookshelf.transaction(async (tx) => {
-        // console.log("testMapColl =", testMapCollection)
         testMapCollection3.forEach(testMap => this.logTestMapping(testMap))
         const results = await testMapCollection3.invokeThen("save", null, {transacting: tx})
         console.log("results ===> ", results.length)
@@ -71,20 +72,36 @@ export default class TestController extends BaseController {
   }
 
   async getList (req, res) {
-      try {
-          // console.log("I'm in getList");
-          const { date } = req.query
-          const { usr_id, team_id } = req.currentUser.toJSON()
-          const created_at = new Date(date)
-          console.log(`Date = ${created_at}, usr_id = ${usr_id}`)
-          // const queryTestsByDate = q => q.where(Fields.)
+    try {
+      const isPaging = isPagination(req)
+      const { date, page, limit: pageSize } = req.query
+      const { usr_id, team_id } = req.currentUser.toJSON()
+      const created_at = new Date(date)
+      console.log(`Date = ${created_at}, usr_id = ${usr_id}. team_id = ${team_id}`)
+      const teamMembers = await Team.forge({ team_id }).fetch({ withRelated: ["members"] }) ||
+      await Team.forge().orderBy(Fields.TEAM_ID).fetchAll() || []
+      const { members } = teamMembers.toJSON()
+      const memberIds = members.map(member => member.usr_id)
+      const queryTest = q => q.where(Fields.USR_ID, "in", R.uniq(memberIds)).orderBy("created_at", "des")
+      const tests = await (isPaging ? Tests.query(queryTest).fetchPage({ page, pageSize })
+        : Tests.query(queryTest).fetchAll())
+      this.success(res, { tests, ...getPagination(tests) })
+    } catch (error) {
+      this.failure(res, error)
+    }
+  }
 
-          // const tests = await Test.forge()
-          const data = { created_at }
-          this.success(res, data)
-      } catch (error) {
-          this.failure(res, error)
-      }
+  async getTestcaseList (req, res) {
+    // const fetchTestMapping = promiseTest.map(test => {
+    //   const { test_id, test_tc_no } = test
+    //   const tcIds = Array.from({length: test_tc_no}, (v, k) => k + 1)
+    //   const testMappingCollection = tcIds
+    //     .map(tcId => q => q.where({test_id, test_tc_id: tcIds}).orderBy("test_map_id", "asc"))
+    //     .map((queryTestMap) => TestMappings.query(queryTestMap).fetch())
+    //   testMappingCollection.map(x => console.log(x.toJSON()))
+    //   test.testcases = testMappingCollection
+    //   return test
+    // })
   }
 
   convertToTestMapping (kwd, testId, tcId, testcase, name) {
