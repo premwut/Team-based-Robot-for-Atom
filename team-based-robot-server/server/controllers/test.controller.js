@@ -82,7 +82,7 @@ export default class TestController extends BaseController {
       await Team.forge().orderBy(Fields.TEAM_ID).fetchAll() || []
       const { members } = teamMembers.toJSON()
       const memberIds = members.map(member => member.usr_id)
-      const queryTest = q => q.where(Fields.USR_ID, "in", R.uniq(memberIds)).orderBy("created_at", "des")
+      const queryTest = q => q.where(Fields.USR_ID, "in", R.uniq(memberIds)).orderBy("created_at", "desc")
       const tests = await (isPaging ? Tests.query(queryTest).fetchPage({ page, pageSize })
         : Tests.query(queryTest).fetchAll())
       this.success(res, { tests, ...getPagination(tests) })
@@ -91,17 +91,26 @@ export default class TestController extends BaseController {
     }
   }
 
-  async getTestcaseList (req, res) {
-    // const fetchTestMapping = promiseTest.map(test => {
-    //   const { test_id, test_tc_no } = test
-    //   const tcIds = Array.from({length: test_tc_no}, (v, k) => k + 1)
-    //   const testMappingCollection = tcIds
-    //     .map(tcId => q => q.where({test_id, test_tc_id: tcIds}).orderBy("test_map_id", "asc"))
-    //     .map((queryTestMap) => TestMappings.query(queryTestMap).fetch())
-    //   testMappingCollection.map(x => console.log(x.toJSON()))
-    //   test.testcases = testMappingCollection
-    //   return test
-    // })
+  async getTestcases (req, res) {
+    try {
+      console.log("Hello, I'm in getTestcases")
+      const { id: test_id } = req.params
+      const { page, limit: pageSize } = req.query
+      console.log("test_id ===>", test_id)
+      const test = await Test.forge({test_id}).fetch()
+      const test_tc_no = test.get(Fields.TEST_TC_NO)
+      const tcIds = Array.apply(null, Array(test_tc_no)).map((x, idx) => idx + 1) 
+
+      const testMappingList = tcIds
+        .map(tcId => q => q.where({ test_id: test_id }).orderBy("test_map_id", "asc"))
+        .map((queryTestMap) => TestMappings.query(queryTestMap).fetch())
+
+      const [testcases] = await Promise.all(testMappingList)
+      const data = { ...test, testcases }
+      this.success(res, data)
+    } catch (error) {
+      this.failure(res, error)
+    }
   }
 
   convertToTestMapping (kwd, testId, tcId, testcase, name) {
