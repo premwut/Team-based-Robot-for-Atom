@@ -25,7 +25,8 @@ export default class SearchKeywordView {
     if (robotGrammar) {
       this.refs.editorContent.setGrammar(robotGrammar)
     }
-    this.refs.editorContent.element.setHeight(220)
+    this.refs.editorContent.element.setHeight(100)
+    this.refs.editorReview.element.setHeight(100)
     console.log(this.refs)
     this.updateProps(props)
   }
@@ -242,6 +243,10 @@ export default class SearchKeywordView {
             <div className="input-block">
               <label>Keyword Description</label>
               <TextEditor ref="editorDesc" readOnly={true} mini={true} placeholderText="Keyword Description" />
+            </div>
+            <div className="input-block">
+              <label>Keyword Review</label>
+              <TextEditor ref="editorReview" placeholderText="Type your keyword review here..."/>
             </div>
           </section>
         </div>
