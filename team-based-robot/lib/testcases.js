@@ -36,27 +36,23 @@ export const saveTestcase = async (tbInstance) => {
   something.test_failed = testResults.statistics.total.stat[1]._attributes.fail
 
   suites = (testResults.suite.suite) ? testResults.suite.suite : [ testResults.suite ]
+
   console.log(testResults)
   // testcases = (!Array.isArray(testResults.test)) ? [ testResults.test ] : testResults.test
   suites.map(suite => {
-    const cases = (!Array.isArray(suite.test)) ? [ suite.test ] : suite.test
-    // testcaseList.push({
-    //   tc_name: _attributes.name,
-    //   tc_passed: status._attributes.status
-    // })
+    const cases = toArray(suite.test)
     cases.map(tc => {
       console.log(tc, 'tc')
       testcaseList.push({
         tc_name: tc._attributes.name,
         tc_passed: tc.status._attributes.status,
-        // kwd_list: tc.kw
+        kwd_list: toArray(tc.kw)
       })
     })
   })
   console.log(testcaseList, 'testcaseList')
-  // something.test_result = testcaseList
-  //
-  // console.log(something, 'something')
+  something.test_result = testcaseList
+  console.log(something, 'something')
 
   // const test = await connection.getTestcase()
   // const testcaseData = test.data.testcases //fetched from database
@@ -174,4 +170,8 @@ const mapTestcases = function (testResults, testcaseData) {
   })
 
   return { saveList, editList }
+}
+
+const toArray = obj => {
+  return (!Array.isArray(obj)) ? [ obj ] : obj
 }
