@@ -26,41 +26,13 @@ export const saveTestcase = async (tbInstance) => {
   let testResults = getTestResults().robot
   const connection = tbInstance.connection
   const currentUser = await connection.getProfile()
-  console.log(testResults)
+  const testOutput = mapTestOutput(testResults)
+  console.log(testOutput)
 
-  //Building output object for test history (New feature on web app)
-  let something = {}
-      testcaseList = []
-  something.test_tc_no = null
-  something.test_passed = testResults.statistics.total.stat[1]._attributes.pass
-  something.test_failed = testResults.statistics.total.stat[1]._attributes.fail
-
-  suites = (testResults.suite.suite) ? testResults.suite.suite : [ testResults.suite ]
-
-  console.log(testResults)
-  // testcases = (!Array.isArray(testResults.test)) ? [ testResults.test ] : testResults.test
-  suites.map(suite => {
-    const cases = toArray(suite.test)
-    cases.map(tc => {
-      console.log(tc, 'tc')
-      testcaseList.push({
-        tc_name: tc._attributes.name,
-        tc_passed: tc.status._attributes.status,
-        kwd_list: toArray(tc.kw)
-      })
-    })
-  })
-  console.log(testcaseList, 'testcaseList')
-  something.test_result = testcaseList
-  console.log(something, 'something')
 
   // const test = await connection.getTestcase()
   // const testcaseData = test.data.testcases //fetched from database
 
-
-  if (!Array.isArray(testResults)) {
-    testResults = [ testResults ]
-  }
 
   // let { saveList, editList } = mapTestcases(testResults, testcaseData)
   // let { saveList } = mapTestcases(testResults, testcaseData)
@@ -132,15 +104,42 @@ export const saveTestcase = async (tbInstance) => {
   //       editOutput.testcases.push(input)
   // })
 
-  console.log(outputData)
-
-
   // const { data: response } = await connection.saveTestcaseRun(outputData)
   // const asdf = await connection.updateTestcases(editOutput)
 
-  return outputData
+  return testOutput
 }
 
+const mapTestOutput = testResults => {
+  //Building output object for test history (New feature on web app)
+  let output = {}
+      testcaseList = []
+  output.test_tc_no = null
+  output.test_passed = testResults.statistics.total.stat[1]._attributes.pass
+  output.test_failed = testResults.statistics.total.stat[1]._attributes.fail
+
+  suites = (testResults.suite.suite) ? testResults.suite.suite : [ testResults.suite ]
+
+  // testcases = (!Array.isArray(testResults.test)) ? [ testResults.test ] : testResults.test
+  suites.map(suite => {
+    const cases = toArray(suite.test)
+    cases.map(tc => {
+      testcaseList.push({
+        tc_name: tc._attributes.name,
+        tc_passed: tc.status._attributes.status,
+        kwd_list: toArray(tc.kw).map(kw => {
+          return kw._attributes.name
+        })
+      })
+    })
+  })
+
+  output.test_result = testcaseList
+
+  return output
+}
+
+//Deprecated
 const mapTestcases = function (testResults, testcaseData) {
   let resultTestcase = []
       saveList = []
