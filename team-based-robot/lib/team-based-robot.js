@@ -41,7 +41,7 @@ export default class TeamBasedRobot {
       reportView: new ReportView({})
     }
 
-    this.socket.on('sendNotification', (data) => {
+    this.socket.on('sendKeywordNoti', (data) => {
       const isAutoReload = atom.config.get(`${PACKAGE_NAME}.autoReload`)
       const isShowNoti = atom.config.get(`${PACKAGE_NAME}.showNotify`)
 
