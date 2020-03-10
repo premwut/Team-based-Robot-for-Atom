@@ -1,21 +1,23 @@
 <script>
 import { mapGetters } from "vuex"
 import LoadingFailModal from "~/components/popups/LoadingFailure.vue"
+import TestTable from "~/components/TestTable.vue"
 const rowsPerPage = 10
 
 export default {
   layout: "admin",
   components: {
     LoadingFailModal,
+    TestTable,
   },
   async fetch ({ store }) {
     try {
       this.isLoading = true
       const process = []
-      const isTestcaseEmpty = store.state.testcase.testcases.list.length === 0
-      console.log("isTestcaseEmpty", isTestcaseEmpty)
+      const isTestEmpty = store.state.test.tests.list.length === 0
+      console.log("isTestEmpty", isTestEmpty)
       console.log(this.isLoading, "isLoading")
-      isTestcaseEmpty && process.push(store.dispatch("test/fetchTests", { page: 1, limit: rowsPerPage }))
+      isTestEmpty && process.push(store.dispatch("test/fetchTests", { page: 1, limit: rowsPerPage }))
       await Promise.all(process)
       this.isLoading = false
       console.log("isLoading ===>", this.isLoading)
@@ -116,37 +118,6 @@ export default {
       </v-card-actions>
     </v-flex>
   </v-layout>
-  <v-flex md12>
-    <div class="table-container">
-      <v-data-table id="user-table-container"
-        :headers="headers" :items="tests.list"
-        :loading="isLoading"
-        :pagination.sync="pagination"
-        :total-items="paging.totalItems"
-        :rows-per-page-items="[10]"
-        class="elevation-1">
-        <v-progress-linear slot="progress" color="primary" height="3" indeterminate></v-progress-linear>
-        <template slot="items" slot-scope="props">
-          <td class="text-xs-center">{{ props.item.test_id }}</td>
-          <td class="text-xs-center">{{ props.item.test_tc_no }}</td>
-          <td class="text-xs-center">{{ props.item.test_passed }}</td>
-          <td class="text-xs-center">{{ props.item.test_failed }}</td>
-          <td class="text-xs-center">{{ props.item.test_file_link }}</td>
-          <td class="text-xs-center">{{ props.item.test_usr_id }}</td>
-          <td class="text-xs-center">{{ props.item.created_at }}</td>
-        </template>
-        <template slot="no-data">
-          <div>
-            <h2 class="text-xs-center my-5">No Testcase Data!</h2>
-          </div>
-        </template>
-      </v-data-table>
-
-      <v-snackbar :timeout="5000" color="error" :top="true" :right="true" v-model="showError">
-        {{ errorMessage }}
-        <v-btn flat @click.native="showError = false">Close</v-btn>
-      </v-snackbar>
-    </div>
-  </v-flex>
+  <TestTable/>
 </div>
 </template>
