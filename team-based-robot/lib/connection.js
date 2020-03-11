@@ -179,4 +179,14 @@ export default class Connection {
       throw e
     }
   }
+
+  async getReview() {
+    try {
+      const url = `/review/get`
+      const { data: respose } = await this.axios.get(url, this.headerToken)
+      return respose.data
+    } catch (e) {
+      throw e
+    }
+  }
 }

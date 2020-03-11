@@ -6,7 +6,7 @@ import BaseController from "./base.controller"
 export default class ReviewController extends BaseController {
   async getReview (req, res) {
     try {
-      const reviews = await Review.forge().fetch()
+      const reviews = await Reviews.forge().fetch()
       this.success(res, reviews)
     } catch (e) {
       this.error(res, e)

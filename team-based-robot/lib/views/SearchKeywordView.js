@@ -84,8 +84,8 @@ export default class SearchKeywordView {
     const sharingKeywords = keywords.map(k => {
       const content = k.kwd_doc === "" ? `${k.kwd_content}` : `\n\t[Documentation]\t${k.kwd_doc}${k.kwd_content}`
       const original = `${k.kwd_name}${content}`
-      console.log("In searchKey displaySharingKeyword Fn"); // new
-      console.log(k.kwd_review); // new
+      // console.log("In searchKey displaySharingKeyword Fn"); // new
+      // console.log(k.kwd_review); // new
       return {
         id: k.kwd_id,
         name: k.kwd_name,
@@ -116,7 +116,7 @@ export default class SearchKeywordView {
 
   onKeywordSelected(keyword, index) {
     this.keywordSelectedIndex = index
-    console.log("onKeywordSelected =>" + JSON.stringify(keyword));
+    // console.log("onKeywordSelected =>" + JSON.stringify(keyword));
     if (keyword) {
       this.bufferContent.setText(keyword.original)
       this.bufferDesc.setText(keyword.desc)
@@ -162,6 +162,11 @@ export default class SearchKeywordView {
     })
   }
 
+  async onModalVisible() {
+    const review = await this.connection.getReview()
+    console.log(review)
+  }
+
   get isVisible() {
     return this.panel.isVisible()
   }
@@ -169,6 +174,7 @@ export default class SearchKeywordView {
   show(props = {}) {
     this.updateProps(props)
     this.panel.show()
+    this.onModalVisible()
     atom.views.getView(atom.workspace).classList.add('search-keyword-visible')
     this.initSubscriptions()
     this.displaySharingKeyword()
