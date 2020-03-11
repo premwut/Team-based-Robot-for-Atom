@@ -1,24 +1,26 @@
 <script>
 import { mapGetters } from "vuex"
 import LoadingFailModal from "~/components/popups/LoadingFailure.vue"
+import TestTable from "~/components/TestTable.vue"
 const rowsPerPage = 10
 
 export default {
   layout: "admin",
   components: {
     LoadingFailModal,
+    TestTable,
   },
   async fetch ({ store }) {
     try {
       this.isLoading = true
       const process = []
-      const isTestcaseEmpty = store.state.testcase.testcases.list.length === 0
-      console.log("isTestcaseEmpty", isTestcaseEmpty)
+      const isTestEmpty = store.state.test.tests.list.length === 0
+      console.log("isTestEmpty", isTestEmpty)
       console.log(this.isLoading, "isLoading")
-      isTestcaseEmpty && process.push(store.dispatch("testcase/fetchTestcases", { page: 1, limit: rowsPerPage }))
+      isTestEmpty && process.push(store.dispatch("test/fetchTests", { page: 1, limit: rowsPerPage }))
       await Promise.all(process)
       this.isLoading = false
-      console.log("what the fuck", this.isLoading)
+      console.log("isLoading ===>", this.isLoading)
     } catch (error) {
       this.isLoading = false
       this.isLoadingFail = true
@@ -33,7 +35,9 @@ export default {
     showError: false,
     errorMessage: "",
     breadcrumbs: [
-      { text: "Testcase Run Result", disabled: false },
+      { text: "Executed result", disabled: false },
+      { text: "Testcase List", disabled: false },
+      { text: "Keyword List", disabled: false },
     ],
     headers: [
       { text: "Testcase ID", align: "center", sortable: false },
@@ -51,8 +55,8 @@ export default {
   computed: {
     paging () {
       return {
-        rowsPerPage: this.testcases.limit,
-        totalItems: this.testcases.total,
+        rowsPerPage: this.tests.limit,
+        totalItems: this.tests.total,
       }
     },
     isAdmin () {
@@ -67,24 +71,24 @@ export default {
       return isAdmin
     },
     ...mapGetters({
-      testcases: "testcase/getTestcases",
+      tests: "test/getTests",
     }),
   },
   watch: {
     pagination: {
       handler (paging) {
-        this.getTestcases(paging)
+        this.getTests(paging)
       },
     },
   },
   methods: {
-    async getTestcases ({ page = this.pagination.page } = {}) {
+    async getTests ({ page = this.pagination.page } = {}) {
       this.isLoading = true
-      await this.$store.dispatch("testcase/fetchTestcases", { page, limit: rowsPerPage })
+      await this.$store.dispatch("test/fetchTests", { page, limit: rowsPerPage })
       this.isLoading = false
     },
     onRefreshClicked () {
-      this.getTestcases({ page: 1 })
+      this.getTests({ page: 1 })
       this.pagination.page = 1
     },
   },
@@ -93,7 +97,7 @@ export default {
 
 <template>
 <div id="team-manage">
-  <loading-fail-modal :isOpen.sync="isLoadingFail" :onReload="getTestcases"></loading-fail-modal>
+  <loading-fail-modal :isOpen.sync="isLoadingFail" :onReload="getTests"></loading-fail-modal>
 
   <v-layout row wrap>
     <v-flex xs8>
@@ -114,37 +118,6 @@ export default {
       </v-card-actions>
     </v-flex>
   </v-layout>
-  <v-flex md12>
-    <div class="table-container">
-      <v-data-table id="user-table-container"
-        :headers="headers" :items="testcases.list"
-        :loading="isLoading"
-        :pagination.sync="pagination"
-        :total-items="paging.totalItems"
-        :rows-per-page-items="[10]"
-        class="elevation-1">
-        <v-progress-linear slot="progress" color="primary" height="3" indeterminate></v-progress-linear>
-        <template slot="items" slot-scope="props">
-          <td class="text-xs-center">{{ props.item.tc_id }}</td>
-          <td class="text-xs-center">{{ props.item.tc_name }}</td>
-          <td class="text-xs-center">{{ props.item.tc_run_start }}</td>
-          <td class="text-xs-center">{{ props.item.tc_run_end }}</td>
-          <td class="text-xs-center">{{ props.item.tc_run_end }}</td>
-          <td class="text-xs-center">{{ props.item.tc_run_date }}</td>
-          <td class="text-xs-center">{{ props.item.tc_run_result }}</td>
-        </template>
-        <template slot="no-data">
-          <div>
-            <h2 class="text-xs-center my-5">No Testcase Data!</h2>
-          </div>
-        </template>
-      </v-data-table>
-
-      <v-snackbar :timeout="5000" color="error" :top="true" :right="true" v-model="showError">
-        {{ errorMessage }}
-        <v-btn flat @click.native="showError = false">Close</v-btn>
-      </v-snackbar>
-    </div>
-  </v-flex>
+  <TestTable/>
 </div>
 </template>

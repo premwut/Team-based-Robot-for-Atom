@@ -6,7 +6,7 @@ export const state = () => ({
     { id: 4, icon: "fa-project-diagram", title: "Project", allowAll: true, feature: "MANAGE_PROJECT", permission: "READ", link: "/admin/projects", children: [] },
     { id: 5, icon: "fa-users", title: "Team", allowAll: true, feature: "MANAGE_TEAM", permission: "WRITE", link: "/admin/team", children: [] },
     { id: 6, icon: "fa-code", title: "Keywords", allowAll: true, feature: "MANAGE_KEYWORD", permission: "WRITE", link: "/admin/keywords", children: [] },
-    { id: 7, icon: "fa-server", title: "Testcases", allowAll: true, feature: "MANAGE_TESTCASE", permission: "WRITE", link: "/admin/testcases", children: [] },
+    { id: 7, icon: "fa-server", title: "Executed result", allowAll: true, feature: "MANAGE_TEST", permission: "WRITE", link: "/admin/tests", children: [] },
   ],
 })
 

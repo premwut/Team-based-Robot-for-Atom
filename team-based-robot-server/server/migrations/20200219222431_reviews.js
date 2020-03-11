@@ -3,9 +3,9 @@ const tableName = "reviews"
 exports.up = function(knex, Promise) {
     return Promise.all([
         knex.schema.createTable(tableName, (table) => {
-          table.increments("r_id")
-          table.string("kwd_status")
-          table.string("kwd_review")
+          table.increments("rw_id")
+          table.string("rw_status")
+          table.string("rw_comment")
           table.integer("kwd_id").references("keywords.kwd_id")
           table.integer("usr_id").references("users.usr_id")
           table.timestamps()
