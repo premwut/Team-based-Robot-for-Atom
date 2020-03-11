@@ -12,8 +12,8 @@ export const FeatureType = Object.freeze({
   MANAGE_ROLE: 'MANAGE_ROLE',
   MANAGE_TEAM_MEMBER: 'MANAGE_TEAM_MEMBER',
   MANAGE_KEYWORD: 'MANAGE_KEYWORD',
-  MANAGE_TESTCASE: 'MANAGE_REVIEW',
-  MANAGE_TEST_HISTORY: 'MANAGE_TEST_HISTORY',
+  MANAGE_REVIEW: 'MANAGE_REVIEW',
+  MANAGE_TEST: 'MANAGE_TEST',
 })
 
 export const PermissionType = Object.freeze({
@@ -37,7 +37,8 @@ export const Tables = Object.freeze({
   ROLE: 'role',
   TEAM: 'team',
   USER: 'users',
-  TEST_HISTORY: 'test_history',
+  TEST: 'tests',
+  TEST_MAPPING: 'test_mapping',
   REVIEW: 'reviews'
 })
 
@@ -64,6 +65,21 @@ export const Fields = Object.freeze({
   KWD_DESC: 'kwd_desc',
   KWD_DEPRECATE: 'kwd_deprecate',
   KWD_PARENT_ID: 'kwd_parent_id',
+
+  TEST_MAP_ID: 'test_map_id',
+  TEST_MAP_TC_ID: 'test_map_tc_id',
+  TEST_MAP_TC_NAME: 'test_map_tc_name',
+  TEST_MAP_TC_PASSED: 'test_map_tc_passed',
+  TEST_ID: 'test_id',
+  TEST_TC_NO: 'test_tc_no',
+  TEST_PASSED: 'test_passed',
+  TEST_FAILED: 'test_failed',
+  TEST_FILE_LINK: 'test_file_link',
+  TEST_KWD_NAME: 'test_kwd_name',
+
+  RW_ID: 'rw_id',
+  RW_STATUS: 'rw_status',
+  RW_COMMENT: 'rw_comment',
 
   PROJ_ID: 'proj_id',
   PROJ_NAME: 'proj_name',
@@ -94,7 +110,9 @@ export const Models = Object.freeze({
   ROLE: 'Role',
   TEAM: 'Team',
   USER: 'User',
-  TESTCASE: 'Testcase',
+  TEST: 'Test',
+  TEST_MAPPING: 'TestMapping',
+  REVIEW: 'Review',
 })
 
 
@@ -108,4 +126,5 @@ export const PERMISSION_API   = '/permission'
 export const PROJECT_API      = '/project'
 export const TEAM_API         = '/team'
 export const KEYWORD_API      = '/keyword'
-export const TESTCASE_API     = '/testcase'
+export const TEST_API         = '/test'
+export const REVIEW_API       = '/review'

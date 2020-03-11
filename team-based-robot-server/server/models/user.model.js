@@ -57,8 +57,8 @@ class User extends BaseModel {
     return this.hasMany(Models.KEYWORD_MAPPING, Fields.USR_ID)
   }
 
-  testcase () {
-    return this.hasMany(Models.TESTCASE, Fields.TC_ID)
+  test () {
+    return this.hasMany(Models.TEST, Fields.TEST_ID)
   }
 
   static dependents = ["testcase"]
