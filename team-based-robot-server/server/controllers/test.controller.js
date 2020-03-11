@@ -93,7 +93,7 @@ export default class TestController extends BaseController {
 
   async getTestcases (req, res) {
     try {
-      console.log("Hello, I'm in getTestcases")
+      console.log("[Controller] Hello, I'm in getTestcases")
       const { id: test_id } = req.params
       const { page, limit: pageSize } = req.query
       console.log("test_id ===>", test_id)
@@ -106,7 +106,7 @@ export default class TestController extends BaseController {
         .map((queryTestMap) => TestMappings.query(queryTestMap).fetch())
 
       const [testcases] = await Promise.all(testMappingList)
-      const data = { ...test, testcases }
+      const data = { testcases }
       this.success(res, data)
     } catch (error) {
       this.failure(res, error)

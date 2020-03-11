@@ -66,7 +66,7 @@ export default class KeywordController extends BaseController {
       const query = q => q.where(Fields.KWD_NAME, "in", keywordNames)
       const queryResult = await Keywords.query(query).fetch({ withRelated: ["keywordMappings"] })
       const keywords = queryResult.toJSON()
-      console.log("Keyword in verify =", keywords)
+      // console.log("Keyword in verify =", keywords)
       const result = keywordNames.map(name => {
         const [match] = keywords.filter(x => x[Fields.KWD_NAME] === name)
         const shared = { projects: [], teams: [], users: [] }

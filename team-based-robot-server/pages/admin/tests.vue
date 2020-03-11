@@ -1,7 +1,9 @@
 <script>
-import { mapGetters } from "vuex"
+// import { mapGetters } from "vuex"
 import LoadingFailModal from "~/components/popups/LoadingFailure.vue"
 import TestTable from "~/components/TestTable.vue"
+import TestcaseTable from "~/components/TestcaseTable.vue"
+import KeywordTable from "~/components/KeywordTable.vue"
 const rowsPerPage = 10
 
 export default {
@@ -9,6 +11,8 @@ export default {
   components: {
     LoadingFailModal,
     TestTable,
+    TestcaseTable,
+    KeywordTable,
   },
   async fetch ({ store }) {
     try {
@@ -27,6 +31,7 @@ export default {
     }
   },
   data: () => ({
+    tableName: "TestTable",
     isLoadingFail: false,
     isOpenKeywordDetail: false,
     isConfirmDelete: false,
@@ -70,9 +75,10 @@ export default {
       })
       return isAdmin
     },
-    ...mapGetters({
-      tests: "test/getTests",
-    }),
+    // ...mapGetters({
+    //   tests: "test/getTests",
+    //   testcases: "test/getTestcases",
+    // }),
   },
   watch: {
     pagination: {
@@ -87,9 +93,17 @@ export default {
       await this.$store.dispatch("test/fetchTests", { page, limit: rowsPerPage })
       this.isLoading = false
     },
+    async getTestcases ({ item, page = this.pagination.page } = {}) {
+      this.isLoading = true
+      await this.$store.dispatch("test/fetchTestcases", { item, page, limit: rowsPerPage })
+      this.isLoading = false
+    },
     onRefreshClicked () {
       this.getTests({ page: 1 })
       this.pagination.page = 1
+    },
+    changeTable (componentName) {
+      this.tableName = componentName
     },
   },
 }
@@ -98,7 +112,6 @@ export default {
 <template>
 <div id="team-manage">
   <loading-fail-modal :isOpen.sync="isLoadingFail" :onReload="getTests"></loading-fail-modal>
-
   <v-layout row wrap>
     <v-flex xs8>
       <v-breadcrumbs class="px-0">
@@ -118,6 +131,6 @@ export default {
       </v-card-actions>
     </v-flex>
   </v-layout>
-  <TestTable/>
+  <component @changeTable="changeTable" :is="tableName"></component>
 </div>
 </template>
