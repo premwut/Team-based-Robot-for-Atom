@@ -2,37 +2,39 @@
   <div id="testcase-table">
     <v-flex md12>
         <H1>This is Testcase Table</H1>
-        <div class="table-container">
-        <ul id="example-2">
-        <li v-for="(item, index) in testcases.list">
+        <!-- {{ testcases.list }} -->
+        
+        <!-- <li v-for="item in testcases.list.tc_list" :key="item">
         {{ item }}
         </li>
-        </ul>
-            <!-- {{ testcases.list }} -->
-        <!-- <v-data-table id="user-table-container"
-        :headers="headers" :items="testcases.list"
-        :loading="isLoading"
-        :pagination.sync="pagination"
-        :total-items="paging.totalItems"
-        :rows-per-page-items="[10]"
-        class="elevation-1">
-        <v-progress-linear slot="progress" color="primary" height="3" indeterminate></v-progress-linear>
-            <template slot="items" slot-scope="props">
-                <td class="text-xs-center">{{ changeDateFormat(props.item.created_at) }}</td>
-                <td class="text-xs-center">{{ props.item.tc_id }}</td>
-                <td class="text-xs-center">{{ props.item.tc_name }}</td>
-                <td class="text-xs-center">{{ props.item.tc_passed }}</td>
-            </template>
-            <template slot="no-data">
-                <div>
-                    <h2 class="text-xs-center my-5">No Testcase Data!</h2>
-                </div>
-            </template>
-        </v-data-table> -->
-            <v-snackbar :timeout="5000" color="error" :top="true" :right="true" v-model="showError">
-                {{ errorMessage }}
-                <v-btn flat @click.native="showError = false">Close</v-btn>
-            </v-snackbar>
+        <li v-for="item in testcases.list.kwd_list" :key="item">
+        {{ item }}
+        </li> -->
+        <div class="table-container">
+          <v-data-table id="user-table-container"
+          :headers="headers" :items="testcases.list"
+          :loading="isLoading"
+          :pagination.sync="pagination"
+          :total-items="paging.totalItems"
+          :rows-per-page-items="[10]"
+          class="elevation-1">
+          <v-progress-linear slot="progress" color="primary" height="3" indeterminate></v-progress-linear>
+              <template slot="items" slot-scope="props">
+                  <td class="text-xs-center">{{ changeDateFormat(props.item.created_at) }}</td>
+                  <td class="text-xs-center">{{ props.item.tc_id }}</td>
+                  <td class="text-xs-center">{{ props.item.tc_name }}</td>
+                  <td class="text-xs-center">{{ props.item.tc_passed }}</td>
+              </template>
+              <template slot="no-data">
+                  <div>
+                      <h2 class="text-xs-center my-5">No Testcase Data!</h2>
+                  </div>
+              </template>
+          </v-data-table>
+          <v-snackbar :timeout="5000" color="error" :top="true" :right="true" v-model="showError">
+            {{ errorMessage }}
+            <v-btn flat @click.native="showError = false">Close</v-btn>
+          </v-snackbar>
         </div>
   </v-flex>
   </div>
@@ -119,6 +121,11 @@ export default {
     changeDateFormat (date) {
       let formatted_date = moment(new Date(date)).format("L")
       return formatted_date
+    },
+    async getTestcases ({ item, page = this.pagination.page } = {}) {
+      this.isLoading = true
+      await this.$store.dispatch("test/fetchTestcases", { item, page, limit: rowsPerPage })
+      this.isLoading = false
     },
   },
 }
