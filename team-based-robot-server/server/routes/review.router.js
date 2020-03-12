@@ -18,7 +18,7 @@ const manageRead = [
 ]
 
 // router.get(`${REVIEW_API}/get`, ctrl.getReview.bind(ctrl))
-router.get(`${REVIEW_API}/get`, authn, authz(manageRead), ctrl.getReview.bind(ctrl))
+router.get(`${REVIEW_API}/get/:userId`, authn, authz(manageRead), ctrl.getReview.bind(ctrl))
 router.post(`${REVIEW_API}/submit`, authn, authz(manageWrite), ctrl.submitReview.bind(ctrl))
 router.put(`${REVIEW_API}/edit`, authn, authz(manageWrite), ctrl.editReview.bind(ctrl))
 

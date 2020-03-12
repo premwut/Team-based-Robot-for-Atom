@@ -180,9 +180,9 @@ export default class Connection {
     }
   }
 
-  async getReview() {
+  async getReview(userId) {
     try {
-      const url = `/review/get`
+      const url = `/review/get/${userId}`
       const { data: response } = await this.axios.get(url, this.headerToken)
       return response.data
     } catch (e) {

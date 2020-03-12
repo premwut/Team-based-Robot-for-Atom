@@ -166,14 +166,14 @@ export default class SearchKeywordView {
     const { usr_id } = this.teambaseInstance.user
     const test = {
       rw_status: "Approved",
-      rw_comment: "Finish with this la i sud",
+      rw_comment: "Edit by narospol",
       kwd_id: 3,
       usr_id: usr_id
     }
-    const response = await this.connection.submitReview(test)
-    const review = await this.connection.getReview()
+    // const response = await this.connection.submitReview(test)
+    const review = await this.connection.getReview(usr_id)
     console.log(review, "fetched review")
-    console.log(response)
+    // console.log(response)
   }
 
   get isVisible() {

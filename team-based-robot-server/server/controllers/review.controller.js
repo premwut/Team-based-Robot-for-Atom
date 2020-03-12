@@ -7,7 +7,8 @@ import bookshelf from "../config/bookshelf"
 export default class ReviewController extends BaseController {
   async getReview (req, res) {
     try {
-      const reviews = await Reviews.forge().fetch()
+      const usr_id = req.params.userId
+      const reviews = await Review.forge().where({ usr_id }).fetchAll()
       this.success(res, reviews)
     } catch (e) {
       this.error(res, e)
@@ -23,7 +24,6 @@ export default class ReviewController extends BaseController {
     if (!isExist) {
       const submit = await Review.create(reviewData)
     }
-    // const submit = (!reviewExists) ? await Review.create(reviewData) : await Review.set(reviewData, {kwd_id, usr_id})
 
     this.success(res, { review: review.pop(), isExist })
   }
