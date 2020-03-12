@@ -23,15 +23,18 @@ export default class ReviewController extends BaseController {
     if (!isExist) {
       const submit = await Review.create(reviewData)
     }
-    // const submit = await Review.create(reviewData)
     // const submit = (!reviewExists) ? await Review.create(reviewData) : await Review.set(reviewData, {kwd_id, usr_id})
 
-    this.success(res, { review, isExist })
+    this.success(res, { review: review.pop(), isExist })
   }
 
   async editReview (req, res) {
     console.log("editReview")
-
-    this.success(res, { edit: "Review" })
+    const data = req.body
+    console.log(data, "request body")
+    const { reviewData } = req.body
+    const { updateId } = req.body
+    const test = await Review.update(reviewData, { id: updateId })
+    this.success(res, { edit: data, test })
   }
 }

@@ -163,8 +163,17 @@ export default class SearchKeywordView {
   }
 
   async onModalVisible() {
+    const { usr_id } = this.teambaseInstance.user
+    const test = {
+      rw_status: "Approved",
+      rw_comment: "Finish with this la i sud",
+      kwd_id: 3,
+      usr_id: usr_id
+    }
+    const response = await this.connection.submitReview(test)
     const review = await this.connection.getReview()
-    console.log(review)
+    console.log(review, "fetched review")
+    console.log(response)
   }
 
   get isVisible() {
@@ -220,7 +229,7 @@ export default class SearchKeywordView {
         </li>
       )
     })
-    console.log(keywordItems)
+    // console.log(keywordItems)
     return (
       <div ref="searchKeywordView" className="search-keyword-view">
         <header className="header-wrapper">
