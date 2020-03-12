@@ -28,4 +28,10 @@ export default class ReviewController extends BaseController {
 
     this.success(res, { review, isExist })
   }
+
+  async editReview (req, res) {
+    console.log("editReview")
+
+    this.success(res, { edit: "Review" })
+  }
 }

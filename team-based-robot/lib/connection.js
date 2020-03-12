@@ -194,6 +194,7 @@ export default class Connection {
     try {
       const url = `/review/submit`
       const { data: response } = await this.axios.post(url, reviewData, this.headerToken)
+      if ( response.data.isExist ) this.editReview(reviewData)
       return response.data
     } catch (e) {
       throw e
@@ -204,6 +205,7 @@ export default class Connection {
     try {
       const url = `/review/edit`
       const { data: response } = await this.axios.put(url, reviewData, this.headerToken)
+      console.log(response, "in editReview")
     } catch (e) {
       throw e
     }
