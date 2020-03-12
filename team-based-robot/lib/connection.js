@@ -183,8 +183,27 @@ export default class Connection {
   async getReview() {
     try {
       const url = `/review/get`
-      const { data: respose } = await this.axios.get(url, this.headerToken)
-      return respose.data
+      const { data: response } = await this.axios.get(url, this.headerToken)
+      return response.data
+    } catch (e) {
+      throw e
+    }
+  }
+
+  async submitReview(reviewData) {
+    try {
+      const url = `/review/submit`
+      const { data: response } = await this.axios.post(url, reviewData, this.headerToken)
+      return response.data
+    } catch (e) {
+      throw e
+    }
+  }
+
+  async editReview(reviewData) {
+    try {
+      const url = `/review/edit`
+      const { data: response } = await this.axios.put(url, reviewData, this.headerToken)
     } catch (e) {
       throw e
     }

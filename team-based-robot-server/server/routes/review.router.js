@@ -19,6 +19,6 @@ const manageRead = [
 
 // router.get(`${REVIEW_API}/get`, ctrl.getReview.bind(ctrl))
 router.get(`${REVIEW_API}/get`, authn, authz(manageRead), ctrl.getReview.bind(ctrl))
-router.post(`${REVIEW_API}/submit`, ctrl.submitReview.bind(ctrl))
+router.post(`${REVIEW_API}/submit`, authn, authz(manageWrite), ctrl.submitReview.bind(ctrl))
 
 export default router
