@@ -135,11 +135,11 @@ export default {
     getDownloadUrl (url) {
       return "http://" + url.toString()
     },
-    async onTestClick (test_id) {
+    onTestClick (test_id) {
       const page = this.pagination.page
       this.isLoading = true
       console.log(`In event method item ==> ${test_id}`)
-      await this.$store.dispatch("test/fetchTestcases", { test_id, page, limit: rowsPerPage })
+      this.$store.dispatch("test/fetchTestcases", { test_id, page, limit: rowsPerPage })
       this.isLoading = false
       this.$emit("changeTable", "testcaseTable")
     },

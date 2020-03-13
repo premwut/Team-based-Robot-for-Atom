@@ -1,15 +1,13 @@
 <template>
   <div id="testcase-table">
     <v-flex md12>
+      <!-- Debug -->
         <H1>This is Testcase Table</H1>
         <!-- {{ testcases.list }} -->
-        
-        <!-- <li v-for="item in testcases.list.tc_list" :key="item">
-        {{ item }}
+        <li v-for="item in testcases.list" :key="item">
+        {{ item }} <br>
         </li>
-        <li v-for="item in testcases.list.kwd_list" :key="item">
-        {{ item }}
-        </li> -->
+  
         <div class="table-container">
           <v-data-table id="user-table-container"
           :headers="headers" :items="testcases.list"
@@ -20,10 +18,12 @@
           class="elevation-1">
           <v-progress-linear slot="progress" color="primary" height="3" indeterminate></v-progress-linear>
               <template slot="items" slot-scope="props">
+                <tr @click="onTestcaseClick(props.item.tc_id)">
                   <td class="text-xs-center">{{ changeDateFormat(props.item.created_at) }}</td>
                   <td class="text-xs-center">{{ props.item.tc_id }}</td>
                   <td class="text-xs-center">{{ props.item.tc_name }}</td>
                   <td class="text-xs-center">{{ props.item.tc_passed }}</td>
+                </tr>
               </template>
               <template slot="no-data">
                   <div>
@@ -75,7 +75,7 @@ export default {
     errorMessage: "",
     breadcrumbs: [
       { text: "Executed result", disabled: false },
-      { text: "Testcase List", disabled: false },
+      { text: "Testcase List", disabled: true },
       { text: "Keyword List", disabled: false },
     ],
     headers: [
@@ -126,6 +126,14 @@ export default {
       this.isLoading = true
       await this.$store.dispatch("test/fetchTestcases", { item, page, limit: rowsPerPage })
       this.isLoading = false
+    },
+    async onTestcaseClick (tc_id) {
+      const page = this.pagination.page
+      this.isLoading = true
+      console.log(`In event method item ==> ${tc_id}`)
+      await this.$store.dispatch("test/fetchKeywords", { tc_id, page, limit: rowsPerPage })
+      this.isLoading = false
+      this.$emit("changeTable", "keywordTable")
     },
   },
 }

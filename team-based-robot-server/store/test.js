@@ -3,6 +3,7 @@
 export const state = () => ({
   tests: { list: [] },
   testcases: { list: [] },
+  keywords: { list: [] },
 })
 
 export const mutations = {
@@ -53,6 +54,11 @@ export const mutations = {
       list: testcaseList.tc_list,
     }
   },
+  setKeywords (state, tc_id) {
+    const keywordFilter = (tc) => tc.tc_id === tc_id
+    const keywordList = state.testcases.list.filter(keywordFilter).map((tc) => tc.kwd_list)
+    state.keywords = { list: keywordList }
+  },
 }
 // get tests from database then [setTests]
 export const actions = {
@@ -77,6 +83,15 @@ export const actions = {
       throw error
     }
   },
+  async fetchKeywords ({ commit, dispatch }, { tc_id, page = 1, limit = 10 } = {}) {
+    try {
+      console.log(`[test store] In action - fetchTestcase\nitem ===> ${tc_id}`)
+      // tc_id = 1
+      commit("setKeywords", tc_id)
+    } catch (error) {
+      throw error
+    }
+  },
 }
 // get testcases from store
 export const getters = {
@@ -85,5 +100,8 @@ export const getters = {
   },
   getTestcases (state) {
     return state.testcases
+  },
+  getKeywords (state) {
+    return state.keywords
   },
 }
