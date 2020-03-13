@@ -4,9 +4,9 @@
       <!-- Debug -->
         <H1>This is Testcase Table</H1>
         <!-- {{ testcases.list }} -->
-        <li v-for="item in testcases.list" :key="item">
+        <!-- <li v-for="item in testcases.list" :key="item">
         {{ item }} <br>
-        </li>
+        </li> -->
   
         <div class="table-container">
           <v-data-table id="user-table-container"
@@ -49,22 +49,22 @@ export default {
   components: {
     LoadingFailModal,
   },
-  async fetch ({ store }) {
-    try {
-      this.isLoading = true
-      const process = []
-      const isTestcaseEmpty = store.state.test.testcases.list.length === 0
-      console.log("isTestcaseEmpty", isTestcaseEmpty)
-      console.log(this.isLoading, "isLoading")
-      isTestcaseEmpty && process.push(store.dispatch("test/fetchTestcases", { page: 1, limit: rowsPerPage }))
-      await Promise.all(process)
-      this.isLoading = false
-      console.log("isLoading ===>", this.isLoading)
-    } catch (error) {
-      this.isLoading = false
-      this.isLoadingFail = true
-    }
-  },
+  // async fetch ({ store }) {
+  //   try {
+  //     this.isLoading = true
+  //     const process = []
+  //     const isTestcaseEmpty = store.state.test.testcases.list.length === 0
+  //     console.log("isTestcaseEmpty", isTestcaseEmpty)
+  //     console.log(this.isLoading, "isLoading")
+  //     isTestcaseEmpty && process.push(store.dispatch("test/fetchTestcases", { page: 1, limit: rowsPerPage }))
+  //     await Promise.all(process)
+  //     this.isLoading = false
+  //     console.log("isLoading ===>", this.isLoading)
+  //   } catch (error) {
+  //     this.isLoading = false
+  //     this.isLoadingFail = true
+  //   }
+  // },
   data: () => ({
     isLoadingFail: false,
     isOpenKeywordDetail: false,
@@ -75,7 +75,7 @@ export default {
     errorMessage: "",
     breadcrumbs: [
       { text: "Executed result", disabled: false },
-      { text: "Testcase List", disabled: true },
+      { text: "Testcase List", disabled: false },
       { text: "Keyword List", disabled: false },
     ],
     headers: [
@@ -118,19 +118,23 @@ export default {
     },
   },
   methods: {
+    onRefreshClicked () {
+      this.getTests({ page: 1 })
+      this.pagination.page = 1
+    },
     changeDateFormat (date) {
       let formatted_date = moment(new Date(date)).format("L")
       return formatted_date
     },
-    async getTestcases ({ item, page = this.pagination.page } = {}) {
+    async getTestcases ({ page = this.pagination.page } = {}) {
       this.isLoading = true
-      await this.$store.dispatch("test/fetchTestcases", { item, page, limit: rowsPerPage })
+      await this.$store.dispatch("test/fetchTestcases", { page, limit: rowsPerPage })
       this.isLoading = false
     },
     async onTestcaseClick (tc_id) {
       const page = this.pagination.page
       this.isLoading = true
-      console.log(`In event method item ==> ${tc_id}`)
+      console.log(`[even method] tc_id ==> ${tc_id}`)
       await this.$store.dispatch("test/fetchKeywords", { tc_id, page, limit: rowsPerPage })
       this.isLoading = false
       this.$emit("changeTable", "keywordTable")

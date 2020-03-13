@@ -3,14 +3,14 @@
     <v-flex md12>
       <!-- Debug -->
         <H1>This is Keyword Table</H1>
-        <!-- {{ keywords.list }} -->
-        <li v-for="item in keywords.list" :key="item">
-        {{ item }} <br>
-        </li>
+        <!-- {{ testKeywords.list }}
+        <li v-for="item in testKeywords.list" :key="item">
+        {{ item }}
+        </li> -->
   
         <div class="table-container">
           <v-data-table id="user-table-container"
-          :headers="headers" :items="keywords.list"
+          :headers="headers" :items="testKeywords.list"
           :loading="isLoading"
           :pagination.sync="pagination"
           :total-items="paging.totalItems"
@@ -29,11 +29,8 @@
                   </div>
               </template>
           </v-data-table>
-          <v-snackbar :timeout="5000" color="error" :top="true" :right="true" v-model="showError">
-            {{ errorMessage }}
-            <v-btn flat @click.native="showError = false">Close</v-btn>
-          </v-snackbar>
         </div>
+
   </v-flex>
   </div>
 </template>
@@ -41,28 +38,27 @@
 <script>
 import { mapGetters } from "vuex"
 import LoadingFailModal from "~/components/popups/LoadingFailure.vue"
-import KeywordDetailModal from "~/components/popups/KeywordDetail.vue"
 const rowsPerPage = 10
 
 export default {
-  layout: "admin",
   components: {
     LoadingFailModal,
-    KeywordDetailModal,
   },
-  async fetch ({ store }) {
-    try {
-      this.isLoading = true
-      const process = []
-      const isKeywordEmpty = store.state.test.keywords.list.length === 0
-      isKeywordEmpty && process.push(store.dispatch("test/fetchKeywords", { page: 1, limit: rowsPerPage }))
-      await Promise.all(process)
-      this.isLoading = false
-    } catch (error) {
-      this.isLoading = false
-      this.isLoadingFail = true
-    }
-  },
+  // async fetch ({ store }) {
+  //   try {
+  //     this.isLoading = true
+  //     const process = []
+  //     const isKeywordEmpty = store.state.test.keywords.list.length === 0
+  //     console.log("isTestcaseEmpty", isKeywordEmpty)
+  //     console.log(this.isLoading, "isLoading")
+  //     isKeywordEmpty && process.push(store.dispatch("test/fetchKeywords", { tc_id: 1, page: 1, limit: rowsPerPage }))
+  //     await Promise.all(process)
+  //     this.isLoading = false
+  //   } catch (error) {
+  //     this.isLoading = false
+  //     this.isLoadingFail = true
+  //   }
+  // },
   data: () => ({
     isLoadingFail: false,
     isOpenKeywordDetail: false,
@@ -74,7 +70,7 @@ export default {
     breadcrumbs: [
       { text: "Executed result", disabled: false },
       { text: "Testcase List", disabled: false },
-      { text: "Keyword List", disabled: true },
+      { text: "Keyword List", disabled: false },
     ],
     headers: [
       { text: "Keyword ID", align: "center", sortable: false },
@@ -87,8 +83,8 @@ export default {
   computed: {
     paging () {
       return {
-        rowsPerPage: this.keywords.limit,
-        totalItems: this.keywords.total,
+        rowsPerPage: this.testKeywords.limit,
+        totalItems: this.testKeywords.total,
       }
     },
     isAdmin () {
@@ -103,7 +99,7 @@ export default {
       return isAdmin
     },
     ...mapGetters({
-      keywords: "test/getKeywords",
+      testKeywords: "test/getKeywords",
     }),
   },
   watch: {
@@ -114,9 +110,13 @@ export default {
     },
   },
   methods: {
+    onRefreshClicked () {
+      this.getKeywords({ page: 1 })
+      this.pagination.page = 1
+    },
     async getKeywords ({ page = this.pagination.page } = {}) {
       this.isLoading = true
-      await this.$store.dispatch("test/fetchKeywords", { tc_id: 1, page, limit: rowsPerPage })
+      await this.$store.dispatch("test/fetchKeywords", { page, limit: rowsPerPage })
       this.isLoading = false
     },
   },

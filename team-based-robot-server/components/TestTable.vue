@@ -1,6 +1,13 @@
 <template>
   <div id="test-table">
     <v-flex md12>
+      <!-- Debug -->
+        <H1>This is Test Table</H1>
+        <!-- {{ tests.list }} -->
+        <!-- <li v-for="item in tests.list" :key="item">
+        {{ item }} <br>
+        </li> -->
+
     <div class="table-container">
       <v-data-table id="user-table-container"
         :headers="headers" :items="tests.list"
@@ -119,11 +126,6 @@ export default {
     },
   },
   methods: {
-    async getTests ({ page = this.pagination.page } = {}) {
-      this.isLoading = true
-      await this.$store.dispatch("test/fetchTests", { page, limit: rowsPerPage })
-      this.isLoading = false
-    },
     onRefreshClicked () {
       this.getTests({ page: 1 })
       this.pagination.page = 1
@@ -135,11 +137,16 @@ export default {
     getDownloadUrl (url) {
       return "http://" + url.toString()
     },
-    onTestClick (test_id) {
+    async getTests ({ page = this.pagination.page } = {}) {
+      this.isLoading = true
+      await this.$store.dispatch("test/fetchTests", { page, limit: rowsPerPage })
+      this.isLoading = false
+    },
+    async onTestClick (test_id) {
       const page = this.pagination.page
       this.isLoading = true
-      console.log(`In event method item ==> ${test_id}`)
-      this.$store.dispatch("test/fetchTestcases", { test_id, page, limit: rowsPerPage })
+      console.log(`[event method] test_id ==> ${test_id}`)
+      await this.$store.dispatch("test/fetchTestcases", { test_id, page, limit: rowsPerPage })
       this.isLoading = false
       this.$emit("changeTable", "testcaseTable")
     },

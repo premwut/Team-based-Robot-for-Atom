@@ -54,10 +54,13 @@ export const mutations = {
       list: testcaseList.tc_list,
     }
   },
+  // set keywords into store
   setKeywords (state, tc_id) {
     const keywordFilter = (tc) => tc.tc_id === tc_id
-    const keywordList = state.testcases.list.filter(keywordFilter).map((tc) => tc.kwd_list)
-    state.keywords = { list: keywordList }
+    const [keywordList] = state.testcases.list.filter(keywordFilter).map((tc) => tc.kwd_list)
+    state.keywords = {
+      list: keywordList,
+    }
   },
 }
 // get tests from database then [setTests]
@@ -74,7 +77,7 @@ export const actions = {
   },
   async fetchTestcases ({ commit, dispatch }, { test_id, page = 1, limit = 10 } = {}) {
     try {
-      console.log(`[test store] In action - fetchTestcase\nitem ===> ${test_id}`)
+      console.log(`[test store] In action - fetchTestcase\ntest_id ===> ${test_id}`)
       test_id = 1
       const { data } = await this.$axios.$get(`/api/test/${test_id}/testcases?page=${page}&limit=${limit}`)
       console.log("[store->testcase->action] :\n", data)
@@ -85,7 +88,7 @@ export const actions = {
   },
   async fetchKeywords ({ commit, dispatch }, { tc_id, page = 1, limit = 10 } = {}) {
     try {
-      console.log(`[test store] In action - fetchTestcase\nitem ===> ${tc_id}`)
+      console.log(`[test store] In action - fetchKeyword\ntc_id ===> ${tc_id}`)
       // tc_id = 1
       commit("setKeywords", tc_id)
     } catch (error) {
