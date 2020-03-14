@@ -2,7 +2,7 @@
   <div id="testcase-table">
     <v-flex md12>
       <!-- Debug -->
-        <H1>This is Testcase Table</H1>
+        <!-- <H1>This is Testcase Table</H1> -->
         <!-- {{ testcases.list }} -->
         <!-- <li v-for="item in testcases.list" :key="item">
         {{ item }} <br>
@@ -136,6 +136,7 @@ export default {
       this.isLoading = true
       console.log(`[even method] tc_id ==> ${tc_id}`)
       await this.$store.dispatch("test/fetchKeywords", { tc_id, page, limit: rowsPerPage })
+      // await this.$store.commit("test/setKeywords", { tc_id, page, limit: rowsPerPage })
       this.isLoading = false
       this.$emit("changeTable", "keywordTable")
     },

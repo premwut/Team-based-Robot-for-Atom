@@ -89,8 +89,7 @@ export const actions = {
   async fetchKeywords ({ commit, dispatch }, { tc_id, page = 1, limit = 10 } = {}) {
     try {
       console.log(`[test store] In action - fetchKeyword\ntc_id ===> ${tc_id}`)
-      // tc_id = 1
-      commit("setKeywords", tc_id)
+      if (tc_id !== undefined) { commit("setKeywords", tc_id) }
     } catch (error) {
       throw error
     }

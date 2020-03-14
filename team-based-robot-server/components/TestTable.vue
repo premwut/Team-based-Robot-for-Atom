@@ -2,7 +2,7 @@
   <div id="test-table">
     <v-flex md12>
       <!-- Debug -->
-        <H1>This is Test Table</H1>
+        <!-- <H1>This is Test Table</H1> -->
         <!-- {{ tests.list }} -->
         <!-- <li v-for="item in tests.list" :key="item">
         {{ item }} <br>
@@ -115,7 +115,6 @@ export default {
     },
     ...mapGetters({
       tests: "test/getTests",
-      // testcases: "test/getTestcases",
     }),
   },
   watch: {

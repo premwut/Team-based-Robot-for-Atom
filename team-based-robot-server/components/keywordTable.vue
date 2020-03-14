@@ -2,9 +2,9 @@
   <div id="keyword-table">
     <v-flex md12>
       <!-- Debug -->
-        <H1>This is Keyword Table</H1>
-        <!-- {{ testKeywords.list }}
-        <li v-for="item in testKeywords.list" :key="item">
+        <!-- <H1>This is Keyword Table</H1> -->
+        <!-- {{ testKeywords.list }} -->
+        <!-- <li v-for="item in testKeywords.list" :key="item.kwd_id">
         {{ item }}
         </li> -->
   
@@ -18,7 +18,7 @@
           class="elevation-1">
           <v-progress-linear slot="progress" color="primary" height="3" indeterminate></v-progress-linear>
               <template slot="items" slot-scope="props">
-                <tr @click="onKeywordClick(props.item.kwd_id)">
+                <tr @click="onKeywordClick(props.item)">
                   <td class="text-xs-center">{{ props.item.kwd_id || "No ID" }}</td>
                   <td class="text-xs-center">{{ props.item.kwd_name || "No Name"}}</td>
                 </tr>
@@ -118,6 +118,9 @@ export default {
       this.isLoading = true
       await this.$store.dispatch("test/fetchKeywords", { page, limit: rowsPerPage })
       this.isLoading = false
+    },
+    async onKeywordClick (item) {
+      alert(`kwd_id = ${item.kwd_id}\nkwd_name = ${item.kwd_name}`)
     },
   },
 }

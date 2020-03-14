@@ -1,5 +1,4 @@
 <script>
-// import { mapGetters } from "vuex"
 import LoadingFailModal from "~/components/popups/LoadingFailure.vue"
 import TestTable from "~/components/TestTable.vue"
 import TestcaseTable from "~/components/TestcaseTable.vue"
@@ -75,10 +74,6 @@ export default {
       })
       return isAdmin
     },
-    // ...mapGetters({
-    //   tests: "test/getTests",
-    //   testcases: "test/getTestcases",
-    // }),
   },
   watch: {
     pagination: {
