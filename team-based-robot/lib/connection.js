@@ -122,6 +122,16 @@ export default class Connection {
     }
   }
 
+  async getRoleById(userId) {
+    try {
+      const url = `/role/${userId}/getId`
+      const { data: response } = await this.axios.get(url, this.headerToken)
+      return response.data
+    } catch (e) {
+      throw e
+    }
+  }
+
   async saveKeywords(keywordInfo) {
     try {
       const url = `/keyword/create`
@@ -140,7 +150,7 @@ export default class Connection {
 
   async saveTestcaseRun(testcaseInfo) {
     try {
-      const url = `/testcase/create`
+      const url = `/test/create`
       const { data: response } = await this.axios.post(url, testcaseInfo, this.headerToken)
       console.log(response, 'response')
       return [ ...response.data ]

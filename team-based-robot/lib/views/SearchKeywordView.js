@@ -172,7 +172,10 @@ export default class SearchKeywordView {
     }
     // const response = await this.connection.submitReview(test)
     const review = await this.connection.getReview(usr_id)
+    const shit = await this.connection.getRoleById(usr_id)
     console.log(review, "fetched review")
+    console.log(shit, 'shit')
+    // console.log(this.teambaseInstance.user)
     // console.log(response)
   }
 

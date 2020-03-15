@@ -25,5 +25,6 @@ router.put(`${ROLE_API}/:id/edit`, authn, authz(manageWrite), ctrl.edit.bind(ctr
 router.delete(`${ROLE_API}/:id/delete`, authn, authz(manageWrite), ctrl.delete.bind(ctrl))
 router.get(`${ROLE_API}/:id/info`, authn, authz(manageRead), ctrl.get.bind(ctrl))
 router.get(`${ROLE_API}/list`, authn, authz(manageRead), ctrl.getList.bind(ctrl))
+router.get(`${ROLE_API}/:usr_id/getId`, authn, authz(manageRead), ctrl.getRoleId.bind(ctrl))
 
 export default router

@@ -3,7 +3,8 @@ import { getPagination, isPagination } from "../utilities/utils"
 
 import BaseController from "./base.controller"
 import Feature from "../models/feature.model"
-import { Fields } from "../utilities/constants"
+import User from "../models/user.model"
+import { Tables, Fields } from "../utilities/constants"
 import Permission from "../models/permission.model"
 import R from "ramda"
 import Role from "../models/role.model"
@@ -26,6 +27,18 @@ export default class RoleController extends BaseController {
     } catch (error) {
       this.failure(res, error)
     }
+  }
+
+  async getRoleId (req, res) {
+    const { usr_id } = req.params
+    // let role_idx
+    // const user = await bookshelf.knex(Tables.USER).select(Fields.ROLE_ID).where({ usr_id })
+    bookshelf.knex(Tables.USER)
+      .where({ usr_id })
+      .join(Tables.ROLE, `${Tables.USER}.${Fields.ROLE_ID}`, "=", `${Tables.ROLE}.${Fields.ROLE_ID}`)
+      .then(data => {
+        this.success(res, data)
+      })
   }
 
   async getList (req, res) {
