@@ -93,20 +93,19 @@ export default class TestController extends BaseController {
 
   async getTestcases (req, res) {
     try {
-      console.log("Hello, I'm in getTestcases")
+      console.log("[Controller] Hello, I'm in getTestcases")
       const { id: test_id } = req.params
       const { page, limit: pageSize } = req.query
       console.log("test_id ===>", test_id)
       const test = await Test.forge({test_id}).fetch()
       const test_tc_no = test.get(Fields.TEST_TC_NO)
-      const tcIds = Array.apply(null, Array(test_tc_no)).map((x, idx) => idx + 1) 
-
+      const tcIds = Array.apply(null, Array(test_tc_no)).map((x, idx) => idx + 1)
       const testMappingList = tcIds
         .map(tcId => q => q.where({ test_id: test_id }).orderBy("test_map_id", "asc"))
         .map((queryTestMap) => TestMappings.query(queryTestMap).fetch())
 
       const [testcases] = await Promise.all(testMappingList)
-      const data = { ...test, testcases }
+      const data = { testcases }
       this.success(res, data)
     } catch (error) {
       this.failure(res, error)

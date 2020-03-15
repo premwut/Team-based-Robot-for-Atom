@@ -1,6 +1,13 @@
 <template>
   <div id="test-table">
     <v-flex md12>
+      <!-- Debug -->
+        <!-- <H1>This is Test Table</H1> -->
+        <!-- {{ tests.list }} -->
+        <!-- <li v-for="item in tests.list" :key="item">
+        {{ item }} <br>
+        </li> -->
+
     <div class="table-container">
       <v-data-table id="user-table-container"
         :headers="headers" :items="tests.list"
@@ -11,6 +18,7 @@
         class="elevation-1">
         <v-progress-linear slot="progress" color="primary" height="3" indeterminate></v-progress-linear>
         <template slot="items" slot-scope="props">
+          <tr @click="onTestClick(props.item.test_id)">
           <td class="text-xs-center">{{ changeDateFormat(props.item.created_at) }}</td>
           <td class="text-xs-center">{{ props.item.usr_id }}</td>
           <td class="text-xs-center">{{ props.item.test_id }}</td>
@@ -18,10 +26,11 @@
           <td class="text-xs-center">{{ props.item.test_passed }}</td>
           <td class="text-xs-center">{{ props.item.test_failed }}</td>
           <td class="text-xs-center"><a :href="getDownloadUrl(props.item.test_file_link)" target="_bank">Link</a></td>
+        </tr>
         </template>
         <template slot="no-data">
           <div>
-            <h2 class="text-xs-center my-5">No Testcase Data!</h2>
+            <h2 class="text-xs-center my-5">No Test Data!</h2>
           </div>
         </template>
       </v-data-table>
@@ -48,10 +57,10 @@ export default {
     try {
       this.isLoading = true
       const process = []
-      const isTestcaseEmpty = store.state.testcase.testcases.list.length === 0
-      console.log("isTestcaseEmpty", isTestcaseEmpty)
+      const isTestEmpty = store.state.test.tests.list.length === 0
+      console.log("isTestEmpty", isTestEmpty)
       console.log(this.isLoading, "isLoading")
-      isTestcaseEmpty && process.push(store.dispatch("test/fetchTests", { page: 1, limit: rowsPerPage }))
+      isTestEmpty && process.push(store.dispatch("test/fetchTests", { page: 1, limit: rowsPerPage }))
       await Promise.all(process)
       this.isLoading = false
       console.log("isLoading ===>", this.isLoading)
@@ -77,9 +86,9 @@ export default {
       { text: "Date", align: "center", sortable: false },
       { text: "Executor ID", align: "center", sortable: false },
       { text: "Executed ID", align: "center", sortable: false },
-      { text: "Number of testcases", align: "center", sortable: false },
-      { text: "Passed", align: "center", sortable: false },
-      { text: "Failed", align: "center", sortable: false },
+      { text: "Number of Testcases", align: "center", sortable: false },
+      { text: "Number of Passed", align: "center", sortable: false },
+      { text: "Number of Failed", align: "center", sortable: false },
       { text: "Download", align: "center", sortable: false },
     ],
     pagination: { rowsPerPage },
@@ -116,11 +125,6 @@ export default {
     },
   },
   methods: {
-    async getTests ({ page = this.pagination.page } = {}) {
-      this.isLoading = true
-      await this.$store.dispatch("test/fetchTests", { page, limit: rowsPerPage })
-      this.isLoading = false
-    },
     onRefreshClicked () {
       this.getTests({ page: 1 })
       this.pagination.page = 1
@@ -131,6 +135,19 @@ export default {
     },
     getDownloadUrl (url) {
       return "http://" + url.toString()
+    },
+    async getTests ({ page = this.pagination.page } = {}) {
+      this.isLoading = true
+      await this.$store.dispatch("test/fetchTests", { page, limit: rowsPerPage })
+      this.isLoading = false
+    },
+    async onTestClick (test_id) {
+      const page = this.pagination.page
+      this.isLoading = true
+      console.log(`[event method] test_id ==> ${test_id}`)
+      await this.$store.dispatch("test/fetchTestcases", { test_id, page, limit: rowsPerPage })
+      this.isLoading = false
+      this.$emit("changeTable", "testcaseTable")
     },
   },
 }
