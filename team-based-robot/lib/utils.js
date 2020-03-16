@@ -6,6 +6,7 @@ export const PACKAGE_NAME = "team-based-robot"
 export const SHARE_TYPE = { PROJECT: 1, TEAM: 2, USER: 3 }
 export const RUN_TYPE = { ALL: 1, SUITE: 2, TAG: 3 }
 export const PROJECT_TYPE = { SIMPLE: "Simple", LARGE: "Large" }
+export const ROLE_TYPE = { LEADER: "TEAM_LEADER", MEMBER: "TEAM_MEMBER" }
 
 export const isTeamBaseProject = () => {
   const [projectDir] =  atom.project.rootDirectories

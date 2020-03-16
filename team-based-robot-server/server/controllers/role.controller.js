@@ -37,7 +37,7 @@ export default class RoleController extends BaseController {
       .where({ usr_id })
       .join(Tables.ROLE, `${Tables.USER}.${Fields.ROLE_ID}`, "=", `${Tables.ROLE}.${Fields.ROLE_ID}`)
       .then(data => {
-        this.success(res, data)
+        this.success(res, ...data)
       })
   }
 

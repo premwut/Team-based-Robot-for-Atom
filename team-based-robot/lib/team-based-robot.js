@@ -125,6 +125,7 @@ export default class TeamBasedRobot {
   async authenticate(authen) {
     try {
       const currentUser = await this.connection.login(authen)
+      console.log(currentUser)
       if (currentUser) {
         this.user = currentUser
         const features = await this.connection.getFeatures()
@@ -135,6 +136,10 @@ export default class TeamBasedRobot {
       this.LoggedIn = false
       console.log("Authenticate & Get features failure")
     }
+    const role = await this.connection.getRoleById(this.user.usr_id)
+    console.log(role)
+    this.user.role = role.role_name
+    console.log(this.user, "this.user")
   }
 
   async syncKeywordsToTeamBaseRobotFile(isReloadAll = true, isAutoReload) {
