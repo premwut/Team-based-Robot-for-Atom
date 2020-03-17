@@ -3,7 +3,7 @@
 
 import etch from "etch"
 import { TextEditor, TextBuffer, CompositeDisposable } from "atom"
-import { SHARE_TYPE, fuzzysearch } from '../utils'
+import { SHARE_TYPE, ROLE_TYPE, fuzzysearch } from '../utils'
 import { editKeyword } from '../keywords'
 
 export default class SearchKeywordView {
@@ -16,6 +16,7 @@ export default class SearchKeywordView {
     this.panel = atom.workspace.addModalPanel({ item: this.element, visible: false, autoFocus: true })
     this.bufferContent = this.refs.editorContent.buffer
     this.bufferDesc = this.refs.editorDesc.buffer
+    this.bufferReview = this.refs.editorReview.buffer
     this.subscriptions = new CompositeDisposable()
 
     this.editorSearchSubscription = this.refs.editorSearch.onDidStopChanging(this.onEditorSearchChange.bind(this))
@@ -79,13 +80,13 @@ export default class SearchKeywordView {
     }
   }
 
-  displaySharingKeyword() {
+  async displaySharingKeyword() {
     const keywords = this.teambaseInstance.sharingKeywords
+    const reviews = await this.connection.getReview(this.teambaseInstance.user.usr_id)
     const sharingKeywords = keywords.map(k => {
       const content = k.kwd_doc === "" ? `${k.kwd_content}` : `\n\t[Documentation]\t${k.kwd_doc}${k.kwd_content}`
       const original = `${k.kwd_name}${content}`
-      // console.log("In searchKey displaySharingKeyword Fn"); // new
-      // console.log(k.kwd_review); // new
+      const review = reviews.filter(rw => rw.kwd_id === k.kwd_id)[0]
       return {
         id: k.kwd_id,
         name: k.kwd_name,
@@ -94,11 +95,14 @@ export default class SearchKeywordView {
         content: k.kwd_content,
         isAprv: k.kwd_is_approved, // new
         review: k.kwd_review, // new
+        comment: review.rw_comment,
+        status: review.rw_status,
         isShared: true,
         original
       }
     })
     this.keywords = [...sharingKeywords]
+    console.log(sharingKeywords)
     this.verifySharedKeyword()
     this.updateSearchKeywords()
     etch.update(this)
@@ -116,10 +120,12 @@ export default class SearchKeywordView {
 
   onKeywordSelected(keyword, index) {
     this.keywordSelectedIndex = index
+    console.log(keyword)
     // console.log("onKeywordSelected =>" + JSON.stringify(keyword));
     if (keyword) {
       this.bufferContent.setText(keyword.original)
       this.bufferDesc.setText(keyword.desc)
+      this.bufferReview.setText(keyword.comment)
     } else {
       this.bufferContent.setText("")
       this.bufferDesc.setText("")
@@ -162,7 +168,7 @@ export default class SearchKeywordView {
     })
   }
 
-  async onModalVisible() {
+  async setReviewOnVisible() {
     const { usr_id } = this.teambaseInstance.user
     const test = {
       rw_status: "Approved",
@@ -171,9 +177,16 @@ export default class SearchKeywordView {
       usr_id: usr_id
     }
     // const response = await this.connection.submitReview(test)
-    const review = await this.connection.getReview(usr_id)
+    // const review = await this.connection.getReview(usr_id)
     const shit = await this.connection.getRoleById(usr_id)
-    console.log(review, "fetched review")
+    const { role } = this.teambaseInstance.user
+
+    if (role === ROLE_TYPE.LEADER) {
+      this.refs.editorReview.readOnly = false
+    } else {
+      this.refs.editorReview.readOnly = true
+    }
+    // console.log(review, "fetched review")
     console.log(shit, 'shit')
     // console.log(this.teambaseInstance.user)
     // console.log(response)
@@ -186,7 +199,8 @@ export default class SearchKeywordView {
   show(props = {}) {
     this.updateProps(props)
     this.panel.show()
-    this.onModalVisible()
+    this.setReviewOnVisible()
+    console.log(this.teambaseInstance.sharingKeywords)
     atom.views.getView(atom.workspace).classList.add('search-keyword-visible')
     this.initSubscriptions()
     this.displaySharingKeyword()
@@ -224,7 +238,7 @@ export default class SearchKeywordView {
       return (
         <li key={i} className={itemClass}>
           <div className="title" onClick={() => this.onKeywordSelected(keyword, i)}>
-            <div style="margin-left: 5px" class={reviewClass}></div> { keyword.name }
+            <div style="margin-left: 5px" className={reviewClass}></div> { keyword.name }
           </div>
           <div className="actions">
             { actionType }
@@ -232,7 +246,7 @@ export default class SearchKeywordView {
         </li>
       )
     })
-    // console.log(keywordItems)
+    console.log(keywordItems)
     return (
       <div ref="searchKeywordView" className="search-keyword-view">
         <header className="header-wrapper">
@@ -262,9 +276,9 @@ export default class SearchKeywordView {
               <label>Keyword Description</label>
               <TextEditor ref="editorDesc" readOnly={true} mini={true} placeholderText="Keyword Description" />
             </div>
-            <div className="input-block">
+            <div className="input-block" style={{overflow: 'scroll'}}>
               <label>Keyword Review</label>
-              <TextEditor ref="editorReview" placeholderText="Type your keyword review here..."/>
+              <TextEditor ref="editorReview" readOnly={true} placeholderText="Type your keyword review here..."/>
             </div>
           </section>
         </div>
