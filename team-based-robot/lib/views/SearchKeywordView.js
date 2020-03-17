@@ -86,7 +86,8 @@ export default class SearchKeywordView {
     const sharingKeywords = keywords.map(k => {
       const content = k.kwd_doc === "" ? `${k.kwd_content}` : `\n\t[Documentation]\t${k.kwd_doc}${k.kwd_content}`
       const original = `${k.kwd_name}${content}`
-      const review = reviews.filter(rw => rw.kwd_id === k.kwd_id)[0]
+      let review = reviews.filter(rw => rw.kwd_id === k.kwd_id)
+      if (review) review = review[0]
       return {
         id: k.kwd_id,
         name: k.kwd_name,
@@ -95,8 +96,8 @@ export default class SearchKeywordView {
         content: k.kwd_content,
         isAprv: k.kwd_is_approved, // new
         review: k.kwd_review, // new
-        comment: review.rw_comment,
-        status: review.rw_status,
+        comment: (review) ? review.rw_comment : undefined,
+        status: (review) ? review.rw_status : undefined,
         isShared: true,
         original
       }
@@ -125,10 +126,12 @@ export default class SearchKeywordView {
     if (keyword) {
       this.bufferContent.setText(keyword.original)
       this.bufferDesc.setText(keyword.desc)
-      this.bufferReview.setText(keyword.comment)
+      if (keyword.comment) this.bufferReview.setText(keyword.comment)
+      else this.bufferReview.setText("")
     } else {
       this.bufferContent.setText("")
       this.bufferDesc.setText("")
+      this.bufferReview.setText("")
     }
     etch.update(this)
   }
@@ -178,16 +181,19 @@ export default class SearchKeywordView {
     }
     // const response = await this.connection.submitReview(test)
     // const review = await this.connection.getReview(usr_id)
-    const shit = await this.connection.getRoleById(usr_id)
+    // const shit = await this.connection.getRoleById(usr_id)
     const { role } = this.teambaseInstance.user
 
     if (role === ROLE_TYPE.LEADER) {
       this.refs.editorReview.readOnly = false
+      console.log("You're the leader!")
     } else {
       this.refs.editorReview.readOnly = true
+      console.log("WTF did I do wrong?")
     }
+    etch.update(this)
     // console.log(review, "fetched review")
-    console.log(shit, 'shit')
+    // console.log(shit, 'shit')
     // console.log(this.teambaseInstance.user)
     // console.log(response)
   }
@@ -278,7 +284,7 @@ export default class SearchKeywordView {
             </div>
             <div className="input-block" style={{overflow: 'scroll'}}>
               <label>Keyword Review</label>
-              <TextEditor ref="editorReview" readOnly={true} placeholderText="Type your keyword review here..."/>
+              <TextEditor ref="editorReview" placeholderText="Type your keyword review here..."/>
             </div>
           </section>
         </div>
