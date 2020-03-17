@@ -3,7 +3,7 @@
 
 import etch from "etch"
 import { TextEditor, TextBuffer, CompositeDisposable } from "atom"
-import { SHARE_TYPE, ROLE_TYPE, fuzzysearch } from '../utils'
+import { SHARE_TYPE, ROLE_TYPE, KEYWORD_STATUS, fuzzysearch } from '../utils'
 import { editKeyword } from '../keywords'
 
 export default class SearchKeywordView {
@@ -228,7 +228,16 @@ export default class SearchKeywordView {
     const keywordItems = this.searchKeywords.map((keyword, i) => {
       const itemClass = `list-item ${ i === this.keywordSelectedIndex ? 'selected' : ''}`
       let actionType = <div className="-verifying"><div className="spinner -warning"/>Verifying</div>
-      let reviewClass = keyword.isAprv ? "icon icon-thumbsup" : !keyword.isAprv && !keyword.review ? "icon icon-unverified" : "icon icon-thumbsdown"
+      let reviewClass
+       // = keyword.status ? "icon icon-thumbsup" : !keyword.status && !keyword.comment ? "icon icon-unverified" : "icon icon-thumbsdown"
+      switch (keyword.status) {
+        case KEYWORD_STATUS.APPROVED:
+          reviewClass = "icon icon-thumbsup"
+          break;
+        case KEYWORD_STATUS.DISAPPROVED:
+          reviewClass = "icon icon-thumbsdown"
+          break;
+      }
       if (this.isVerified && keyword.isShared) {
         if (keyword.isOwner) {
           actionType = <div className="actions-botton">
