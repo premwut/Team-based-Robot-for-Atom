@@ -14,6 +14,9 @@ export const getTestResults = () => {
   let outputXML
   try {
     outputXML = fs.readFileSync(`${getRootDirPath()}${outputPath}/output.xml`).toString()
+    const test = new Blob([fs.readFileSync(`${getRootDirPath()}${outputPath}/output.xml`)])
+    const test2 = new Blob(outputXML)
+    console.log(test, 'BLOB test')
   } catch (e) {
     return undefined
   }
@@ -28,6 +31,8 @@ export const saveTestcase = async (tbInstance) => {
   const currentUser = await connection.getProfile()
   const testOutput = mapTestOutput(testResults)
   console.log(testOutput)
+  const test = await connection.saveTestcaseRun(testOutput)
+  console.log(test)
 
 
   // const test = await connection.getTestcase()
@@ -126,7 +131,7 @@ const mapTestOutput = testResults => {
     cases.map(tc => {
       testcaseList.push({
         tc_name: tc._attributes.name,
-        tc_passed: tc.status._attributes.status,
+        tc_passed: (tc.status._attributes.status === "PASS") ? true : false,
         kwd_list: toArray(tc.kw).map(kw => {
           return kw._attributes.name
         })
