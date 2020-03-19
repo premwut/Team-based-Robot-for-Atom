@@ -203,7 +203,7 @@ export default class SearchKeywordView {
     if (this.teambaseInstance.user) {
       const { role } = this.teambaseInstance.user
       if (role === ROLE_TYPE.LEADER) {
-        this.reviewButtonDisplay = 'block'
+        this.reviewButtonDisplay = 'flex'
       } else {
         this.reviewButtonDisplay = 'none'
       }
@@ -319,12 +319,15 @@ export default class SearchKeywordView {
               <label>Keyword Review</label>
               <TextEditor ref="editorReview" placeholderText="Type your keyword review here..."/>
               <div class="review-button-container" style={ { display: this.reviewButtonDisplay } }>
-                <label ref="approveButton" onClick={() => this.checkKeywordStatus(KEYWORD_STATUS.APPROVED)} class="btn btn-success inline-block-tight">
-                  <span class="icon icon-thumbsup"></span>
-                </label>
-                <label ref="disButton" onClick={() => this.checkKeywordStatus(KEYWORD_STATUS.DISAPPROVED)} class="btn btn-error inline-block-tight">
-                  <span class="icon icon-thumbsdown"></span>
-                </label>
+                <div className="btn-group">
+                  <label ref="approveButton" onClick={() => this.checkKeywordStatus(KEYWORD_STATUS.APPROVED)} class="btn btn-success">
+                    <span class="icon icon-thumbsup"></span>
+                  </label>
+                  <label ref="disButton" onClick={() => this.checkKeywordStatus(KEYWORD_STATUS.DISAPPROVED)} class="btn btn-error">
+                    <span class="icon icon-thumbsdown"></span>
+                  </label>
+                </div>
+                <label className="btn"> Submit </label>
               </div>
             </div>
           </section>
