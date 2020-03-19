@@ -195,8 +195,6 @@ export default class SaveKeywordView {
           doc: keywordEditor.documentation || keyword.documentation || "",
           desc: keyword.desc,
           deprecate: false,
-          review: keyword.review, // new
-          isAprv: keyword.isAprv, // new
           shared: { teamIds, projectIds, userIds }
         }
       })
@@ -433,19 +431,13 @@ export default class SaveKeywordView {
                   <label>Keyword Description</label>
                   <TextEditor ref="editorDesc" mini={true} placeholderText="Keyword Description" />
                 </div>
-                <div className="input-block">
+                <div className="input-block" style="display:none;">
                   <label>Keyword Review</label>
                   <TextEditor ref="editorReview" autoHeight={false} placeholderText="Add comment for reviewing this keyword" />
                 </div>
               </div>
 
             </section>
-            <span className="review-actions">
-              <button className={buttonClassesAprv}
-                onClick={() => this.onApproveKeywordReviewClicked(true)}>Approve</button>
-              <button className={buttonClassesUnAprv}
-                onClick={() => this.onApproveKeywordReviewClicked(false)}>Disapprove</button>
-            </span>
           </section>
           <section className="shared-block">
             <ShareKeywordView ref="shareView"
