@@ -38,6 +38,7 @@ export default class SearchKeywordView {
     this.keywordSelectedIndex = 0
     this.isLoading = false
     this.isVerified = false
+    this.reviewButtonDisplay = 'none'
   }
 
   updateProps(props) {
@@ -87,7 +88,7 @@ export default class SearchKeywordView {
       const content = k.kwd_doc === "" ? `${k.kwd_content}` : `\n\t[Documentation]\t${k.kwd_doc}${k.kwd_content}`
       const original = `${k.kwd_name}${content}`
       let review = reviews.filter(rw => rw.kwd_id === k.kwd_id)
-      if (review) review = review[0]
+      if (review) review = review.pop()
       return {
         id: k.kwd_id,
         name: k.kwd_name,
@@ -195,19 +196,26 @@ export default class SearchKeywordView {
       usr_id: usr_id
     }
     // const response = await this.connection.submitReview(test)
-    // const review = await this.connection.getReview(usr_id)
+    const review = await this.connection.getReview(usr_id)
     // const shit = await this.connection.getRoleById(usr_id)
     const { role } = this.teambaseInstance.user
 
+    if (this.teambaseInstance.user) {
+      const { role } = this.teambaseInstance.user
+      if (role === ROLE_TYPE.LEADER) {
+        this.reviewButtonDisplay = 'block'
+      } else {
+        this.reviewButtonDisplay = 'none'
+      }
+    }
+
     if (role === ROLE_TYPE.LEADER) {
       this.refs.editorReview.readOnly = false
-      console.log("You're the leader!")
     } else {
       this.refs.editorReview.readOnly = true
-      console.log("WTF did I do wrong?")
     }
     etch.update(this)
-    // console.log(review, "fetched review")
+    console.log(review, "fetched review")
     // console.log(shit, 'shit')
     // console.log(this.teambaseInstance.user)
     // console.log(response)
@@ -221,7 +229,6 @@ export default class SearchKeywordView {
     this.updateProps(props)
     this.panel.show()
     this.setReviewOnVisible()
-    console.log(this.teambaseInstance.sharingKeywords)
     atom.views.getView(atom.workspace).classList.add('search-keyword-visible')
     this.initSubscriptions()
     this.displaySharingKeyword()
@@ -253,6 +260,7 @@ export default class SearchKeywordView {
           reviewClass = "icon icon-thumbsdown"
           break;
       }
+
       if (this.isVerified && keyword.isShared) {
         if (keyword.isOwner) {
           actionType = <div className="actions-botton">
@@ -277,6 +285,7 @@ export default class SearchKeywordView {
       )
     })
     console.log(keywordItems)
+
     return (
       <div ref="searchKeywordView" className="search-keyword-view">
         <header className="header-wrapper">
@@ -309,7 +318,7 @@ export default class SearchKeywordView {
             <div className="input-block" style={{overflow: 'scroll'}}>
               <label>Keyword Review</label>
               <TextEditor ref="editorReview" placeholderText="Type your keyword review here..."/>
-              <div class="review-button-container">
+              <div class="review-button-container" style={ { display: this.reviewButtonDisplay } }>
                 <label ref="approveButton" onClick={() => this.checkKeywordStatus(KEYWORD_STATUS.APPROVED)} class="btn btn-success inline-block-tight">
                   <span class="icon icon-thumbsup"></span>
                 </label>

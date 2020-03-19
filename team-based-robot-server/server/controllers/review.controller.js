@@ -1,5 +1,6 @@
 import { Fields, Tables } from "../utilities/constants"
 import Review, { Reviews } from "../models/review.model"
+import User from "../models/user.model"
 
 import BaseController from "./base.controller"
 import bookshelf from "../config/bookshelf"
@@ -8,7 +9,10 @@ export default class ReviewController extends BaseController {
   async getReview (req, res) {
     try {
       const usr_id = req.params.userId
-      const reviews = await Review.forge().where({ usr_id }).fetchAll()
+      const { team_id } = (await bookshelf.knex(Tables.USER).select(Fields.TEAM_ID).where({ usr_id })).pop()
+      const leaderId = (await bookshelf.knex(Tables.USER).where({ team_id, role_id: 2 })).pop().usr_id
+      console.log(team_id, "team_id")
+      const reviews = await Review.forge().where({ usr_id: leaderId }).fetchAll()
       this.success(res, reviews)
     } catch (e) {
       this.error(res, e)
