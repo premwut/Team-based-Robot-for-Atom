@@ -128,6 +128,7 @@ export default class SearchKeywordView {
       this.bufferDesc.setText(keyword.desc)
       if (keyword.comment) this.bufferReview.setText(keyword.comment)
       else this.bufferReview.setText("")
+      this.checkKeywordStatus(keyword.status)
     } else {
       this.bufferContent.setText("")
       this.bufferDesc.setText("")
@@ -171,7 +172,7 @@ export default class SearchKeywordView {
     })
   }
 
-  onApproveClicked(status) {
+  checkKeywordStatus(status) {
     console.log(status)
     switch (status) {
       case KEYWORD_STATUS.APPROVED:
@@ -309,10 +310,10 @@ export default class SearchKeywordView {
               <label>Keyword Review</label>
               <TextEditor ref="editorReview" placeholderText="Type your keyword review here..."/>
               <div class="review-button-container">
-                <label ref="approveButton" onClick={() => this.onApproveClicked(KEYWORD_STATUS.APPROVED)} class="btn btn-success inline-block-tight">
+                <label ref="approveButton" onClick={() => this.checkKeywordStatus(KEYWORD_STATUS.APPROVED)} class="btn btn-success inline-block-tight">
                   <span class="icon icon-thumbsup"></span>
                 </label>
-                <label ref="disButton" onClick={() => this.onApproveClicked(KEYWORD_STATUS.DISAPPROVED)} class="btn btn-error inline-block-tight">
+                <label ref="disButton" onClick={() => this.checkKeywordStatus(KEYWORD_STATUS.DISAPPROVED)} class="btn btn-error inline-block-tight">
                   <span class="icon icon-thumbsdown"></span>
                 </label>
               </div>
