@@ -171,6 +171,20 @@ export default class SearchKeywordView {
     })
   }
 
+  onApproveClicked(status) {
+    console.log(status)
+    switch (status) {
+      case KEYWORD_STATUS.APPROVED:
+        this.refs.approveButton.classList.add("selected")
+        this.refs.disButton.classList.remove("selected")
+        break
+      case KEYWORD_STATUS.DISAPPROVED:
+        this.refs.disButton.classList.add("selected")
+        this.refs.approveButton.classList.remove("selected")
+        break
+    }
+  }
+
   async setReviewOnVisible() {
     const { usr_id } = this.teambaseInstance.user
     const test = {
@@ -294,6 +308,14 @@ export default class SearchKeywordView {
             <div className="input-block" style={{overflow: 'scroll'}}>
               <label>Keyword Review</label>
               <TextEditor ref="editorReview" placeholderText="Type your keyword review here..."/>
+              <div class="review-button-container">
+                <label ref="approveButton" onClick={() => this.onApproveClicked(KEYWORD_STATUS.APPROVED)} class="btn btn-success inline-block-tight">
+                  <span class="icon icon-thumbsup"></span>
+                </label>
+                <label ref="disButton" onClick={() => this.onApproveClicked(KEYWORD_STATUS.DISAPPROVED)} class="btn btn-error inline-block-tight">
+                  <span class="icon icon-thumbsdown"></span>
+                </label>
+              </div>
             </div>
           </section>
         </div>
