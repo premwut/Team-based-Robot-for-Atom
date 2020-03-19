@@ -269,13 +269,12 @@ export default class SearchKeywordView {
       let actionType = <div className="-verifying"><div className="spinner -warning"/>Verifying</div>
       let reviewClass
        // = keyword.status ? "icon icon-thumbsup" : !keyword.status && !keyword.comment ? "icon icon-unverified" : "icon icon-thumbsdown"
-      switch (keyword.status) {
-        case KEYWORD_STATUS.APPROVED:
+      if (keyword.status === KEYWORD_STATUS.APPROVED) {
           reviewClass = "icon icon-thumbsup"
-          break;
-        case KEYWORD_STATUS.DISAPPROVED:
-          reviewClass = "icon icon-thumbsdown"
-          break;
+      } else if (keyword.status === KEYWORD_STATUS.DISAPPROVED) {
+        reviewClass = "icon icon-thumbsdown"
+      } else {
+        reviewClass = "icon icon-unverified"
       }
 
       if (this.isVerified && keyword.isShared) {
