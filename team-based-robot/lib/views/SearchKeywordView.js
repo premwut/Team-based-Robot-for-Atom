@@ -104,7 +104,6 @@ export default class SearchKeywordView {
       }
     })
     this.keywords = [...sharingKeywords]
-    console.log(sharingKeywords)
     this.verifySharedKeyword()
     this.updateSearchKeywords()
     etch.update(this)
@@ -122,7 +121,6 @@ export default class SearchKeywordView {
 
   onKeywordSelected(keyword, index) {
     this.keywordSelectedIndex = index
-    console.log(keyword)
     // console.log("onKeywordSelected =>" + JSON.stringify(keyword));
     if (keyword) {
       this.bufferContent.setText(keyword.original)
@@ -173,8 +171,27 @@ export default class SearchKeywordView {
     })
   }
 
+  //fucntions for Keyword Review features
+  async onSubmitReviewClick() {
+    try {
+      const currentKeyword = this.searchKeywords[this.keywordSelectedIndex]
+      const reviewData = {
+        usr_id: this.teambaseInstance.user.usr_id,
+        kwd_id: currentKeyword.id,
+        rw_comment: this.bufferReview.getText(),
+        rw_status: currentKeyword.status
+      }
+      await this.connection.submitReview(reviewData)
+      this.hide()
+      atom.notifications.addSuccess("Keyword review was updated")
+    } catch (e) {
+      atom.notifications.addError("Keyword review error")
+    }
+
+  }
+
   checkKeywordStatus(status) {
-    console.log(status)
+    this.searchKeywords[this.keywordSelectedIndex].status = status
     switch (status) {
       case KEYWORD_STATUS.APPROVED:
         this.refs.approveButton.classList.add("selected")
@@ -327,7 +344,7 @@ export default class SearchKeywordView {
                     <span class="icon icon-thumbsdown"></span>
                   </label>
                 </div>
-                <label className="btn"> Submit </label>
+                <label onClick={() => this.onSubmitReviewClick()} className="btn"> Submit </label>
               </div>
             </div>
           </section>
