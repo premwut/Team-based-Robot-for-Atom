@@ -4,6 +4,8 @@ import TestMapping, { TestMappings } from "../models/testMapping.model"
 import Keyword, { Keywords } from "../models/keyword.model"
 import Team from "../models/team.model"
 import { getPagination, isPagination } from "../utilities/utils"
+import GoogleStorage from "../utilities/GoogleStorage"
+import { config } from "../config/cloud-storage"
 
 import BaseController from "./base.controller"
 import { Fields } from "../utilities/constants"
@@ -14,9 +16,28 @@ import bookshelf from "../config/bookshelf"
 export default class TestController extends BaseController {
   async create (req, res) {
     try {
-      const { test_tc_no, test_passed, test_failed, test_file_link, test_result } = req.body
+      const { files } = req
+      const { bucketName } = config
+      const googleStorage = new GoogleStorage(bucketName)
+      let promises = []
+      files.forEach(file => {
+        promises.push(googleStorage.uploadFileToGoogleStoragePromise(file))
+      })
+      let uploadResult = {}
+      Promise.all(promises)
+        .then(result => {
+          console.log("๊Upload Files Success")
+          uploadResult = { "upload_result": result }
+        })
+        .catch(error => {
+          console.log(error)
+          return res.status(404).send(error)
+        })
+
+      const json = JSON.parse(req.body.json)
+      const { test_tc_no, test_passed, test_failed, test_result } = json
+      const test_file_link = "www.google.com"
       const usr_id = req.currentUser.get(Fields.USR_ID)
-      console.log("usr_id ===>", usr_id)
       const testData = {
         test_tc_no,
         test_passed,
@@ -24,6 +45,7 @@ export default class TestController extends BaseController {
         test_file_link,
         usr_id,
       }
+
       const test = await Test.forge(testData).save()
       const testId = test.get(Fields.TEST_ID)
 
@@ -65,8 +87,11 @@ export default class TestController extends BaseController {
         console.log("results ===> ", results.length)
         return results
       })
+
+      const data = {message: "Test upload file"}
       this.success(res, data)
     } catch (error) {
+      console.log("Error")      
       this.failure(res, error)
     }
   }
