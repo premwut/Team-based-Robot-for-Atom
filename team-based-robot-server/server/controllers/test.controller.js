@@ -24,20 +24,12 @@ export default class TestController extends BaseController {
         promises.push(googleStorage.uploadFileToGoogleStoragePromise(file))
       })
       let uploadResult = {}
-      Promise.all(promises)
-        .then(result => {
-          console.log("๊Upload Files Success")
-          uploadResult = { "upload_result": result }
-        })
-        .catch(error => {
-          console.log(error)
-          return res.status(404).send(error)
-        })
+      const uploadFiles = await Promise.all(promises)
 
       const json = JSON.parse(req.body.json)
       const { test_tc_no, test_passed, test_failed, test_result } = json
-      const test_file_link = "www.google.com"
       const usr_id = req.currentUser.get(Fields.USR_ID)
+      const test_file_link = (uploadFiles[0].file.cloudStoragePublicUrl).concat(",", uploadFiles[1].file.cloudStoragePublicUrl)
       const testData = {
         test_tc_no,
         test_passed,
@@ -88,8 +80,7 @@ export default class TestController extends BaseController {
         return results
       })
 
-      const data = {message: "Test upload file"}
-      this.success(res, data)
+      this.success(res, { ...data, "upload_result": uploadFiles })
     } catch (error) {
       console.log("Error")      
       this.failure(res, error)
