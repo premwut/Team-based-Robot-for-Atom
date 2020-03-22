@@ -1,6 +1,5 @@
 import { API, PORT, PRODUCTION } from "./utilities/constants"
 import { Builder, Nuxt } from "nuxt"
-
 import PrettyError from "pretty-error"
 import bodyParser from "body-parser"
 import compression from "compression"
@@ -11,7 +10,6 @@ import expressValidator from "express-validator"
 import routers from "./routes"
 import SocketIO from "socket.io"
 import http from "http"
-
 dotenv.load()
 const app = express()
 const host = process.env.HOST
