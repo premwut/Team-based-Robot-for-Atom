@@ -14,9 +14,6 @@ export const getTestResults = () => {
   let outputXML
   try {
     outputXML = fs.readFileSync(`${getRootDirPath()}${outputPath}/output.xml`).toString()
-    const test = new Blob([fs.readFileSync(`${getRootDirPath()}${outputPath}/output.xml`)])
-    const test2 = new Blob(outputXML)
-    console.log(test, 'BLOB test')
   } catch (e) {
     return undefined
   }
