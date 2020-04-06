@@ -74,6 +74,10 @@
         {
           "label": "View Latest Test Results",
           "command": "team-based-robot:show-report"
+        },
+        {
+          "label": "Add keyword to local storage",
+          "command": "team-based-robot:add-local-keyword"
         }
       ]
     }
