@@ -20,6 +20,7 @@ export default class SearchKeywordView {
     this.subscriptions = new CompositeDisposable()
 
     this.editorSearchSubscription = this.refs.editorSearch.onDidStopChanging(this.onEditorSearchChange.bind(this))
+    // this.editorSearchSubscription = this.refs.editorSearch.onDidStopChanging(this.onEditorSearchChange.bind(this))
 
     // Set grammar to content editor
     const [robotGrammar] = atom.grammars.getGrammars().filter(x => x.name === "Robot Framework")
@@ -95,8 +96,10 @@ export default class SearchKeywordView {
         doc: k.kwd_doc,
         desc: k.kwd_desc,
         content: k.kwd_content,
-        isAprv: k.kwd_is_approved, // new
-        review: k.kwd_review, // new
+        isAprv: k.kwd_is_approved,
+        review: k.kwd_review,
+        created_at: k.created_at,
+        usr_id: k.usr_id,
         comment: (review) ? review.rw_comment : undefined,
         status: (review) ? review.rw_status : undefined,
         isShared: true,
@@ -135,13 +138,14 @@ export default class SearchKeywordView {
     }
     etch.update(this)
   }
-
+  //Need to change here for filter
   onEditorSearchChange() {
     const searchText = this.refs.editorSearch.getText()
+    const test = 1
     if (searchText === "") {
       this.updateSearchKeywords()
     } else {
-      const keywordFilters = this.keywords.filter(x => fuzzysearch(searchText, x.name))
+      const keywordFilters = this.keywords.filter(x => fuzzysearch(searchText, x.name)) // use || for making filter here!!
       this.updateSearchKeywords(keywordFilters)
     }
   }
@@ -315,6 +319,15 @@ export default class SearchKeywordView {
             <section className="search-control">
               <label>Search keyword by name</label>
               <TextEditor ref="editorSearch" mini={true} placeholderText="Keyword Name" />
+            </section>
+            <section ref="editorFilter" className="filter-control">
+              <span class="btn" ref="orderFilter">Created</span>
+              <span ref="approvedFilter">
+                Dropdown
+              </span>
+              <span ref="creatorFilter">
+                Dropdown
+              </span>
             </section>
             <section className="keyword-list">
               <label>Keywords</label>
