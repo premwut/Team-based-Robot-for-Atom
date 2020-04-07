@@ -102,6 +102,16 @@ export default class Connection {
     }
   }
 
+  async getTeamMembers(teamId) {
+    try {
+      const url = `team/${teamId}/members`
+      const { data: response } = await this.axios.get(url, this.headerToken)
+      return [...response.data.members]
+    } catch (e) {
+      throw e
+    }
+  }
+
   async getUsers() {
     try {
       const url = `/user/shareable`

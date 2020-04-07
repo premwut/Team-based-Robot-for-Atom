@@ -200,7 +200,7 @@ export default class SaveKeywordView {
       })
       this.isLoading = true
       etch.update(this)
-      console.log("I sus see here -> keywords : ", keywords);
+      console.log("keywords ---> keywords : ", keywords);
       await this.connection.saveKeywords({ keywords })
       atom.notifications.addSuccess("Save keyword complete")
       this.hide()
