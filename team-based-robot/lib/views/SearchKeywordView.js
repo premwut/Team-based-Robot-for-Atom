@@ -20,6 +20,7 @@ export default class SearchKeywordView {
     this.subscriptions = new CompositeDisposable()
 
     this.editorSearchSubscription = this.refs.editorSearch.onDidStopChanging(this.onEditorSearchChange.bind(this))
+    this.orderFilterSubscription = this.refs.orderFilterBtn.addEventListener("click", this.onOrderFilterBtnClicked.bind(this))
     this.creatorFilterSubscription = this.refs.creatorFilter.addEventListener("change", this.onCreatorFilterChange.bind(this))
     this.statusFilterSubscription = this.refs.statusFilter.addEventListener("change", this.onStatusFilterChange.bind(this))
 
@@ -159,11 +160,22 @@ export default class SearchKeywordView {
   onOrderFilterBtnClicked() {
     let temp = this.refs.orderFilterBtn.childNodes[1].className
     let iconClass
+    let isAscending
     if (temp.includes("icon-arrow-up")) {
       iconClass = temp.replace("icon-arrow-up", "icon-arrow-down")
+      isAscending = true
     } else {
       iconClass = temp.replace("icon-arrow-down", "icon-arrow-up")
+      isAscending = false
     }
+    const orderFilter = (kwd1, kwd2) => {
+      const time1 = new Date(kwd1.created_at)
+      const time2 = new Date(kwd2.created_at)
+      return isAscending ? time1 - time2 : time2 - time1
+    }
+    const keywords = this.searchKeywords
+    const orderedKeywords = keywords.sort(orderFilter)
+    this.updateSearchKeywords(orderedKeywords)
     this.refs.orderFilterBtn.childNodes[1].className = iconClass
   }
 
@@ -400,8 +412,8 @@ export default class SearchKeywordView {
             </section>
             <section ref="editorFilter" className="filter-control">
               <label>Filters</label>
-              <span class="btn clickable orderFilterBtn" ref="orderFilterBtn"
-              onClick={() => this.onOrderFilterBtnClicked()}>Created at
+              <span class="btn clickable orderFilterBtn" ref="orderFilterBtn">
+              Created at
               <span className="icon-arrow-up" style="margin-left: 5px"></span>
               </span>
 
@@ -467,6 +479,7 @@ export default class SearchKeywordView {
     this.subscriptions && this.subscriptions.dispose()
     this.tooltipSubscriptions && this.tooltipSubscriptions.dispose()
     this.editorSearchSubscription && this.editorSearchSubscription.dispose()
+    this.orderFilterSubscription && this.orderFilterSubscription.dispose()
     this.creatorFilterSubscription && this.creatorFilterSubscription.dispose()
     this.statusFilterSubscription && this.statusFilterSubscription.dispose()
     return etch.destroy(this)
