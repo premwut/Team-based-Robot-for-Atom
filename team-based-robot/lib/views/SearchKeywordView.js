@@ -20,7 +20,7 @@ export default class SearchKeywordView {
     this.subscriptions = new CompositeDisposable()
 
     this.editorSearchSubscription = this.refs.editorSearch.onDidStopChanging(this.onEditorSearchChange.bind(this))
-    // this.editorSearchSubscription = this.refs.editorSearch.onDidStopChanging(this.onEditorSearchChange.bind(this))
+    this.creatorFilterSubscription = this.refs.creatorFilter.addEventListener("change", this.onCreatorFilterChange.bind(this))
 
     // Set grammar to content editor
     const [robotGrammar] = atom.grammars.getGrammars().filter(x => x.name === "Robot Framework")
@@ -138,6 +138,24 @@ export default class SearchKeywordView {
     }
     etch.update(this)
   }
+
+  onOrderFilterBtnClicked() {
+    let temp = this.refs.orderFilterBtn.childNodes[1].className
+    let iconClass
+    if (temp.includes("icon-arrow-up")) {
+      iconClass = temp.replace("icon-arrow-up", "icon-arrow-down")
+    } else {
+      iconClass = temp.replace("icon-arrow-down", "icon-arrow-up")
+    }
+    console.log("temp ===>", temp)
+    this.refs.orderFilterBtn.childNodes[1].className = iconClass
+  }
+
+  onCreatorFilterChange() {
+    let x = document.getElementById("creatorFilterSelect").value
+    console.log("Select Option ===>", x)
+  }
+
   //Need to change here for filter
   onEditorSearchChange() {
     const searchText = this.refs.editorSearch.getText()
@@ -321,16 +339,31 @@ export default class SearchKeywordView {
               <TextEditor ref="editorSearch" mini={true} placeholderText="Keyword Name" />
             </section>
             <section ref="editorFilter" className="filter-control">
-              <span class="btn" ref="orderFilter">Created</span>
-              <span ref="approvedFilter">
-                Dropdown
+              <label>Filters</label>
+              <span class="btn clickable orderFilterBtn" ref="orderFilterBtn"
+              onClick={() => this.onOrderFilterBtnClicked()}>Created at
+              <span className="icon-arrow-up" style="margin-left: 5px"></span>
               </span>
-              <span ref="creatorFilter">
-                Dropdown
+
+              <span class="custom-select">Status:
+                <select ref="approvedFilter" id="approvedFilterSelect" class="input-select">
+                  <option value="0">Pending</option>
+                  <option value="1">Approved</option>
+                  <option value="2">Refused</option>
+                </select>
               </span>
+
+              <span class="custom-select">Created by:
+                <select ref="creatorFilter" id="creatorFilterSelect" class="input-select">
+                  <option value="0">Volvo</option>
+                  <option value="1">Audi</option>
+                  <option value="2">BMW</option>
+                  <option value="3">Citroen</option>
+                </select>
+              </span>
+
             </section>
             <section className="keyword-list">
-              <label>Keywords</label>
               <ol className="list-group">{ keywordItems }</ol>
             </section>
           </section>
@@ -373,6 +406,7 @@ export default class SearchKeywordView {
     this.subscriptions && this.subscriptions.dispose()
     this.tooltipSubscriptions && this.tooltipSubscriptions.dispose()
     this.editorSearchSubscription && this.editorSearchSubscription.dispose()
+    this.creatorFilterSubscription && this.creatorFilterSubscription.dispose()
     return etch.destroy(this)
   }
 }
