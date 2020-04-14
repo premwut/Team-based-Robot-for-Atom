@@ -40,7 +40,7 @@ export default class TeamBasedRobot {
       generateView: new GenerateView({}),
       runnerView: new RunnerView({}),
       reportView: new ReportView({}),
-      storeView: new StoreView({})
+      storeView: new StoreView({ teambaseInstance: this })
     }
 
     this.socket.on('sendKeywordNoti', (data) => {
@@ -79,7 +79,7 @@ export default class TeamBasedRobot {
       'team-based-robot:manage-member': () => this.openBrowserManageTeamMember(),
       'team-based-robot:assign-team': () => this.openBrowserAssignTeamToProject(),
       'team-based-robot:show-report': () => this.views.reportView.show(),
-      'team-based-robot:add-local-keyword': () => this.views.storeView.show({ teambaseInstance: this })
+      'team-based-robot:add-local-keyword': () => this.views.storeView.show()
      }));
 
     this.autocomplete.load()
