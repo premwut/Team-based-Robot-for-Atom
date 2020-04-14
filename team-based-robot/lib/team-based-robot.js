@@ -152,6 +152,7 @@ export default class TeamBasedRobot {
       const { team_id } = this.user
       const keywords = await this.connection.getKeywords()
       this.memberList = await this.connection.getTeamMembers(team_id)
+      console.log("memberList in syncFile ===>", this.memberList)
       let approvedKeywords, approvedContent
       if (!isReloadAll) {
         approvedKeywords = keywords.filter(keyword => keyword.kwd_is_approved === true)
