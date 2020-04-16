@@ -29,7 +29,9 @@ export default class TestController extends BaseController {
       const json = JSON.parse(req.body.json)
       const { test_tc_no, test_passed, test_failed, test_result } = json
       const usr_id = req.currentUser.get(Fields.USR_ID)
-      const test_file_link = (uploadFiles[0].file.cloudStoragePublicUrl).concat(",", uploadFiles[1].file.cloudStoragePublicUrl)
+      const linkA = uploadFiles[0].file.cloudStoragePublicUrl
+      const linkB = uploadFiles[1].file.cloudStoragePublicUrl
+      const test_file_link = linkB ? linkA.concat(",", linkB) : linkA
       const testData = {
         test_tc_no,
         test_passed,

@@ -48,8 +48,16 @@ export default class KeywordController extends BaseController {
       mappingCollection.each(m => { mappings.push(m.get(Fields.KWD_ID)) })
       const keywordIds = R.uniq(mappings)
       const queryKeyword = q => q.where(Fields.KWD_ID, "in", R.uniq(keywordIds)).orderBy(Fields.KWD_ID, "asc")
-      const keywords = await Keywords.query(queryKeyword).fetch()
-      this.success(res, { keywords })
+      const keywords = await Keywords.query(queryKeyword).fetch({ withRelated: ["keywordMappings"] })
+      const addUserId = (cur) => {
+        const kwd = cur.toJSON()
+        const { keywordMappings: [item1] } = kwd
+        const { usr_id } = item1
+        delete kwd.keywordMappings
+        return { usr_id, ...kwd }
+      }
+      const data = await keywords.map(addUserId)
+      this.success(res, { keywords: data })
     } catch (error) {
       this.failure(res, error)
     }

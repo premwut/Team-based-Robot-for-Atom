@@ -26,6 +26,7 @@ export default class TeamBasedRobot {
     this.user = undefined
     this.features = []
     this.sharingKeywords = []
+    this.memberList = []
     this.views = {}
     this.autocomplete = autocomplete
     this.connectionConfig = { endpoint: state.endpoint, username: state.username, password: state.password }
@@ -151,7 +152,10 @@ export default class TeamBasedRobot {
     }
 
     try {
+      const { team_id } = this.user
       const keywords = await this.connection.getKeywords()
+      this.memberList = await this.connection.getTeamMembers(team_id)
+      console.log("memberList in syncFile ===>", this.memberList)
       let approvedKeywords, approvedContent
       if (!isReloadAll) {
         approvedKeywords = keywords.filter(keyword => keyword.kwd_is_approved === true)

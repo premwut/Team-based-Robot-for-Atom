@@ -20,6 +20,9 @@ export default class SearchKeywordView {
     this.subscriptions = new CompositeDisposable()
 
     this.editorSearchSubscription = this.refs.editorSearch.onDidStopChanging(this.onEditorSearchChange.bind(this))
+    this.orderFilterSubscription = this.refs.orderFilterBtn.addEventListener("click", this.onOrderFilterBtnClicked.bind(this))
+    this.creatorFilterSubscription = this.refs.creatorFilter.addEventListener("change", this.onCreatorFilterChange.bind(this))
+    this.statusFilterSubscription = this.refs.statusFilter.addEventListener("change", this.onStatusFilterChange.bind(this))
 
     // Set grammar to content editor
     const [robotGrammar] = atom.grammars.getGrammars().filter(x => x.name === "Robot Framework")
@@ -34,6 +37,8 @@ export default class SearchKeywordView {
 
   initProps() {
     this.keywords = []
+    this.creators = []
+    this.filters = {"status":"", "creator":-1}
     this.searchKeywords = []
     this.keywordSelectedIndex = 0
     this.isLoading = false
@@ -95,8 +100,10 @@ export default class SearchKeywordView {
         doc: k.kwd_doc,
         desc: k.kwd_desc,
         content: k.kwd_content,
-        isAprv: k.kwd_is_approved, // new
-        review: k.kwd_review, // new
+        // isAprv: k.kwd_is_approved,
+        // review: k.kwd_review,
+        created_at: k.created_at,
+        usr_id: k.usr_id,
         comment: (review) ? review.rw_comment : undefined,
         status: (review) ? review.rw_status : undefined,
         isShared: true,
@@ -106,12 +113,26 @@ export default class SearchKeywordView {
     this.keywords = [...sharingKeywords]
     this.verifySharedKeyword()
     this.updateSearchKeywords()
+    this.updateKeywordCreators()
     etch.update(this)
   }
 
   updateSearchKeywords(keywords = this.keywords) {
     this.searchKeywords = keywords
     this.focusFirstKeyword()
+  }
+
+  updateKeywordCreators() {
+    const { team_id } = this.teambaseInstance.user
+    const members = this.teambaseInstance.memberList
+    this.creators = members.map((creator) => {
+      console.log("creator ===>", creator)
+      const { usr_id, usr_fname, usr_lname } = creator
+      const fullname = usr_fname + " " + usr_lname
+      console.log("fullname ===>", fullname)
+      return { usr_id, fullname }
+    })
+
   }
 
   focusFirstKeyword() {
@@ -136,15 +157,85 @@ export default class SearchKeywordView {
     etch.update(this)
   }
 
+  onOrderFilterBtnClicked() {
+    let temp = this.refs.orderFilterBtn.childNodes[1].className
+    let iconClass
+    let isAscending
+    if (temp.includes("icon-arrow-up")) {
+      iconClass = temp.replace("icon-arrow-up", "icon-arrow-down")
+      isAscending = true
+    } else {
+      iconClass = temp.replace("icon-arrow-down", "icon-arrow-up")
+      isAscending = false
+    }
+    const orderFilter = (kwd1, kwd2) => {
+      const time1 = new Date(kwd1.created_at)
+      const time2 = new Date(kwd2.created_at)
+      return isAscending ? time1 - time2 : time2 - time1
+    }
+    const keywords = this.searchKeywords
+    const orderedKeywords = keywords.sort(orderFilter)
+    this.updateSearchKeywords(orderedKeywords)
+    this.refs.orderFilterBtn.childNodes[1].className = iconClass
+  }
+
+  onStatusFilterChange() {
+    let x = document.getElementById("statusFilterSelect").value
+    console.log("Status Option ===>", x)
+    const caseNo = parseInt(x)
+    switch (caseNo) {
+      case 0:
+        this.filters.status = undefined
+        break;
+      case 1:
+        this.filters.status = KEYWORD_STATUS.APPROVED
+        break;
+      case 2:
+        this.filters.status = KEYWORD_STATUS.DISAPPROVED
+        break;
+      default:
+        this.filters.status = ""
+    }
+    this.onEditorSearchChange()
+  }
+
+  onCreatorFilterChange() {
+    let x = document.getElementById("creatorFilterSelect").value
+    console.log("Creator Option ===>", x)
+    const idNo = parseInt(x)
+    const creator_id = idNo === -1 ? -1 : idNo
+    this.filters.creator = creator_id
+    this.onEditorSearchChange()
+  }
+
   onEditorSearchChange() {
     const searchText = this.refs.editorSearch.getText()
-    if (searchText === "") {
-      this.updateSearchKeywords()
-    } else {
-      const keywordFilters = this.keywords.filter(x => fuzzysearch(searchText, x.name))
-      this.updateSearchKeywords(keywordFilters)
-    }
+    const test = 1
+    const keywordFilters = this.keywords.filter(x => {
+      const result = fuzzysearch(searchText, x.name) && this.statusFilter(x.status) && this.creatorFilter(x.usr_id)
+      console.log("kwd ===>", x)
+      console.log("filters ===>", this.filters)
+      console.log("result ===>", result)
+      return result
+    })
+    this.updateSearchKeywords(keywordFilters)
   }
+
+  statusFilter(status) {
+    console.log("statusFilter ===>", status)
+    const selected = this.filters.status
+    if (selected === "") return true
+    return status === selected
+  }
+
+  creatorFilter(usr_id) {
+    console.log("craetorFilter ===>", usr_id)
+    const selected = this.filters.creator
+    if (selected === -1) return true
+    return usr_id === selected
+  }
+
+
 
   onEditKeywordClick(index) {
     const keyword = this.keywords[index]
@@ -300,8 +391,11 @@ export default class SearchKeywordView {
         </li>
       )
     })
-    console.log(keywordItems)
-
+    const creatorItems = this.creators.map((creator) => {
+      return (
+        <option value={creator.usr_id}>{creator.fullname}</option>
+      )
+    })
     return (
       <div ref="searchKeywordView" className="search-keyword-view">
         <header className="header-wrapper">
@@ -316,8 +410,33 @@ export default class SearchKeywordView {
               <label>Search keyword by name</label>
               <TextEditor ref="editorSearch" mini={true} placeholderText="Keyword Name" />
             </section>
+            <section ref="editorFilter" className="filter-control">
+              <label>Filters</label>
+              <span class="btn clickable orderFilterBtn" ref="orderFilterBtn">
+              Created at
+              <span className="icon-arrow-up" style="margin-left: 5px"></span>
+              </span>
+
+              <span class="custom-select">Status:
+                <select ref="statusFilter" id="statusFilterSelect" class="input-select"
+                  >
+                  <option value="-1">All</option>
+                  <option value="0">Pending</option>
+                  <option value="1">Approved</option>
+                  <option value="2">Refused</option>
+                </select>
+              </span>
+
+              <span class="custom-select">Created by:
+                <select ref="creatorFilter" id="creatorFilterSelect" class="input-select"
+                  >
+                  <option value="-1">All</option>
+                  { creatorItems }
+                </select>
+              </span>
+
+            </section>
             <section className="keyword-list">
-              <label>Keywords</label>
               <ol className="list-group">{ keywordItems }</ol>
             </section>
           </section>
@@ -360,6 +479,9 @@ export default class SearchKeywordView {
     this.subscriptions && this.subscriptions.dispose()
     this.tooltipSubscriptions && this.tooltipSubscriptions.dispose()
     this.editorSearchSubscription && this.editorSearchSubscription.dispose()
+    this.orderFilterSubscription && this.orderFilterSubscription.dispose()
+    this.creatorFilterSubscription && this.creatorFilterSubscription.dispose()
+    this.statusFilterSubscription && this.statusFilterSubscription.dispose()
     return etch.destroy(this)
   }
 }
