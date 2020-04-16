@@ -4,6 +4,8 @@ import { parseKeywordSelection, isRobot } from './autocomplete-robot/parse-robot
 import convertXML from 'xml-js'
 import Connection from './connection.js'
 import fs from 'fs-plus'
+import { zip } from 'zip-a-folder'
+import moment from 'moment'
 
 import { PACKAGE_NAME, getRootDirPath } from './utils.js'
 // import { saveTestcaseRun } from './connection.js'
@@ -28,13 +30,46 @@ export const saveTestcase = async (tbInstance) => {
   const currentUser = await connection.getProfile()
   const testOutput = mapTestOutput(testResults)
   console.log(testOutput)
-  const test = await connection.saveTestcaseRun(testOutput)
-  console.log(test)
 
+  //Zip Target Directory
+  const { usr_id, team_id } = tbInstance.user
+  const timestamp = moment().format('YYYYmmddHHMMSS')
+  const outputPath = atom.config.get(`${PACKAGE_NAME}.runnerOutputPath`)
+  const zipDirTarget = `${getRootDirPath}${outputPath}`
+  const zipFileName = `${team_id}-${usr_id}-${timestamp}`
+  const zipDirDest = `${getRootDirPath}/${zipFileName}.zip`
+  console.log("zipFileName ===>", zipFileName)
+
+  const formData = new FormData()
+  formData.append("json", testOutput)
+  formData.append("files", fs.createReadStream(zipFilePath))
+
+  const zipTestPromise = zip(zipDirPath, zipDirDest)
+  const savedTestPromise = connection.saveTestcaseRun(formData)
+  const rmZipPromise = () => {
+    return new Promise(resolve => {
+      fs.removeSync(zipFilePath)
+      console.log(`Zip file is removed ==>`, resolve)
+    })
+  }
+  
+  let result, error, finalResult = []
+  { result, error } = await to(zipTestPromise)
+  if (error) { console.log(error) }
+  finalResult = [...finalResult, ...result]
+
+  { result, error } = await to(savedTestPromise)
+  if (error) { console.log(error) }
+  finalResult = [...finalResult, ...result]
+
+  { result, error } = await to(rmZipPromise)
+  if (error) { console.log(error) }
+  finalResult = [...finalResult, ...result]
+
+  console.log(finalResult)
 
   // const test = await connection.getTestcase()
   // const testcaseData = test.data.testcases //fetched from database
-
 
   // let { saveList, editList } = mapTestcases(testResults, testcaseData)
   // let { saveList } = mapTestcases(testResults, testcaseData)
@@ -175,4 +210,18 @@ const mapTestcases = function (testResults, testcaseData) {
 
 const toArray = obj => {
   return (!Array.isArray(obj)) ? [ obj ] : obj
+}
+
+function to(promise) {
+   return promise.then(data => {
+      return {
+        error: null,
+        result: data
+      }
+   })
+   .catch(err => {
+     return {
+       error: err
+     }
+   })
 }

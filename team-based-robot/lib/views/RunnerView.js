@@ -237,13 +237,16 @@ export default class RunnerView {
     }
     const exit = (code) => {
       console.log("[Runner] exit witch ", code)
+      // const { usr_id, team_id } = this.props.teambaseInstance.user
+      // const timestamp = new moment().format('YYYYmmddHHMMSS')
+      // let zipFileName = `${team_id}-${usr_id}-${timestamp}`
+      // console.log("zipFileName ===>", zipFileName)
       if (code == 0) {
         this.processOutput = ""
         // this.refs.editorProcess.setText("")
         // this.hide()
         saveTestcase(this.props.teambaseInstance)
       }
-
     }
     const process = new BufferedProcess({ command, args, stdout, stderr, exit })
   }
