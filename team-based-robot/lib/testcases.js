@@ -44,27 +44,57 @@ export const saveTestcase = async (tbInstance) => {
   formData.append("json", testOutput)
   formData.append("files", fs.createReadStream(zipFilePath))
 
+  const to = (promise) => {
+     return promise.then(data => {
+        return {
+          error: null,
+          result: data
+        }
+     })
+     .catch(err => {
+       return {
+         error: err
+       }
+     })
+  }
   const zipTestPromise = zip(zipDirPath, zipDirDest)
-  const savedTestPromise = connection.saveTestcaseRun(formData)
+  const saveTestPromise = connection.saveTestcaseRun(formData)
   const rmZipPromise = () => {
     return new Promise(resolve => {
       fs.removeSync(zipFilePath)
       console.log(`Zip file is removed ==>`, resolve)
     })
   }
-  
-  let result, error, finalResult = []
-  { result, error } = await to(zipTestPromise)
-  if (error) { console.log(error) }
-  finalResult = [...finalResult, ...result]
 
-  { result, error } = await to(savedTestPromise)
-  if (error) { console.log(error) }
-  finalResult = [...finalResult, ...result]
+  try {
+    const zipTest = await zipTestPromise
+    const savedTest = await saveTestPromise
+    const rmZip = await rmZipPromise
+  } catch (e) {
+    console.log(e)
+  }
 
-  { result, error } = await to(rmZipPromise)
-  if (error) { console.log(error) }
-  finalResult = [...finalResult, ...result]
+  // let result, error, finalResult = []
+  // { result, error } = await to(zipTestPromise)
+  // if (error) {
+  //   console.log(error)
+  //   return
+  // }
+  // finalResult = [...finalResult, ...result]
+  //
+  // { result, error } = await to(saveTestPromise)
+  // if (error) {
+  //   console.log(error)
+  //   return
+  // }
+  // finalResult = [...finalResult, ...result]
+  //
+  // { result, error } = await to(rmZipPromise)
+  // if (error) {
+  //   console.log(error)
+  //   return
+  // }
+  // finalResult = [...finalResult, ...result]
 
   console.log(finalResult)
 
@@ -212,16 +242,16 @@ const toArray = obj => {
   return (!Array.isArray(obj)) ? [ obj ] : obj
 }
 
-function to(promise) {
-   return promise.then(data => {
-      return {
-        error: null,
-        result: data
-      }
-   })
-   .catch(err => {
-     return {
-       error: err
-     }
-   })
-}
+// function to(promise) {
+//    return promise.then(data => {
+//       return {
+//         error: null,
+//         result: data
+//       }
+//    })
+//    .catch(err => {
+//      return {
+//        error: err
+//      }
+//    })
+// }
