@@ -18,71 +18,79 @@ export default class TestController extends BaseController {
     try {
       const { files } = req
       const { bucketName } = config
-      const googleStorage = new GoogleStorage(bucketName)
-      let promises = []
-      files.forEach(file => {
-        promises.push(googleStorage.uploadFileToGoogleStoragePromise(file))
-      })
-      let uploadResult = {}
-      const uploadFiles = await Promise.all(promises)
+      // const googleStorage = new GoogleStorage(bucketName)
+      // let promises = []
+      // files.forEach(file => {
+      //   promises.push(googleStorage.uploadFileToGoogleStoragePromise(file))
+      // })
+      // let uploadResult = {}
+      // const uploadFiles = await Promise.all(promises)
 
-      const json = JSON.parse(req.body.json)
-      const { test_tc_no, test_passed, test_failed, test_result } = json
-      const usr_id = req.currentUser.get(Fields.USR_ID)
-      const linkA = uploadFiles[0].file.cloudStoragePublicUrl
-      const linkB = uploadFiles[1].file.cloudStoragePublicUrl
-      const test_file_link = linkB ? linkA.concat(",", linkB) : linkA
-      const testData = {
-        test_tc_no,
-        test_passed,
-        test_failed,
-        test_file_link,
-        usr_id,
-      }
+      // const { json } = req.params
+      // const json1 = req.param["json"]
+      // console.log("header ===>", req.header("content-type"))
+      // console.log("form ===>", req.body.form)
+      // console.log("files ==>", files)
+      // console.log("type & json & paranJSON===>", typeof req.body.json, req.body.json)
+      // const json = JSON.parse(req.body.json)
+      console.log("body ====>", req.body)
+      // const { test_tc_no, test_passed, test_failed, test_result } = json
+      // const usr_id = req.currentUser.get(Fields.USR_ID)
+      // const linkA = uploadFiles[0].file.cloudStoragePublicUrl
+      // const linkB = uploadFiles[1].file.cloudStoragePublicUrl
+      // const test_file_link = linkB ? linkA.concat(",", linkB) : linkA
+      // const testData = {
+      //   test_tc_no,
+      //   test_passed,
+      //   test_failed,
+      //   test_file_link,
+      //   usr_id,
+      // }
 
-      const test = await Test.forge(testData).save()
-      const testId = test.get(Fields.TEST_ID)
+      // const test = await Test.forge(testData).save()
+      // const testId = test.get(Fields.TEST_ID)
 
-      // Lab by P'Golf Yossapol
-      const promiseKeywords = test_result
-        .map(({kwd_list}) => R.uniq(kwd_list))
-        .map(keywordName => q => q.where(Fields.KWD_NAME, "in", R.uniq(keywordName)))
-        .map((queryKeyword) => Keywords.query(queryKeyword).fetch({require: false}))
+      // // Lab by P'Golf Yossapol
+      // const promiseKeywords = test_result
+      //   .map(({kwd_list}) => R.uniq(kwd_list))
+      //   .map(keywordName => q => q.where(Fields.KWD_NAME, "in", R.uniq(keywordName)))
+      //   .map((queryKeyword) => Keywords.query(queryKeyword).fetch({require: false}))
 
-      const fetchKeywords = await Promise.all(promiseKeywords)
+      // const fetchKeywords = await Promise.all(promiseKeywords)
 
-      const fetchKeywordMapping = fetchKeywords.reduce((acc, fetchKeyword) => {
-        fetchKeyword.forEach(kwd => {
-          const kwdName = kwd.get(Fields.KWD_NAME)
+      // const fetchKeywordMapping = fetchKeywords.reduce((acc, fetchKeyword) => {
+      //   fetchKeyword.forEach(kwd => {
+      //     const kwdName = kwd.get(Fields.KWD_NAME)
 
-          if (!R.isNil(kwdName)) {
-            acc[kwdName] = kwd
-          }
-        })
-        return acc
-      }, {})
+      //     if (!R.isNil(kwdName)) {
+      //       acc[kwdName] = kwd
+      //     }
+      //   })
+      //   return acc
+      // }, {})
 
-      const testMapCollection3 = test_result.reduce((acc, testcase, tcId) => {
-        testcase.tc_id = tcId + 1
-        const { tc_id, kwd_list } = testcase
-        const keywordNames = R.uniq(kwd_list)
+      // const testMapCollection3 = test_result.reduce((acc, testcase, tcId) => {
+      //   testcase.tc_id = tcId + 1
+      //   const { tc_id, kwd_list } = testcase
+      //   const keywordNames = R.uniq(kwd_list)
 
-        const testMap = R.flatten(keywordNames.map((kwdName) => {
-          const kwd = fetchKeywordMapping[kwdName]
-          return this.convertToTestMapping(kwd, testId, tc_id, testcase, kwdName)
-        }))
+      //   const testMap = R.flatten(keywordNames.map((kwdName) => {
+      //     const kwd = fetchKeywordMapping[kwdName]
+      //     return this.convertToTestMapping(kwd, testId, tc_id, testcase, kwdName)
+      //   }))
 
-        return acc.push(testMap)
-      }, TestMappings.forge())
+      //   return acc.push(testMap)
+      // }, TestMappings.forge())
 
-      const data = await bookshelf.transaction(async (tx) => {
-        testMapCollection3.forEach(testMap => this.logTestMapping(testMap))
-        const results = await testMapCollection3.invokeThen("save", null, {transacting: tx})
-        console.log("results ===> ", results.length)
-        return results
-      })
+      // const data = await bookshelf.transaction(async (tx) => {
+      //   testMapCollection3.forEach(testMap => this.logTestMapping(testMap))
+      //   const results = await testMapCollection3.invokeThen("save", null, {transacting: tx})
+      //   console.log("results ===> ", results.length)
+      //   return results
+      // })
 
-      this.success(res, { ...data, "upload_result": uploadFiles })
+      // this.success(res, { ...data, "upload_result": uploadFiles })
+      this.success(res, { })
     } catch (error) {
       console.log("Error")      
       this.failure(res, error)

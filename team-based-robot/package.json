@@ -23,6 +23,7 @@
     "chalk": "^2.4.1",
     "commander": "^2.18.0",
     "etch": "0.14.0",
+    "form-data": "^3.0.0",
     "fs-plus": "^3.0.2",
     "fuzzaldrin-plus": "^0.1.0",
     "git-clone": "^0.1.0",

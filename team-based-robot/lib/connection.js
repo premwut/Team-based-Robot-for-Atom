@@ -161,6 +161,10 @@ export default class Connection {
   async saveTestcaseRun(testcaseInfo) {
     try {
       const url = `/test/create`
+      const fixedHeader = { headers: { ...this.headerToken.headers, ...testcaseInfo.getHeaders()} }
+      console.log("pri header", this.headerToken)
+      console.log("fix header ==>", fixedHeader)
+      console.log("FormData ===>", testcaseInfo)
       const { data: response } = await this.axios.post(url, testcaseInfo, this.headerToken)
       console.log(response, 'response')
       return [ ...response.data ]

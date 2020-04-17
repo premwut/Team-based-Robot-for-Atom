@@ -4,8 +4,10 @@ import { parseKeywordSelection, isRobot } from './autocomplete-robot/parse-robot
 import convertXML from 'xml-js'
 import Connection from './connection.js'
 import fs from 'fs-plus'
+import fsOri from 'fs'
 import { zip } from 'zip-a-folder'
 import moment from 'moment'
+import FormData from 'form-data'
 
 import { PACKAGE_NAME, getRootDirPath } from './utils.js'
 // import { saveTestcaseRun } from './connection.js'
@@ -35,14 +37,10 @@ export const saveTestcase = async (tbInstance) => {
   const { usr_id, team_id } = tbInstance.user
   const timestamp = moment().format('YYYYmmddHHMMSS')
   const outputPath = atom.config.get(`${PACKAGE_NAME}.runnerOutputPath`)
-  const zipDirTarget = `${getRootDirPath}${outputPath}`
+  const zipDirTarget = `${getRootDirPath()}${outputPath}`
   const zipFileName = `${team_id}-${usr_id}-${timestamp}`
-  const zipDirDest = `${getRootDirPath}/${zipFileName}.zip`
+  const zipDirDest = `${getRootDirPath()}/${zipFileName}.zip`
   console.log("zipFileName ===>", zipFileName)
-
-  const formData = new FormData()
-  formData.append("json", testOutput)
-  formData.append("files", fs.createReadStream(zipFilePath))
 
   const to = (promise) => {
      return promise.then(data => {
@@ -57,8 +55,19 @@ export const saveTestcase = async (tbInstance) => {
        }
      })
   }
-  const zipTestPromise = zip(zipDirPath, zipDirDest)
-  const saveTestPromise = connection.saveTestcaseRun(formData)
+  const zipTestPromise = zip(zipDirTarget, zipDirDest)
+  const mkFormPormise = (testOutput) => {
+    const testOutStr = JSON.stringify(testOutput)
+    console.log("testOutStr ==>", testOutStr)
+    const formData = new FormData()
+    formData.append("json", testOutStr)
+    formData.append("files", fs.createReadStream(zipDirDest))
+    console.log("getHeaders ===>", formData.getHeaders())
+    return formData
+  }
+  const saveTestPromise = (formData) => {
+    return connection.saveTestcaseRun(formData)
+  }
   const rmZipPromise = () => {
     return new Promise(resolve => {
       fs.removeSync(zipFilePath)
@@ -68,7 +77,8 @@ export const saveTestcase = async (tbInstance) => {
 
   try {
     const zipTest = await zipTestPromise
-    const savedTest = await saveTestPromise
+    const mdForm = await mkFormPormise(testOutput)
+    const savedTest = await saveTestPromise(mdForm)
     const rmZip = await rmZipPromise
   } catch (e) {
     console.log(e)
@@ -95,8 +105,7 @@ export const saveTestcase = async (tbInstance) => {
   //   return
   // }
   // finalResult = [...finalResult, ...result]
-
-  console.log(finalResult)
+  // console.log(finalResult)
 
   // const test = await connection.getTestcase()
   // const testcaseData = test.data.testcases //fetched from database
