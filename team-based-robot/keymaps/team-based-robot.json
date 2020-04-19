@@ -13,7 +13,8 @@
 
     "ctrl-alt-s": "team-based-robot:keyword-search",
     "ctrl-alt-r": "team-based-robot:keyword-reload",
-    "ctrl-alt-l": "team-based-robot:show-report"
+    "ctrl-alt-l": "team-based-robot:show-report",
+    "ctrl-alt-m": "team-based-robot:add-local-keyword"
   },
   ".team-based-robot atom-text-editor": {
     "ctrl-alt-a": "team-based-robot:keyword-add"
