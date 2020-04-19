@@ -17,9 +17,10 @@ export default class StoreView {
     this.teambaseInstance = props.teambaseInstance
     this.sharingKeywords = this.teambaseInstance.sharingKeywords
     this.localKeywords = []
-    this.filePath = '/resources/local.robot'
+    this.filePath = '/resources/local-team-based.robot'
     this.sharingDisplay = []
     this.localDisplay = []
+    this.temp = []
 
   }
 
@@ -27,35 +28,45 @@ export default class StoreView {
   update(props, children) {
     this.sharingKeywords = this.teambaseInstance.sharingKeywords
     this.localKeywords = parseKeywordSelection(fs.readFileSync(`${getRootDirPath()}/${this.filePath}`).toString())
-    this.sharingDisplay = []
-    this.localDisplay = []
     etch.update(this)
   }
 
-  render () {
+  onKeywordClick (a) {
+    console.log(this, 'from onKeywordClick()')
+  }
+
+  manageStoreKeyword (event, index) {
+    const keyword = event.target
+    console.log(index, 'keyword index')
+  }
+
+  mapKeywords () {
     console.log(this.localKeywords, 'local keywords')
-    this.sharingDisplay = this.sharingKeywords.map(kwd => <li> {kwd.kwd_name} </li>)
-    let temp2 = [ ...this.sharingDisplay ]
-    let temp = [ ...this.sharingDisplay ]
-    console.log(temp)
+    this.sharingDisplay = this.sharingKeywords.map((kwd, index) => {
+      return  <li onClick={(event) => this.manageStoreKeyword(event, index)}> {kwd.kwd_name} </li>
+    })
+    this.temp = [ ...this.sharingDisplay ]
     this.sharingKeywords.map((kwd, index) => {
       const localNames = this.localKeywords.map(kwd => kwd.name)
       let isExist = false
       for (i = 0; i < localNames.length; i++) {
         if (localNames[i] === kwd.kwd_name) {
-          this.localDisplay.push(this.sharingDisplay.splice(index, 1)[0])
-          temp2[index] = undefined
-          this.sharingDisplay = [ ...temp ]
+          this.sharingDisplay[index].isLocal = true
+
         }
+        console.log(localNames[i], kwd.kwd_name, this.sharingDisplay[index].isLocal)
       }
     })
-    console.log(temp)
+
+    console.log(this.temp, 'this.temp')
+    this.sharingDisplay = this.temp.filter(el => el.isLocal !== true)
+    this.localDisplay = this.temp.filter(el => el.isLocal === true)
     console.log(this.sharingDisplay, 'this.sharingDisplay')
     console.log(this.localDisplay, 'this.localDisplay')
-    this.sharingDisplay = temp2
-    this.sharingDisplay = temp2.filter(el => typeof(el) !== 'undefined')
-    this.localDisplay = this.localDisplay.filter(el => typeof(el) !== 'undefined')
+  }
 
+  render () {
+    this.mapKeywords()
     const sharingItems = <div> {this.sharingDisplay} </div>
     const localItems = <div> {this.localDisplay} </div>
     // const sharingItems = <div> kuy </div>
@@ -74,6 +85,8 @@ export default class StoreView {
   }
 
   show () {
+    this.sharingDisplay = []
+    this.localDisplay = []
     this.update()
     if (!(this.panel.isVisible())) this.panel.show()
     else this.panel.hide()
