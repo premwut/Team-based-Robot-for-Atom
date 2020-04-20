@@ -158,14 +158,18 @@ export default class Connection {
     }
   }
 
-  async saveTestcaseRun(testcaseInfo) {
+  async saveTestcaseRun(form) {
     try {
+      // form = testcaseInfo
       const url = `/test/create`
-      const fixedHeader = { headers: { ...this.headerToken.headers, ...testcaseInfo.getHeaders()} }
-      console.log("pri header", this.headerToken)
-      console.log("fix header ==>", fixedHeader)
-      console.log("FormData ===>", testcaseInfo)
-      const { data: response } = await this.axios.post(url, testcaseInfo, this.headerToken)
+      const fixedHeader = { headers: { ...this.headerToken.headers, ...form.getHeaders()} }
+      console.log("fix header =>", fixedHeader)
+      console.log("FormData ==>", form)
+      console.log("Header ===>", form.getHeaders())
+      const formHeader = { headers: form.getHeaders() }
+      // const { data: response } = await axios.post('http://localhost:3000/test', form.getBuffer(), fixedHeader) // it works
+      const formBuffer = form.getBuffer()
+      const { data: response } = await this.axios.post(url, formBuffer, fixedHeader)
       console.log(response, 'response')
       return [ ...response.data ]
     } catch (e) {

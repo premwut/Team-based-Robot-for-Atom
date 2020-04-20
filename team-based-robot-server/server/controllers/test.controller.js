@@ -16,8 +16,9 @@ import bookshelf from "../config/bookshelf"
 export default class TestController extends BaseController {
   async create (req, res) {
     try {
-      const { files } = req
+      const { files, file } = req
       const { bucketName } = config
+      console.log("files & file ===>", files, file)
       // const googleStorage = new GoogleStorage(bucketName)
       // let promises = []
       // files.forEach(file => {
@@ -26,14 +27,8 @@ export default class TestController extends BaseController {
       // let uploadResult = {}
       // const uploadFiles = await Promise.all(promises)
 
-      // const { json } = req.params
-      // const json1 = req.param["json"]
-      // console.log("header ===>", req.header("content-type"))
-      // console.log("form ===>", req.body.form)
-      // console.log("files ==>", files)
-      // console.log("type & json & paranJSON===>", typeof req.body.json, req.body.json)
       // const json = JSON.parse(req.body.json)
-      console.log("body ====>", req.body)
+      console.log("่body ====>", req.body)
       // const { test_tc_no, test_passed, test_failed, test_result } = json
       // const usr_id = req.currentUser.get(Fields.USR_ID)
       // const linkA = uploadFiles[0].file.cloudStoragePublicUrl
@@ -90,9 +85,9 @@ export default class TestController extends BaseController {
       // })
 
       // this.success(res, { ...data, "upload_result": uploadFiles })
-      this.success(res, { })
+      this.success(res, {})
     } catch (error) {
-      console.log("Error")      
+      console.log("Error") 
       this.failure(res, error)
     }
   }

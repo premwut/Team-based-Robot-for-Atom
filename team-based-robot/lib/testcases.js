@@ -39,30 +39,14 @@ export const saveTestcase = async (tbInstance) => {
   const outputPath = atom.config.get(`${PACKAGE_NAME}.runnerOutputPath`)
   const zipDirTarget = `${getRootDirPath()}${outputPath}`
   const zipFileName = `${team_id}-${usr_id}-${timestamp}`
-  const zipDirDest = `${getRootDirPath()}/${zipFileName}.zip`
+  const zipDirDest = `${getRootDirPath()}\\${zipFileName}.zip`
   console.log("zipFileName ===>", zipFileName)
 
-  const to = (promise) => {
-     return promise.then(data => {
-        return {
-          error: null,
-          result: data
-        }
-     })
-     .catch(err => {
-       return {
-         error: err
-       }
-     })
-  }
-  const zipTestPromise = zip(zipDirTarget, zipDirDest)
-  const mkFormPormise = (testOutput) => {
+  const mkFormPormise = () => {
     const testOutStr = JSON.stringify(testOutput)
-    console.log("testOutStr ==>", testOutStr)
     const formData = new FormData()
-    formData.append("json", testOutStr)
-    formData.append("files", fs.createReadStream(zipDirDest))
-    console.log("getHeaders ===>", formData.getHeaders())
+    formData.append('json', testOutStr)
+    // formData.append('test', fs.createReadStream(zipDirDest))
     return formData
   }
   const saveTestPromise = (formData) => {
@@ -76,8 +60,11 @@ export const saveTestcase = async (tbInstance) => {
   }
 
   try {
-    const zipTest = await zipTestPromise
+    const zipTest = await zip(zipDirTarget, zipDirDest)
     const mdForm = await mkFormPormise(testOutput)
+    // const formData = new FormData()
+    // formData.append('json', testOutStr)
+    // formData.append('test', fsOri.createReadStream(zipDirDest))
     const savedTest = await saveTestPromise(mdForm)
     const rmZip = await rmZipPromise
   } catch (e) {
@@ -250,17 +237,3 @@ const mapTestcases = function (testResults, testcaseData) {
 const toArray = obj => {
   return (!Array.isArray(obj)) ? [ obj ] : obj
 }
-
-// function to(promise) {
-//    return promise.then(data => {
-//       return {
-//         error: null,
-//         result: data
-//       }
-//    })
-//    .catch(err => {
-//      return {
-//        error: err
-//      }
-//    })
-// }
