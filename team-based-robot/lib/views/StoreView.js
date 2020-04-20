@@ -52,23 +52,27 @@ export default class StoreView {
 
   render () {
     return (
-      <div>
-        StoreView
-        <div>
-          <div>sharing</div>
-          <div>{this.sharingNames.map((name, index) => {
-            return <button className="btn" onClick={() => this.onKeywordClicked(index, 'sharing')}> {name} </button>
-          })}
-          </div>
-
+      <div className="store-view">
+        <div className="header-wrapper">
+          <div className="title"> Add keyword to local store</div>
         </div>
-        <div>
-          <div>local</div>
-          <div>
-            {this.localNames.map((name, index) => {
-              return <button className="btn" onClick={() => this.onKeywordClicked(index, 'local')}> {name} </button>
-            })}
-          </div>
+        <div class="container">
+          <atom-panel className="sharing-content">
+            <div>sharing</div>
+            <div>
+              {this.sharingNames.map((name, index) => {
+                return <button className="btn keyword-display" onClick={() => this.onKeywordClicked(index, 'sharing')}> {name} </button>
+              })}
+            </div>
+          </atom-panel>
+          <atom-panel className="local-content">
+            <div>local</div>
+            <div>
+              {this.localNames.map((name, index) => {
+                return <button className="btn keyword-display" onClick={() => this.onKeywordClicked(index, 'local')}> {name} </button>
+              })}
+            </div>
+          </atom-panel>
         </div>
       </div>
     )
