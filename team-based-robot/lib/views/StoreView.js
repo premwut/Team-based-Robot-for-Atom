@@ -36,9 +36,9 @@ export default class StoreView {
 
   onKeywordClicked (index, type) {
     if (type === 'local') {
-      this.sharingNames.push(this.localNames.splice(index, 1))
+      this.sharingNames.push(...this.localNames.splice(index, 1))
     } else if (type === 'sharing') {
-      this.localNames.push(this.sharingNames.splice(index, 1))
+      this.localNames.push(...this.sharingNames.splice(index, 1))
     }
     etch.update(this)
   }
@@ -51,28 +51,37 @@ export default class StoreView {
   }
 
   render () {
+    console.log(this.sharingNames, 'this.sharingNames')
+    console.log(this.localNames, 'this.localNames')
     return (
       <div className="store-view">
         <div className="header-wrapper">
           <div className="title"> Add keyword to local store</div>
         </div>
         <div class="container">
-          <atom-panel className="sharing-content">
-            <div>sharing</div>
-            <div>
-              {this.sharingNames.map((name, index) => {
-                return <button className="btn keyword-display" onClick={() => this.onKeywordClicked(index, 'sharing')}> {name} </button>
-              })}
+          <div className="sharing-container">
+            <h2>sharing</h2>
+            <atom-panel className="sharing-content">
+              <div>
+                {this.sharingNames.map((name, index) => {
+                  return <button className="btn keyword-display" onClick={() => this.onKeywordClicked(index, 'sharing')}> {name} </button>
+                })}
+              </div>
+            </atom-panel>
+          </div>
+            <div className="local-container">
+            <h2>local</h2>
+              <atom-panel className="local-content">
+                <div>
+                  {this.localNames.map((name, index) => {
+                    return <button className="btn keyword-display" onClick={() => this.onKeywordClicked(index, 'local')}> {name} </button>
+                  })}
+                </div>
+              </atom-panel>
             </div>
-          </atom-panel>
-          <atom-panel className="local-content">
-            <div>local</div>
-            <div>
-              {this.localNames.map((name, index) => {
-                return <button className="btn keyword-display" onClick={() => this.onKeywordClicked(index, 'local')}> {name} </button>
-              })}
-            </div>
-          </atom-panel>
+        </div>
+        <div className="save-button">
+          <button className="btn btn-success btn-lg"> Save </button>
         </div>
       </div>
     )
