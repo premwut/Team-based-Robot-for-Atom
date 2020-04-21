@@ -4,7 +4,6 @@ import { parseKeywordSelection, isRobot } from './autocomplete-robot/parse-robot
 import convertXML from 'xml-js'
 import Connection from './connection.js'
 import fs from 'fs-plus'
-import fsOri from 'fs'
 import { zip } from 'zip-a-folder'
 import moment from 'moment'
 
