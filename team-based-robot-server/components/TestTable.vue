@@ -25,7 +25,7 @@
           <td class="text-xs-center">{{ props.item.test_tc_no }}</td>
           <td class="text-xs-center">{{ props.item.test_passed }}</td>
           <td class="text-xs-center">{{ props.item.test_failed }}</td>
-          <td class="text-xs-center"><a :href="getDownloadUrl(props.item.test_file_link)" target="_bank">Link</a></td>
+          <td class="text-xs-center"><a :href="props.item.test_file_link" target="_bank">Link</a></td>
         </tr>
         </template>
         <template slot="no-data">
@@ -133,8 +133,8 @@ export default {
       let formatted_date = moment(new Date(date)).format("L")
       return formatted_date
     },
-    getDownloadUrl (url) {
-      return "http://" + url.toString()
+    addHttpInUrl (url) {
+      return "https://" + url.toString()
     },
     async getTests ({ page = this.pagination.page } = {}) {
       this.isLoading = true
