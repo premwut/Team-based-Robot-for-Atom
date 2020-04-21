@@ -7,7 +7,6 @@ import fs from 'fs-plus'
 import fsOri from 'fs'
 import { zip } from 'zip-a-folder'
 import moment from 'moment'
-import FormData from 'form-data'
 
 import { PACKAGE_NAME, getRootDirPath } from './utils.js'
 // import { saveTestcaseRun } from './connection.js'
@@ -44,29 +43,27 @@ export const saveTestcase = async (tbInstance) => {
 
   const mkFormPormise = () => {
     const testOutStr = JSON.stringify(testOutput)
-    const formData = new FormData()
-    formData.append('json', testOutStr)
-    // formData.append('test', fs.createReadStream(zipDirDest))
+    const formData = { my_files: fs.createReadStream(zipDirDest), json: testOutStr }
     return formData
   }
   const saveTestPromise = (formData) => {
-    return connection.saveTestcaseRun(formData)
+    return new Promise(resolve => {
+      connection.saveTestcaseRun(formData)
+      resolve('executed result is saved!')
+    })
   }
   const rmZipPromise = () => {
     return new Promise(resolve => {
-      fs.removeSync(zipFilePath)
-      console.log(`Zip file is removed ==>`, resolve)
+      fs.removeSync(zipDirDest)
+      resolve('zip file is removed!')
     })
   }
 
   try {
     const zipTest = await zip(zipDirTarget, zipDirDest)
-    const mdForm = await mkFormPormise(testOutput)
-    // const formData = new FormData()
-    // formData.append('json', testOutStr)
-    // formData.append('test', fsOri.createReadStream(zipDirDest))
-    const savedTest = await saveTestPromise(mdForm)
-    const rmZip = await rmZipPromise
+    const formData = await mkFormPormise(testOutput)
+    const savedTest = await saveTestPromise(formData)
+    const rmZip = await rmZipPromise()
   } catch (e) {
     console.log(e)
   }

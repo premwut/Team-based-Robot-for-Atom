@@ -16,78 +16,78 @@ import bookshelf from "../config/bookshelf"
 export default class TestController extends BaseController {
   async create (req, res) {
     try {
-      const { files, file } = req
+      const { files } = req
+      // console.log("files ===>", files)
       const { bucketName } = config
-      console.log("files & file ===>", files, file)
-      // const googleStorage = new GoogleStorage(bucketName)
-      // let promises = []
-      // files.forEach(file => {
-      //   promises.push(googleStorage.uploadFileToGoogleStoragePromise(file))
-      // })
-      // let uploadResult = {}
-      // const uploadFiles = await Promise.all(promises)
+      const googleStorage = new GoogleStorage(bucketName)
+      let promises = []
+      files.forEach(file => {
+        promises.push(googleStorage.uploadFileToGoogleStoragePromise(file))
+      })
+      const uploadFiles = await Promise.all(promises)
 
-      // const json = JSON.parse(req.body.json)
-      console.log("่body ====>", req.body)
-      // const { test_tc_no, test_passed, test_failed, test_result } = json
-      // const usr_id = req.currentUser.get(Fields.USR_ID)
-      // const linkA = uploadFiles[0].file.cloudStoragePublicUrl
-      // const linkB = uploadFiles[1].file.cloudStoragePublicUrl
-      // const test_file_link = linkB ? linkA.concat(",", linkB) : linkA
-      // const testData = {
-      //   test_tc_no,
-      //   test_passed,
-      //   test_failed,
-      //   test_file_link,
-      //   usr_id,
-      // }
+      const json = JSON.parse(req.body.json)
+      // console.log("json type ===>", json, typeof json)
+      const { test_tc_no, test_passed, test_failed, test_result } = json
+      const usr_id = req.currentUser.get(Fields.USR_ID)
+      // console.log("uploadFiles ==>", uploadFiles)
 
-      // const test = await Test.forge(testData).save()
-      // const testId = test.get(Fields.TEST_ID)
+      // concat googlePubLink
+      const concatUrlReducer = (acc, { file }) => acc.concat(" ", file.cloudStoragePublicUrl)
+      const test_file_link = uploadFiles.reduce(concatUrlReducer, "").trim()
+      const testData = {
+        test_tc_no,
+        test_passed,
+        test_failed,
+        test_file_link,
+        usr_id,
+      }
 
-      // // Lab by P'Golf Yossapol
-      // const promiseKeywords = test_result
-      //   .map(({kwd_list}) => R.uniq(kwd_list))
-      //   .map(keywordName => q => q.where(Fields.KWD_NAME, "in", R.uniq(keywordName)))
-      //   .map((queryKeyword) => Keywords.query(queryKeyword).fetch({require: false}))
+      const test = await Test.forge(testData).save()
+      const testId = test.get(Fields.TEST_ID)
 
-      // const fetchKeywords = await Promise.all(promiseKeywords)
+      // Lab by P'Golf Yossapol
+      const promiseKeywords = test_result
+        .map(({kwd_list}) => R.uniq(kwd_list))
+        .map(keywordName => q => q.where(Fields.KWD_NAME, "in", R.uniq(keywordName)))
+        .map((queryKeyword) => Keywords.query(queryKeyword).fetch({require: false}))
 
-      // const fetchKeywordMapping = fetchKeywords.reduce((acc, fetchKeyword) => {
-      //   fetchKeyword.forEach(kwd => {
-      //     const kwdName = kwd.get(Fields.KWD_NAME)
+      const fetchKeywords = await Promise.all(promiseKeywords)
 
-      //     if (!R.isNil(kwdName)) {
-      //       acc[kwdName] = kwd
-      //     }
-      //   })
-      //   return acc
-      // }, {})
+      const fetchKeywordMapping = fetchKeywords.reduce((acc, fetchKeyword) => {
+        fetchKeyword.forEach(kwd => {
+          const kwdName = kwd.get(Fields.KWD_NAME)
 
-      // const testMapCollection3 = test_result.reduce((acc, testcase, tcId) => {
-      //   testcase.tc_id = tcId + 1
-      //   const { tc_id, kwd_list } = testcase
-      //   const keywordNames = R.uniq(kwd_list)
+          if (!R.isNil(kwdName)) {
+            acc[kwdName] = kwd
+          }
+        })
+        return acc
+      }, {})
 
-      //   const testMap = R.flatten(keywordNames.map((kwdName) => {
-      //     const kwd = fetchKeywordMapping[kwdName]
-      //     return this.convertToTestMapping(kwd, testId, tc_id, testcase, kwdName)
-      //   }))
+      const testMapCollection = test_result.reduce((acc, testcase, tcId) => {
+        testcase.tc_id = tcId + 1
+        const { tc_id, kwd_list } = testcase
+        const keywordNames = R.uniq(kwd_list)
 
-      //   return acc.push(testMap)
-      // }, TestMappings.forge())
+        const testMap = R.flatten(keywordNames.map((kwdName) => {
+          const kwd = fetchKeywordMapping[kwdName]
+          return this.convertToTestMapping(kwd, testId, tc_id, testcase, kwdName)
+        }))
 
-      // const data = await bookshelf.transaction(async (tx) => {
-      //   testMapCollection3.forEach(testMap => this.logTestMapping(testMap))
-      //   const results = await testMapCollection3.invokeThen("save", null, {transacting: tx})
-      //   console.log("results ===> ", results.length)
-      //   return results
-      // })
+        return acc.push(testMap)
+      }, TestMappings.forge())
 
-      // this.success(res, { ...data, "upload_result": uploadFiles })
-      this.success(res, {})
+      const data = await bookshelf.transaction(async (tx) => {
+        testMapCollection.forEach(testMap => this.logTestMapping(testMap))
+        const results = await testMapCollection.invokeThen("save", null, {transacting: tx})
+        console.log("saved bookshelf results ===> ", results.length)
+        return results
+      })
+
+      this.success(res, { ...data, "upload_result": uploadFiles })
     } catch (error) {
-      console.log("Error") 
+      console.log(error) 
       this.failure(res, error)
     }
   }
