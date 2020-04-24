@@ -68,9 +68,9 @@ export default {
     showError: false,
     errorMessage: "",
     breadcrumbs: [
-      { text: "Executed result", disabled: false },
-      { text: "Testcase List", disabled: false },
-      { text: "Keyword List", disabled: false },
+      { text: "Executed result", disabled: false, tableName: "TestTable" },
+      { text: "Testcase List", disabled: true, tableName: "TestcaseTable" },
+      { text: "Keyword List", disabled: true, tableName: "KeywordTable" },
     ],
     headers: [
       { text: "Keyword ID", align: "center", sortable: false },
@@ -120,7 +120,8 @@ export default {
       this.isLoading = false
     },
     async onKeywordClick (item) {
-      alert(`kwd_id = ${item.kwd_id}\nkwd_name = ${item.kwd_name}`)
+      console.log(`kwd_id = ${item.kwd_id}\nkwd_name = ${item.kwd_name}`)
+      // alert(`kwd_id = ${item.kwd_id}\nkwd_name = ${item.kwd_name}`)
     },
   },
 }

@@ -74,9 +74,9 @@ export default {
     showError: false,
     errorMessage: "",
     breadcrumbs: [
-      { text: "Executed result", disabled: false },
-      { text: "Testcase List", disabled: false },
-      { text: "Keyword List", disabled: false },
+      { text: "Executed result", disabled: false, tableName: "TestTable" },
+      { text: "Testcase List", disabled: false, tableName: "TestcaseTable" },
+      { text: "Keyword List", disabled: false, tableName: "KeywordTable" },
     ],
     headers: [
       { text: "Date", align: "center", sortable: false },
@@ -138,7 +138,10 @@ export default {
       await this.$store.dispatch("test/fetchKeywords", { tc_id, page, limit: rowsPerPage })
       // await this.$store.commit("test/setKeywords", { tc_id, page, limit: rowsPerPage })
       this.isLoading = false
-      this.$emit("changeTable", "keywordTable")
+      this.$emit("changeTable", {
+        tableName: "KeywordTable",
+        breadcrumbs: this.breadcrumbs,
+      })
     },
   },
 }
