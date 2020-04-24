@@ -2,7 +2,6 @@
 Test Teardown     Close All browsers
 Resource          ${CURDIR}/../keywords/keyword.robot
 
-
 *** Test Cases ***
 Desktop - Login by admin success
     [Tags]    login     regression     high     desktop
