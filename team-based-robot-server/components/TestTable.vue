@@ -25,7 +25,10 @@
           <td class="text-xs-center">{{ props.item.test_tc_no }}</td>
           <td class="text-xs-center">{{ props.item.test_passed }}</td>
           <td class="text-xs-center">{{ props.item.test_failed }}</td>
-          <td class="text-xs-center"><a :href="props.item.test_file_link" target="_bank">Link</a></td>
+          <td class="text-xs-center">
+            <a @mouseover="downloadHover = true" @mouseleave="downloadHover = false" 
+            :href="props.item.test_file_link" target="_bank">Link</a>
+          </td>
         </tr>
         </template>
         <template slot="no-data">
@@ -70,6 +73,7 @@ export default {
     }
   },
   data: () => ({
+    downloadHover: false,
     isLoadingFail: false,
     isOpenKeywordDetail: false,
     isConfirmDelete: false,
@@ -142,6 +146,7 @@ export default {
       this.isLoading = false
     },
     async onTestClick (test_id) {
+      if (this.downloadHover) return
       const page = this.pagination.page
       this.isLoading = true
       console.log(`[event method] test_id ==> ${test_id}`)
