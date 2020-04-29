@@ -175,7 +175,6 @@ export default class SaveKeywordView {
     try {
       const isChecked = x => x.checked
       const isAvaiable = x => !x.isExist || (x.isExist && x.isOwner)
-      // const isBoxChecked = x => x.checked
       const avaiableKeywords = this.keywords.filter(isAvaiable).filter(isChecked)
       const applyAll = avaiableKeywords.find(k => k.shared.applyAll)
       const keywords = avaiableKeywords.map(keyword => {
