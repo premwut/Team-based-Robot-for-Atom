@@ -93,6 +93,7 @@ export default class SaveKeywordView {
       this.keywords = this.keywords.map(keyword => {
           return {
             ...keyword,
+            checked: true,
             shared: {
               applyAll: false,
               projects: projects.map(x => ({...x, checked: false})),
@@ -174,7 +175,8 @@ export default class SaveKeywordView {
     try {
       const isChecked = x => x.checked
       const isAvaiable = x => !x.isExist || (x.isExist && x.isOwner)
-      const avaiableKeywords = this.keywords.filter(isAvaiable)
+      // const isBoxChecked = x => x.checked
+      const avaiableKeywords = this.keywords.filter(isAvaiable).filter(isChecked)
       const applyAll = avaiableKeywords.find(k => k.shared.applyAll)
       const keywords = avaiableKeywords.map(keyword => {
         const shared = applyAll ? applyAll.shared : keyword.shared
@@ -215,11 +217,16 @@ export default class SaveKeywordView {
     this.keywordSelectedIndex = index
     this.bufferContent.setText(keyword.original)
     this.bufferDesc.setText(keyword.desc)
-    console.log(keyword);
-    console.log("bufferDesc.setText(keyword.desc) = " + keyword.desc);
-    console.log("keyword.review = " + keyword.review);
-    console.log("Shit why error");
     this.bufferReview.setText(keyword.review || "")
+    etch.update(this)
+  }
+
+  onKeywordIsChecked(checkbox, index) {
+    console.log("keyword ===>", index, checkbox)
+    console.log("Before This.keywords ===>", this.keywords)
+    const status = this.keywords[index].checked
+    this.keywords[index].checked = !status
+    console.log("After This.keywords ===>", this.keywords)
     etch.update(this)
   }
 
@@ -378,10 +385,16 @@ export default class SaveKeywordView {
             actionType = <div className="-create icon icon-check">Saveable</div>
         }
       }
+      let checkBox = keyword.checked ?
+      <input className='input-checkbox' type='checkbox' checked onClick={() => this.onKeywordIsChecked(this, i)}/> :
+      <input className='input-checkbox' type='checkbox' onClick={() => this.onKeywordIsChecked(this, i)}/>
+
       return (
         <li key={i} className={itemClass} onClick={() => this.onKeywordSelected(keyword, i)}>
+          <span className="custom-checkbox">
+            { checkBox }
+          </span>
           <div className="title">
-            <span>{ i+1 }.</span>
             { keyword.name }
           </div>
           <div className="actions">
