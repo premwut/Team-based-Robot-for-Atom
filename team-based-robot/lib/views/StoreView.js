@@ -30,7 +30,9 @@ export default class StoreView {
   async update(props, children) {
     this.sharingKeywords = this.teambaseInstance.sharingKeywords
     this.localKeywords = parseKeywordSelection(fs.readFileSync(`${getRootDirPath()}/${this.filePath}`).toString())
-    this.localNames = this.localKeywords.map(kwd => kwd.name)
+    this.localNames = this.localKeywords.map(kwd => {
+      return kwd.name.split('TB').join('')
+    })
     await etch.update(this)
   }
 
@@ -43,16 +45,21 @@ export default class StoreView {
     etch.update(this)
   }
 
+  onSaveButtonClicked () {
+
+
+  }
+
   mapKeywords () {
-    this.localNames = this.localKeywords.map(kwd => kwd.name)
+    this.localNames = this.localKeywords.map(kwd => kwd.name.split('TB ').join(''))
     console.log(this.localNames, 'this.localNames')
     this.sharingNames = this.keywordNames.filter(kwd => !this.localNames.includes(kwd))
     console.log(this.sharingNames, 'this.sharingNames')
   }
 
   render () {
-    console.log(this.sharingNames, 'this.sharingNames')
-    console.log(this.localNames, 'this.localNames')
+    // console.log(this.sharingNames, 'this.sharingNames')
+    // console.log(this.localNames, 'this.localNames')
     return (
       <div className="store-view">
         <div className="header-wrapper">
@@ -81,14 +88,13 @@ export default class StoreView {
             </div>
         </div>
         <div className="save-button">
-          <button className="btn btn-success btn-lg"> Save </button>
+          <button className="btn btn-success btn-lg" onClick={this.onSaveButtonClicked}> Save </button>
         </div>
       </div>
     )
   }
 
   show () {
-    console.log(this)
     this.sharingKeywords = this.teambaseInstance.sharingKeywords
     this.keywordNames = this.sharingKeywords.map(kwd => kwd.kwd_name)
     this.localKeywords = parseKeywordSelection(fs.readFileSync(`${getRootDirPath()}/${this.filePath}`).toString())
