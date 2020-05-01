@@ -2,7 +2,6 @@
 Test Teardown     Close All browsers
 Resource          ${CURDIR}/../keywords/keyword.robot
 
-
 *** Test Cases ***
 Desktop - Login by admin success
     [Tags]    login     regression     high     desktop
@@ -12,7 +11,7 @@ Desktop - Login by admin success
     Fill Input Login Form     ${USERNAME_ADMIN}     ${PASSWORD_ADMIN}
     Verify Admin Page Is Visible
 
-Desktop - Login by admin failure
+Desktop - Login by admin failurea
     [Tags]    login     regression     high     desktop
     Open Browser To Landing Page
     Change Resolution To Desktop

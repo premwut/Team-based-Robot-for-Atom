@@ -4,6 +4,8 @@ import { parseKeywordSelection, isRobot } from './autocomplete-robot/parse-robot
 import convertXML from 'xml-js'
 import Connection from './connection.js'
 import fs from 'fs-plus'
+import { zip } from 'zip-a-folder'
+import moment from 'moment'
 
 import { PACKAGE_NAME, getRootDirPath } from './utils.js'
 // import { saveTestcaseRun } from './connection.js'
@@ -28,13 +30,68 @@ export const saveTestcase = async (tbInstance) => {
   const currentUser = await connection.getProfile()
   const testOutput = mapTestOutput(testResults)
   console.log(testOutput)
-  const test = await connection.saveTestcaseRun(testOutput)
-  console.log(test)
 
+  //Zip Target Directory
+  const { usr_id, team_id } = tbInstance.user
+  const timestamp = moment().format('YYYYmmddHHMMSS')
+  const outputPath = atom.config.get(`${PACKAGE_NAME}.runnerOutputPath`)
+  const zipDirTarget = `${getRootDirPath()}${outputPath}`
+  const zipFileName = `${team_id}-${usr_id}-${timestamp}`
+  const zipDirDest = `${getRootDirPath()}\\${zipFileName}.zip`
+  console.log("zipFileName ===>", zipFileName)
+
+  const mkFormPormise = () => {
+    const testOutStr = JSON.stringify(testOutput)
+    const formData = { my_files: fs.createReadStream(zipDirDest), json: testOutStr }
+    return formData
+  }
+  const saveTestPromise = (formData) => {
+    return new Promise(resolve => {
+      connection.saveTestcaseRun(formData)
+      resolve('executed result is saved!')
+    })
+  }
+  const rmZipPromise = () => {
+    return new Promise(resolve => {
+      fs.removeSync(zipDirDest)
+      resolve('zip file is removed!')
+    })
+  }
+
+  try {
+    const zipTest = await zip(zipDirTarget, zipDirDest)
+    const formData = await mkFormPormise(testOutput)
+    const savedTest = await saveTestPromise(formData)
+    const rmZip = await rmZipPromise()
+  } catch (e) {
+    console.log(e)
+  }
+
+  // let result, error, finalResult = []
+  // { result, error } = await to(zipTestPromise)
+  // if (error) {
+  //   console.log(error)
+  //   return
+  // }
+  // finalResult = [...finalResult, ...result]
+  //
+  // { result, error } = await to(saveTestPromise)
+  // if (error) {
+  //   console.log(error)
+  //   return
+  // }
+  // finalResult = [...finalResult, ...result]
+  //
+  // { result, error } = await to(rmZipPromise)
+  // if (error) {
+  //   console.log(error)
+  //   return
+  // }
+  // finalResult = [...finalResult, ...result]
+  // console.log(finalResult)
 
   // const test = await connection.getTestcase()
   // const testcaseData = test.data.testcases //fetched from database
-
 
   // let { saveList, editList } = mapTestcases(testResults, testcaseData)
   // let { saveList } = mapTestcases(testResults, testcaseData)

@@ -25,7 +25,10 @@
           <td class="text-xs-center">{{ props.item.test_tc_no }}</td>
           <td class="text-xs-center">{{ props.item.test_passed }}</td>
           <td class="text-xs-center">{{ props.item.test_failed }}</td>
-          <td class="text-xs-center"><a :href="getDownloadUrl(props.item.test_file_link)" target="_bank">Link</a></td>
+          <td class="text-xs-center">
+            <a @mouseover="downloadHover = true" @mouseleave="downloadHover = false" 
+            :href="props.item.test_file_link" target="_bank">Link</a>
+          </td>
         </tr>
         </template>
         <template slot="no-data">
@@ -70,6 +73,7 @@ export default {
     }
   },
   data: () => ({
+    downloadHover: false,
     isLoadingFail: false,
     isOpenKeywordDetail: false,
     isConfirmDelete: false,
@@ -78,9 +82,9 @@ export default {
     showError: false,
     errorMessage: "",
     breadcrumbs: [
-      { text: "Executed result", disabled: false },
-      { text: "Testcase List", disabled: false },
-      { text: "Keyword List", disabled: false },
+      { text: "Executed result", disabled: false, tableName: "TestTable" },
+      { text: "Testcase List", disabled: true, tableName: "TestcaseTable" },
+      // { text: "Keyword List", disabled: true, tableName: "KeywordTable" },
     ],
     headers: [
       { text: "Date", align: "center", sortable: false },
@@ -133,8 +137,8 @@ export default {
       let formatted_date = moment(new Date(date)).format("L")
       return formatted_date
     },
-    getDownloadUrl (url) {
-      return "http://" + url.toString()
+    addHttpInUrl (url) {
+      return "https://" + url.toString()
     },
     async getTests ({ page = this.pagination.page } = {}) {
       this.isLoading = true
@@ -142,12 +146,16 @@ export default {
       this.isLoading = false
     },
     async onTestClick (test_id) {
+      if (this.downloadHover) return
       const page = this.pagination.page
       this.isLoading = true
       console.log(`[event method] test_id ==> ${test_id}`)
       await this.$store.dispatch("test/fetchTestcases", { test_id, page, limit: rowsPerPage })
       this.isLoading = false
-      this.$emit("changeTable", "testcaseTable")
+      this.$emit("changeTable", {
+        tableName: "TestcaseTable",
+        breadcrumbs: this.breadcrumbs,
+      })
     },
   },
 }

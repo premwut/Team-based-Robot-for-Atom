@@ -39,9 +39,9 @@ export default {
     showError: false,
     errorMessage: "",
     breadcrumbs: [
-      { text: "Executed result", disabled: false },
-      { text: "Testcase List", disabled: false },
-      { text: "Keyword List", disabled: false },
+      { text: "Executed result", disabled: false, tableName: "TestTable" },
+      // { text: "Testcase List", disabled: false, tableName: "TestcaseTable" },
+      // { text: "Keyword List", disabled: false, tableName: "KeywordTable" },
     ],
     headers: [
       { text: "Testcase ID", align: "center", sortable: false },
@@ -97,8 +97,20 @@ export default {
       this.getTests({ page: 1 })
       this.pagination.page = 1
     },
-    changeTable (componentName) {
-      this.tableName = componentName
+    changeTable (dataObj) {
+      const { tableName, breadcrumbs } = dataObj
+      this.tableName = tableName
+      this.breadcrumbs = breadcrumbs
+    },
+    breadcrumbSelected (tableName) {
+      console.log("Breadcrumb is clicked!!", tableName)
+      let bcIdx = -1
+      this.breadcrumbs.map((item, idx) => {
+        if (item.tableName === tableName) { bcIdx = idx + 1 }
+      })
+      console.log(`tableName = ${tableName}, idx = ${bcIdx}`)
+      this.breadcrumbs = this.breadcrumbs.slice(0, bcIdx)
+      this.tableName = tableName
     },
   },
 }
@@ -109,13 +121,16 @@ export default {
   <loading-fail-modal :isOpen.sync="isLoadingFail" :onReload="getTests"></loading-fail-modal>
   <v-layout row wrap>
     <v-flex xs8>
-      <v-breadcrumbs class="px-0">
-        <v-icon slot="divider">chevron_right</v-icon>
+
+      <v-breadcrumbs divider=">" class="px-0">
         <v-breadcrumbs-item v-for="item in breadcrumbs"
           :key="item.text" :disabled="item.disabled">
-          {{ item.text }}
+          <div @click="breadcrumbSelected(item.tableName)">
+            {{ item.text }}
+          </div>
         </v-breadcrumbs-item>
       </v-breadcrumbs>
+
     </v-flex>
     <v-flex xs4>
       <v-card-actions class="px-0">

@@ -4,6 +4,7 @@ import axios from "axios"
 import axiosRetry from "axios-retry"
 import base64 from "base-64"
 import io from "socket.io-client"
+import request from "request"
 
 export default class Connection {
 
@@ -149,7 +150,7 @@ export default class Connection {
       const { data: user } = await this.axios.get('/user/profile', this.headerToken)
             userData = user.data
       console.log(userData)
-      this.socket.emit('keywordUpdated', {id: this.socket.id, username: userData.usr_fname})
+      this.socket.emit('keywordUpdated', { id: this.socket.id, username: userData.usr_fname })
 
       console.log(response)
       return [...response.data.keywords]
@@ -158,12 +159,17 @@ export default class Connection {
     }
   }
 
-  async saveTestcaseRun(testcaseInfo) {
+  async saveTestcaseRun(formData) {
     try {
-      const url = `/test/create`
-      const { data: response } = await this.axios.post(url, testcaseInfo, this.headerToken)
-      console.log(response, 'response')
-      return [ ...response.data ]
+      const url = `${this.config.endpoint}/api/test/create`
+      request.post({ url: url, formData: formData, headers: this.headerToken.headers }, function(err, httpResponse, body) {
+      if (err) {
+        return console.error('save executed result failed:', err)
+      }
+      console.log('body ===>', body)
+      // return [ {...response.data} ]
+      return [{}]
+    })
     } catch (e) {
       console.log(e)
       throw e

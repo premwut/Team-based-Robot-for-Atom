@@ -22,6 +22,7 @@ class GoogleStorage {
 
   uploadFileToGoogleStoragePromise (file) {
     return new Promise((resolve, reject) => {
+      console.log("google file ===>", file)
       const { originalname, path, mimetype } = file
       const bucketFile = this.bucket.file(originalname)
 
