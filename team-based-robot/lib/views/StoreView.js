@@ -31,7 +31,7 @@ export default class StoreView {
     this.sharingKeywords = this.teambaseInstance.sharingKeywords
     this.localKeywords = parseKeywordSelection(fs.readFileSync(`${getRootDirPath()}/${this.filePath}`).toString())
     this.localNames = this.localKeywords.map(kwd => {
-      return kwd.name.split('TB').join('')
+      return kwd.name.split('TB ').join('')
     })
     await etch.update(this)
   }
@@ -43,11 +43,25 @@ export default class StoreView {
       this.localNames.push(...this.sharingNames.splice(index, 1))
     }
     etch.update(this)
+    console.log(this.sharingNames)
+    console.log(this.localNames)
   }
 
   onSaveButtonClicked () {
-
-
+    const savedKeywords = this.sharingKeywords.filter(kwd => {
+      // console.log(this.localNames)
+      // if (this.localNames.includes(kwd.kwd_name.split('TB ').join(''))) {
+      console.log(this.localNames, kwd.kwd_name)
+      if (this.localNames.includes(kwd.kwd_name)) {
+        return kwd
+      }
+    })
+    console.log(savedKeywords, 'saveKeywords')
+    // let saveContentd
+    const saveContent = this.teambaseInstance.transformKeywords(savedKeywords)
+    fs.writeFileSync(`${getRootDirPath()}${this.filePath}`, saveContent)
+    this.show()
+    atom.notifications.addSuccess('ควย')
   }
 
   mapKeywords () {
