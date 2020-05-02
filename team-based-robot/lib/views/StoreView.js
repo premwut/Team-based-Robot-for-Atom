@@ -61,7 +61,7 @@ export default class StoreView {
     const saveContent = this.teambaseInstance.transformKeywords(savedKeywords)
     fs.writeFileSync(`${getRootDirPath()}${this.filePath}`, saveContent)
     this.show()
-    atom.notifications.addSuccess('ควย')
+    atom.notifications.addSuccess('Keywords saved')
   }
 
   mapKeywords () {
