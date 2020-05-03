@@ -173,10 +173,10 @@ const mapTestOutput = testResults => {
   //Building output object for test history (New feature on web app)
   let output = {}
       testcaseList = []
-  output.test_tc_no = null
   output.test_passed = testResults.statistics.total.stat[1]._attributes.pass
   output.test_failed = testResults.statistics.total.stat[1]._attributes.fail
-
+  output.test_tc_no = output.test_passed + output.test_failed
+  console.log("test_tc_no ===>", output.test_tc_no)
   suites = (testResults.suite.suite) ? testResults.suite.suite : [ testResults.suite ]
 
   // testcases = (!Array.isArray(testResults.test)) ? [ testResults.test ] : testResults.test
