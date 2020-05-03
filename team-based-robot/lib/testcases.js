@@ -28,7 +28,7 @@ export const saveTestcase = async (tbInstance) => {
   let testResults = getTestResults().robot
   const connection = tbInstance.connection
   const currentUser = await connection.getProfile()
-  const testOutput = mapTestOutput(testResults)
+  const testOutput = mapTestOutput(testResults) // executed result here
   console.log(testOutput)
 
   //Zip Target Directory
@@ -61,34 +61,11 @@ export const saveTestcase = async (tbInstance) => {
   try {
     const zipTest = await zip(zipDirTarget, zipDirDest)
     const formData = await mkFormPormise(testOutput)
-    const savedTest = await saveTestPromise(formData)
+    // const savedTest = await saveTestPromise(formData)
     const rmZip = await rmZipPromise()
   } catch (e) {
     console.log(e)
   }
-
-  // let result, error, finalResult = []
-  // { result, error } = await to(zipTestPromise)
-  // if (error) {
-  //   console.log(error)
-  //   return
-  // }
-  // finalResult = [...finalResult, ...result]
-  //
-  // { result, error } = await to(saveTestPromise)
-  // if (error) {
-  //   console.log(error)
-  //   return
-  // }
-  // finalResult = [...finalResult, ...result]
-  //
-  // { result, error } = await to(rmZipPromise)
-  // if (error) {
-  //   console.log(error)
-  //   return
-  // }
-  // finalResult = [...finalResult, ...result]
-  // console.log(finalResult)
 
   // const test = await connection.getTestcase()
   // const testcaseData = test.data.testcases //fetched from database
@@ -169,23 +146,60 @@ export const saveTestcase = async (tbInstance) => {
   return testOutput
 }
 
+// https://momentjscom.readthedocs.io/en/latest/moment/04-displaying/01-format/
+// format example "20200504 02:38:35.813"
+const changeTimeStrToElapsed = (startTimeStr, endTimeStr) => {
+  const format = 'YYYYMMDD HH:mm:ss.SSS'
+  const startTime = moment(startTimeStr, format)
+  const endTime = moment(endTimeStr, format)
+  const timeDiff = moment.duration(endTime.diff(startTime))
+  const duration = [
+    { hours : timeDiff.hours() },
+    { minutes : timeDiff.minutes() },
+    { seconds : timeDiff.seconds() },
+    { milliseconds : timeDiff.milliseconds() },
+  ]
+  const addZero = (acc, obj) => {
+    if (Object.keys(obj)[0] !== "milliseconds") {
+      return acc + ":" + `${obj[Object.keys(obj)[0]]}`.padStart(2, '0')
+    }
+    return acc + "." + `${obj[Object.keys(obj)[0]]}`.padStart(3, '0');
+  }
+  let elapsed = duration.reduce(addZero, "").slice(1)
+  return elapsed
+}
+
 const mapTestOutput = testResults => {
   //Building output object for test history (New feature on web app)
+  console.log("testResult ===>", testResults)
   let output = {}
       testcaseList = []
+  const testTime = testResults.suite.status._attributes
+  const testStartTime = testTime.starttime || "55550505 05:55:55.555"
+  const testEndTime = testTime.endtime || "55550505 05:55:55.555"
+  output.test_starttime = testStartTime
+  output.test_endtime = testEndTime
+  output.test_elapsed = changeTimeStrToElapsed(testStartTime, testEndTime)
   output.test_passed = testResults.statistics.total.stat[1]._attributes.pass
   output.test_failed = testResults.statistics.total.stat[1]._attributes.fail
-  output.test_tc_no = output.test_passed + output.test_failed
-  console.log("test_tc_no ===>", output.test_tc_no)
+  output.test_tc_no = parseInt(output.test_passed) + parseInt(output.test_failed)
+  console.log("test_tc_no ===>", output.test_tc_no, typeof output.test_tc_no)
   suites = (testResults.suite.suite) ? testResults.suite.suite : [ testResults.suite ]
 
   // testcases = (!Array.isArray(testResults.test)) ? [ testResults.test ] : testResults.test
   suites.map(suite => {
     const cases = toArray(suite.test)
     cases.map(tc => {
+      const statusAtb = tc.status._attributes
+      const startTimeStr = statusAtb.starttime
+      const endTimeStr = statusAtb.endtime
+      const elapsed = changeTimeStrToElapsed(startTimeStr, endTimeStr)
       testcaseList.push({
         tc_name: tc._attributes.name,
         tc_passed: (tc.status._attributes.status === "PASS") ? true : false,
+        tc_starttime: startTimeStr,
+        tc_endtime: endTimeStr,
+        tc_elapsed: elapsed,
         kwd_list: toArray(tc.kw).map(kw => {
           return kw._attributes.name
         })
