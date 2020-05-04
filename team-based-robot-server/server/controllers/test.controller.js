@@ -12,6 +12,7 @@ import { Fields } from "../utilities/constants"
 import R, { flatten } from "ramda"
 import { Users } from "../models/user.model"
 import bookshelf from "../config/bookshelf"
+import fs from "fs-extra"
 
 export default class TestController extends BaseController {
   async create (req, res) {
@@ -28,7 +29,7 @@ export default class TestController extends BaseController {
 
       const json = JSON.parse(req.body.json)
       // console.log("json type ===>", json, typeof json)
-      const { 
+      const {
         test_tc_no,
         test_passed,
         test_failed,
@@ -41,7 +42,10 @@ export default class TestController extends BaseController {
       // console.log("uploadFiles ==>", uploadFiles)
 
       // concat googlePubLink
-      const concatUrlReducer = (acc, { file }) => acc.concat(" ", file.cloudStoragePublicUrl)
+      const concatUrlReducer = (acc, { file }) => {
+        fs.removeSync(file.path)
+        return acc.concat(" ", file.cloudStoragePublicUrl)
+      }
       const test_file_link = uploadFiles.reduce(concatUrlReducer, "").trim()
       const testData = {
         test_tc_no,
@@ -95,7 +99,6 @@ export default class TestController extends BaseController {
         console.log("saved bookshelf results ===> ", results.length)
         return results
       })
-
       this.success(res, { ...data, "upload_result": uploadFiles })
     } catch (error) {
       console.log(error) 
