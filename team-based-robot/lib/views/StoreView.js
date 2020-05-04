@@ -18,7 +18,7 @@ export default class StoreView {
     this.teambaseInstance = props.teambaseInstance
     this.sharingKeywords = this.teambaseInstance.sharingKeywords
     this.localKeywords = []
-    this.filePath = '/resources/local-team-based.robot'
+    this.filePath = atom.config.get('team-based-robot.localRobotPath')
     this.keywordNames = []
     this.sharingNames = []
     this.localNames = []

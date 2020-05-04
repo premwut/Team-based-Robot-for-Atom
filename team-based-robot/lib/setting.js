@@ -25,23 +25,29 @@ const Setting = {
     default: '/resources/team-based.robot',
     order: 5
   },
+  localRobotPath: {
+    title: 'Local robot file path for storing your team-based keywords',
+    type: 'string',
+    default: '/resources/local-team-based.robot',
+    order: 6
+  },
   runnerVariable: {
     title: 'Robot variable for running robot script',
     type: 'string',
     default: 'env:local',
-    order: 6
+    order: 7
   },
   runnerTestcasePath: {
     title: 'Test case path',
     type: 'string',
     default: '/testcases',
-    order: 7
+    order: 8
   },
   runnerOutputPath: {
     title: 'Output path',
     type: 'string',
     default: '/test-results',
-    order: 8
+    order: 9
   },
   debug: {
     title: 'Print debug messages in console',
