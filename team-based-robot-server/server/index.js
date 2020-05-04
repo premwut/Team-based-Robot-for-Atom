@@ -73,9 +73,7 @@ io.on("connection", function (socket) {
     // socket.join("2")
     socket.on("keywordUpdated", (data) => {
       const { username } = data
-
       io.to(roomName).emit("sendKeywordNoti", {...data, message: `Keyword was updated by ${username}`})
-      // io.sockets.emit("sendNotification", {...data, message: "Someone just updated keyword(s)"})
     })
   })
 
