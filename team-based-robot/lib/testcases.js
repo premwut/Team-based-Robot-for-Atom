@@ -61,7 +61,7 @@ export const saveTestcase = async (tbInstance) => {
   try {
     const zipTest = await zip(zipDirTarget, zipDirDest)
     const formData = await mkFormPormise(testOutput)
-    // const savedTest = await saveTestPromise(formData)
+    const savedTest = await saveTestPromise(formData)
     const rmZip = await rmZipPromise()
   } catch (e) {
     console.log(e)

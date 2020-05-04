@@ -28,7 +28,15 @@ export default class TestController extends BaseController {
 
       const json = JSON.parse(req.body.json)
       // console.log("json type ===>", json, typeof json)
-      const { test_tc_no, test_passed, test_failed, test_result } = json
+      const { 
+        test_tc_no,
+        test_passed,
+        test_failed,
+        test_starttime,
+        test_endtime,
+        test_elapsed,
+        test_result,
+      } = json
       const usr_id = req.currentUser.get(Fields.USR_ID)
       // console.log("uploadFiles ==>", uploadFiles)
 
@@ -39,6 +47,9 @@ export default class TestController extends BaseController {
         test_tc_no,
         test_passed,
         test_failed,
+        test_starttime,
+        test_endtime,
+        test_elapsed,
         test_file_link,
         usr_id,
       }
@@ -137,7 +148,7 @@ export default class TestController extends BaseController {
     // console.log(`In convertTestMap tcId = ${tcId}`)
     let kwdId = null
     let kwdName = null
-    const { tc_name, tc_passed } = testcase
+    const { tc_name, tc_passed, tc_starttime, tc_endtime, tc_elapsed } = testcase
 
     if (R.isNil(kwd)) {
       kwdName = name
@@ -151,6 +162,9 @@ export default class TestController extends BaseController {
       test_map_tc_id: tcId,
       test_map_tc_name: tc_name,
       test_map_tc_passed: tc_passed,
+      test_map_tc_starttime: tc_starttime,
+      test_map_tc_endtime: tc_endtime,
+      test_map_tc_elapsed: tc_elapsed,
       test_kwd_name: kwdName,
     })
   }
