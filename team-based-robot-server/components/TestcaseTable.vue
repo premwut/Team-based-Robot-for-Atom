@@ -19,9 +19,11 @@
           <v-progress-linear slot="progress" color="primary" height="3" indeterminate></v-progress-linear>
               <template slot="items" slot-scope="props">
                 <tr @click="onTestcaseClick(props.item.tc_id)">
-                  <td class="text-xs-center">{{ changeDateFormat(props.item.created_at) }}</td>
                   <td class="text-xs-center">{{ props.item.tc_id }}</td>
                   <td class="text-xs-center">{{ props.item.tc_name }}</td>
+                  <td class="text-xs-center">{{ props.item.tc_starttime.split(" ")[1] }}</td>
+                  <td class="text-xs-center">{{ props.item.tc_endtime.split(" ")[1] }}</td>
+                  <td class="text-xs-center">{{ props.item.tc_elapsed }}</td>
                   <td class="text-xs-center">{{ props.item.tc_passed }}</td>
                 </tr>
               </template>
@@ -79,9 +81,11 @@ export default {
       { text: "Keyword List", disabled: false, tableName: "KeywordTable" },
     ],
     headers: [
-      { text: "Date", align: "center", sortable: false },
       { text: "Testcase ID", align: "center", sortable: false },
       { text: "Testcase Name", align: "center", sortable: false },
+      { text: "Start Time", align: "center", sortable: false },
+      { text: "End Time", align: "center", sortable: false },
+      { text: "Elapsed", align: "center", sortable: false },
       { text: "Executed Result", align: "center", sortable: false },
     ],
     pagination: { rowsPerPage },

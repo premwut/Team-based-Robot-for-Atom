@@ -20,7 +20,9 @@ export default {
       const isTestEmpty = store.state.test.tests.list.length === 0
       console.log("isTestEmpty", isTestEmpty)
       console.log(this.isLoading, "isLoading")
-      isTestEmpty && process.push(store.dispatch("test/fetchTests", { page: 1, limit: rowsPerPage }))
+      let { team_id = 1 } = store.state.currentUser || {}
+      team_id = team_id === null ? 1 : team_id
+      isTestEmpty && process.push(store.dispatch("test/fetchTests", { page: 1, limit: rowsPerPage, team_id }))
       await Promise.all(process)
       this.isLoading = false
       console.log("isLoading ===>", this.isLoading)

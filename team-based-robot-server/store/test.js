@@ -8,13 +8,25 @@ export const state = () => ({
 
 export const mutations = {
   // set tests into store
-  setTests (state, data) {
-    console.log("In setTests Mutation", data)
+  setTests (state, { data, members }) {
+    // console.log("In setTests Mutation data ===>", data)
+    // console.log("In setTests Mutation members ===>", members)
+    const findFullname = (acc, member) => {
+      const { usr_id, usr_fname, usr_lname } = member
+      const usr_fullname = usr_fname + " " + usr_lname
+      acc[usr_id] = usr_fullname
+      return acc
+    }
+    const fullnameDict = members.reduce(findFullname, {})
+    console.log("fullname Dict ===>", fullnameDict)
+    const addUserFullname = (test) => {
+      return { ...test, usr_fullname: fullnameDict[test.usr_id] }
+    }
+    const newTestList = data.tests.map(addUserFullname)
     state.tests = {
       ...data,
-      list: [...data.tests],
+      list: [...newTestList],
     }
-    console.log("After set state = ", state.tests)
     delete state.tests.data
     console.log("[store->test->mutation] :\n", state.tests.list)
   },
@@ -31,6 +43,9 @@ export const mutations = {
         test_map_tc_id,
         test_map_tc_name,
         test_map_tc_passed,
+        test_map_tc_starttime,
+        test_map_tc_endtime,
+        test_map_tc_elapsed,
         created_at,
         kwd_id,
         test_kwd_name,
@@ -42,6 +57,9 @@ export const mutations = {
           tc_id: test_map_tc_id,
           tc_name: test_map_tc_name,
           tc_passed: test_map_tc_passed,
+          tc_starttime: test_map_tc_starttime,
+          tc_endtime: test_map_tc_endtime,
+          tc_elapsed: test_map_tc_elapsed,
           created_at,
           kwd_list: [...acc.kwd_list],
         }
@@ -65,12 +83,13 @@ export const mutations = {
 }
 // get tests from database then [setTests]
 export const actions = {
-  async fetchTests ({ commit, dispatch }, { page = 1, limit = 10 } = {}) {
+  async fetchTests ({ commit, dispatch }, { page = 1, limit = 10, team_id = 1 } = {}) {
     try {
       console.log(`/api/test/list?date=2020-03-02&page=${page}&limit=${limit}`)
       const { data } = await this.$axios.$get(`/api/test/list?date=2020-03-02&page=${page}&limit=${limit}`)
+      const { data: { members } } = await this.$axios.$get(`/api/team/${team_id}/members`)
       console.log("[store->test->action] :\n", data)
-      commit("setTests", data)
+      commit("setTests", { data, members })
     } catch (error) {
       throw error
     }

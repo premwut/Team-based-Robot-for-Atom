@@ -19,12 +19,15 @@
         <v-progress-linear slot="progress" color="primary" height="3" indeterminate></v-progress-linear>
         <template slot="items" slot-scope="props">
           <tr @click="onTestClick(props.item.test_id)">
-          <td class="text-xs-center">{{ changeDateFormat(props.item.created_at) }}</td>
-          <td class="text-xs-center">{{ props.item.usr_id }}</td>
+          <td class="text-xs-center">{{ changeDateFormat(props.item.test_starttime.split(" ")[0]) }}</td>
+          <td class="text-xs-center">{{ props.item.usr_fullname }}</td>
           <td class="text-xs-center">{{ props.item.test_id }}</td>
           <td class="text-xs-center">{{ props.item.test_tc_no }}</td>
           <td class="text-xs-center">{{ props.item.test_passed }}</td>
           <td class="text-xs-center">{{ props.item.test_failed }}</td>
+          <td class="text-xs-center">{{ props.item.test_starttime.split(" ")[1] }}</td>
+          <td class="text-xs-center">{{ props.item.test_endtime.split(" ")[1] }}</td>
+          <td class="text-xs-center">{{ props.item.test_elapsed }}</td>
           <td class="text-xs-center">
             <a @mouseover="downloadHover = true" @mouseleave="downloadHover = false" 
             :href="props.item.test_file_link" target="_bank">Link</a>
@@ -88,11 +91,14 @@ export default {
     ],
     headers: [
       { text: "Date", align: "center", sortable: false },
-      { text: "Executor ID", align: "center", sortable: false },
+      { text: "Executor", align: "center", sortable: false },
       { text: "Executed ID", align: "center", sortable: false },
       { text: "Number of Testcases", align: "center", sortable: false },
-      { text: "Number of Passed", align: "center", sortable: false },
-      { text: "Number of Failed", align: "center", sortable: false },
+      { text: "Number of Passes", align: "center", sortable: false },
+      { text: "Number of Fails", align: "center", sortable: false },
+      { text: "Start Time", align: "center", sortable: false },
+      { text: "End Time", align: "center", sortable: false },
+      { text: "Elapsed", align: "center", sortable: false },
       { text: "Download", align: "center", sortable: false },
     ],
     pagination: { rowsPerPage },
@@ -134,7 +140,8 @@ export default {
       this.pagination.page = 1
     },
     changeDateFormat (date) {
-      let formatted_date = moment(new Date(date)).format("L")
+      // let formatted_date = moment(new Date(date)).format("L")
+      let formatted_date = moment(date, "YYYYMMDD").format("YYYY-MM-DD")
       return formatted_date
     },
     addHttpInUrl (url) {
