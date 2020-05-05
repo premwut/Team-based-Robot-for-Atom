@@ -104,7 +104,7 @@ export const saveTestcase = async (tbInstance) => {
   // console.log(saveList, 'saveList')
   // console.log(editList, 'editList')
 
-  let outputData = { testcases: [], usr_id: currentUser.usr_id }
+  // let outputData = { testcases: [], usr_id: currentUser.usr_id }
   // saveList = saveList.map(testcase => {
   //   let tcStatus = testcase.status._attributes
   //   let tcRunDate = tcStatus.starttime.split('')
@@ -190,19 +190,26 @@ const mapTestOutput = testResults => {
   suites.map(suite => {
     const cases = toArray(suite.test)
     cases.map(tc => {
-      const statusAtb = tc.status._attributes
-      const startTimeStr = statusAtb.starttime
-      const endTimeStr = statusAtb.endtime
-      const elapsed = changeTimeStrToElapsed(startTimeStr, endTimeStr)
+      const { starttime, endtime } = tc.status._attributes
+      const elapsed = changeTimeStrToElapsed(starttime, endtime)
+      const kwd_list = toArray(tc.kw).map(kw => {
+        const { status, starttime, endtime } = kw.status._attributes
+        const elapsed = changeTimeStrToElapsed(starttime, endtime)
+        return {
+          kwd_name: kw._attributes.name,
+          kwd_starttime: starttime,
+          kwd_endtime: endtime,
+          kwd_elapsed: elapsed,
+          kwd_passed: (status === "PASS") ? true : false,
+        }
+      })
       testcaseList.push({
         tc_name: tc._attributes.name,
         tc_passed: (tc.status._attributes.status === "PASS") ? true : false,
-        tc_starttime: startTimeStr,
-        tc_endtime: endTimeStr,
+        tc_starttime: starttime,
+        tc_endtime: endtime,
         tc_elapsed: elapsed,
-        kwd_list: toArray(tc.kw).map(kw => {
-          return kw._attributes.name
-        })
+        kwd_list: kwd_list
       })
     })
   })

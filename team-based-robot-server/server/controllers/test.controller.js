@@ -18,7 +18,6 @@ export default class TestController extends BaseController {
   async create (req, res) {
     try {
       const { files } = req
-      // console.log("files ===>", files)
       const { bucketName } = config
       const googleStorage = new GoogleStorage(bucketName)
       let promises = []
@@ -28,7 +27,6 @@ export default class TestController extends BaseController {
       const uploadFiles = await Promise.all(promises)
 
       const json = JSON.parse(req.body.json)
-      // console.log("json type ===>", json, typeof json)
       const {
         test_tc_no,
         test_passed,
@@ -39,7 +37,6 @@ export default class TestController extends BaseController {
         test_result,
       } = json
       const usr_id = req.currentUser.get(Fields.USR_ID)
-      // console.log("uploadFiles ==>", uploadFiles)
 
       // concat googlePubLink
       const concatUrlReducer = (acc, { file }) => {
@@ -61,12 +58,10 @@ export default class TestController extends BaseController {
       const test = await Test.forge(testData).save()
       const testId = test.get(Fields.TEST_ID)
 
-      // Lab by P'Golf Yossapol
       const promiseKeywords = test_result
-        .map(({kwd_list}) => R.uniq(kwd_list))
+        .map(({kwd_list}) => R.uniq(kwd_list.map(kwd => kwd[Fields.TEST_KWD_NAME])))
         .map(keywordName => q => q.where(Fields.KWD_NAME, "in", R.uniq(keywordName)))
         .map((queryKeyword) => Keywords.query(queryKeyword).fetch({require: false}))
-
       const fetchKeywords = await Promise.all(promiseKeywords)
 
       const fetchKeywordMapping = fetchKeywords.reduce((acc, fetchKeyword) => {
@@ -79,17 +74,15 @@ export default class TestController extends BaseController {
         })
         return acc
       }, {})
-
+      console.log("fetchKeywordMapping ===>", fetchKeywordMapping)
       const testMapCollection = test_result.reduce((acc, testcase, tcId) => {
         testcase.tc_id = tcId + 1
-        const { tc_id, kwd_list } = testcase
-        const keywordNames = R.uniq(kwd_list)
-
-        const testMap = R.flatten(keywordNames.map((kwdName) => {
-          const kwd = fetchKeywordMapping[kwdName]
-          return this.convertToTestMapping(kwd, testId, tc_id, testcase, kwdName)
+        const { kwd_list } = testcase
+        const testMap = R.flatten(kwd_list.map((keyword) => {
+          const { kwd_name } = keyword
+          const kwd = fetchKeywordMapping[kwd_name]
+          return this.convertToTestMapping(kwd, testId, testcase, keyword)
         }))
-
         return acc.push(testMap)
       }, TestMappings.forge())
 
@@ -136,7 +129,7 @@ export default class TestController extends BaseController {
       const test_tc_no = test.get(Fields.TEST_TC_NO)
       const tcIds = Array.apply(null, Array(test_tc_no)).map((x, idx) => idx + 1)
       const testMappingList = tcIds
-        .map(tcId => q => q.where({ test_id: test_id }).orderBy("test_map_id", "asc"))
+        .map(tcId => q => q.where({ test_id: test_id }).orderBy(Fields.TEST_MAP_ID, "asc"))
         .map((queryTestMap) => TestMappings.query(queryTestMap).fetch())
 
       const [testcases] = await Promise.all(testMappingList)
@@ -147,28 +140,31 @@ export default class TestController extends BaseController {
     }
   }
 
-  convertToTestMapping (kwd, testId, tcId, testcase, name) {
-    // console.log(`In convertTestMap tcId = ${tcId}`)
-    let kwdId = null
+  convertToTestMapping (kwd, test_id, testcase, keyword) {
+    let kwd_id = null
     let kwdName = null
-    const { tc_name, tc_passed, tc_starttime, tc_endtime, tc_elapsed } = testcase
-
+    const { tc_id, tc_name, tc_passed, tc_starttime, tc_endtime, tc_elapsed } = testcase
+    const { kwd_name, kwd_starttime, kwd_endtime, kwd_elapsed, kwd_passed } = keyword
     if (R.isNil(kwd)) {
-      kwdName = name
+      kwdName = kwd_name
     } else if (kwd.get(Fields.KWD_NAME) != null) {
       kwdName = kwd.get(Fields.KWD_NAME)
-      kwdId = kwd.get(Fields.KWD_ID)
+      kwd_id = kwd.get(Fields.KWD_ID)
     }
     return TestMapping.forge({
-      kwd_id: kwdId,
-      test_id: testId,
-      test_map_tc_id: tcId,
-      test_map_tc_name: tc_name,
-      test_map_tc_passed: tc_passed,
-      test_map_tc_starttime: tc_starttime,
-      test_map_tc_endtime: tc_endtime,
-      test_map_tc_elapsed: tc_elapsed,
-      test_kwd_name: kwdName,
+      kwd_id,
+      test_id,
+      tc_id,
+      tc_name,
+      tc_passed,
+      tc_starttime,
+      tc_endtime,
+      tc_elapsed,
+      kwd_name: kwdName,
+      kwd_starttime,
+      kwd_endtime,
+      kwd_elapsed,
+      kwd_passed,
     })
   }
 

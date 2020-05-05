@@ -40,26 +40,30 @@ export const mutations = {
     }
     const testcaseList = testcases.reduce((acc, cur, idx, src) => {
       let {
-        test_map_tc_id,
-        test_map_tc_name,
-        test_map_tc_passed,
-        test_map_tc_starttime,
-        test_map_tc_endtime,
-        test_map_tc_elapsed,
+        tc_id,
+        tc_name,
+        tc_passed,
+        tc_starttime,
+        tc_endtime,
+        tc_elapsed,
         created_at,
         kwd_id,
-        test_kwd_name,
+        kwd_name,
+        kwd_starttime,
+        kwd_endtime,
+        kwd_elapsed,
+        kwd_passed,
       } = cur
-      const kwdTemp = { kwd_id, kwd_name: test_kwd_name }
+      const kwdTemp = { kwd_id, kwd_name: kwd_name, kwd_starttime, kwd_endtime, kwd_elapsed, kwd_passed }
       acc.kwd_list = [...acc.kwd_list, kwdTemp]
-      if (idx === src.length - 1 || test_map_tc_id !== src[idx + 1].test_map_tc_id) {
+      if (idx === src.length - 1 || tc_id !== src[idx + 1].tc_id) {
         const tcTemp = {
-          tc_id: test_map_tc_id,
-          tc_name: test_map_tc_name,
-          tc_passed: test_map_tc_passed,
-          tc_starttime: test_map_tc_starttime,
-          tc_endtime: test_map_tc_endtime,
-          tc_elapsed: test_map_tc_elapsed,
+          tc_id,
+          tc_name,
+          tc_passed,
+          tc_starttime,
+          tc_endtime,
+          tc_elapsed,
           created_at,
           kwd_list: [...acc.kwd_list],
         }
@@ -97,6 +101,7 @@ export const actions = {
   async fetchTestcases ({ commit, dispatch }, { test_id, page = 1, limit = 10 } = {}) {
     try {
       console.log(`[test store] In action - fetchTestcase\ntest_id ===> ${test_id}`)
+      console.log("test_id ===>", test_id)
       test_id = 1
       const { data } = await this.$axios.$get(`/api/test/${test_id}/testcases?page=${page}&limit=${limit}`)
       console.log("[store->testcase->action] :\n", data)

@@ -59,22 +59,22 @@ export default {
   components: {
     LoadingFailModal,
   },
-  async fetch ({ store }) {
-    try {
-      this.isLoading = true
-      const process = []
-      const isTestEmpty = store.state.test.tests.list.length === 0
-      console.log("isTestEmpty", isTestEmpty)
-      console.log(this.isLoading, "isLoading")
-      isTestEmpty && process.push(store.dispatch("test/fetchTests", { page: 1, limit: rowsPerPage }))
-      await Promise.all(process)
-      this.isLoading = false
-      console.log("isLoading ===>", this.isLoading)
-    } catch (error) {
-      this.isLoading = false
-      this.isLoadingFail = true
-    }
-  },
+  // async fetch ({ store }) {
+  //   try {
+  //     this.isLoading = true
+  //     const process = []
+  //     const isTestEmpty = store.state.test.tests.list.length === 0
+  //     console.log("isTestEmpty", isTestEmpty)
+  //     console.log(this.isLoading, "isLoading")
+  //     isTestEmpty && process.push(store.dispatch("test/fetchTests", { page: 1, limit: rowsPerPage }))
+  //     await Promise.all(process)
+  //     this.isLoading = false
+  //     console.log("isLoading ===>", this.isLoading)
+  //   } catch (error) {
+  //     this.isLoading = false
+  //     this.isLoadingFail = true
+  //   }
+  // },
   data: () => ({
     downloadHover: false,
     isLoadingFail: false,

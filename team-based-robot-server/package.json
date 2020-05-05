@@ -13,7 +13,8 @@
     "lintfix": "eslint --fix --ext .js,.vue --ignore-path .gitignore .",
     "deploy": "git push heroku develop:master",
     "heroku-postbuild": "npm run build",
-    "clean-db": "knex migrate:rollback && knex migrate:latest && knex seed:run"
+    "clean-db": "knex migrate:rollback && knex migrate:latest && knex seed:run",
+    "clean-db-run": "knex migrate:rollback && knex migrate:latest && knex seed:run && backpack dev"
   },
   "dependencies": {
     "@google-cloud/storage": "^4.6.0",
