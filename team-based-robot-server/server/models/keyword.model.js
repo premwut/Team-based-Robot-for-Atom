@@ -17,6 +17,9 @@ class Keyword extends BaseModel {
   keywordMappings () {
     return this.hasMany(Models.KEYWORD_MAPPING, Fields.KWD_ID)
   }
+  review () {
+    return this.hasOne(Models.REVIEW, Fields.RW_ID)
+  }
 
   static dependents = ["keywordMappings"]
 

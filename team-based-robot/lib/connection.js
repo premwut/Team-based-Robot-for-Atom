@@ -166,7 +166,7 @@ export default class Connection {
       if (err) {
         return console.error('save executed result failed:', err)
       }
-      console.log('body ===>', body)
+      console.log(body)
       // return [ {...response.data} ]
       return [{}]
     })

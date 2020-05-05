@@ -4,7 +4,8 @@ TB Open Browser To Landing Page
 	Open browser	${WEB_BASE_URL}	${BROWSER}
 	Set Selenium Speed	${SPEED}
 
-TB Logged In By Admin User
+TB Desktop - Login by admin success
+	[Tags]	login	regression	high	desktop
 	Open Browser To Landing Page
 	Change Resolution To Desktop
 	Go To Login Page

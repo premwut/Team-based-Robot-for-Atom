@@ -15,6 +15,7 @@ exports.up = function (knex, Promise) {
       table.string("kwd_endtime")
       table.string("kwd_elapsed")
       table.boolean("kwd_passed")
+      table.string("kwd_status")
       table.integer("test_id").references("tests.test_id")
       table.integer("kwd_id").references("keywords.kwd_id")
       table.timestamps()

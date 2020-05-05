@@ -13,18 +13,19 @@ import R, { flatten } from "ramda"
 import { Users } from "../models/user.model"
 import bookshelf from "../config/bookshelf"
 import fs from "fs-extra"
+import Review, { Reviews } from "../models/review.model"
 
 export default class TestController extends BaseController {
   async create (req, res) {
     try {
-      const { files } = req
-      const { bucketName } = config
-      const googleStorage = new GoogleStorage(bucketName)
-      let promises = []
-      files.forEach(file => {
-        promises.push(googleStorage.uploadFileToGoogleStoragePromise(file))
-      })
-      const uploadFiles = await Promise.all(promises)
+      // const { files } = req
+      // const { bucketName } = config
+      // const googleStorage = new GoogleStorage(bucketName)
+      // let promises = []
+      // files.forEach(file => {
+      //   promises.push(googleStorage.uploadFileToGoogleStoragePromise(file))
+      // })
+      // const uploadFiles = await Promise.all(promises)
 
       const json = JSON.parse(req.body.json)
       const {
@@ -38,12 +39,13 @@ export default class TestController extends BaseController {
       } = json
       const usr_id = req.currentUser.get(Fields.USR_ID)
 
-      // concat googlePubLink
-      const concatUrlReducer = (acc, { file }) => {
-        fs.removeSync(file.path)
-        return acc.concat(" ", file.cloudStoragePublicUrl)
-      }
-      const test_file_link = uploadFiles.reduce(concatUrlReducer, "").trim()
+      // // concat googlePubLink
+      // const concatUrlReducer = (acc, { file }) => {
+      //   fs.removeSync(file.path)
+      //   return acc.concat(" ", file.cloudStoragePublicUrl)
+      // }
+      // const test_file_link = uploadFiles.reduce(concatUrlReducer, "").trim()
+      const test_file_link = "google.com"
       const testData = {
         test_tc_no,
         test_passed,
@@ -57,24 +59,22 @@ export default class TestController extends BaseController {
 
       const test = await Test.forge(testData).save()
       const testId = test.get(Fields.TEST_ID)
-
       const promiseKeywords = test_result
         .map(({kwd_list}) => R.uniq(kwd_list.map(kwd => kwd[Fields.TEST_KWD_NAME])))
         .map(keywordName => q => q.where(Fields.KWD_NAME, "in", R.uniq(keywordName)))
-        .map((queryKeyword) => Keywords.query(queryKeyword).fetch({require: false}))
+        .map((queryKeyword) => Keywords.query(queryKeyword).fetch({require: false, withRelated: ["review"]}))
       const fetchKeywords = await Promise.all(promiseKeywords)
 
       const fetchKeywordMapping = fetchKeywords.reduce((acc, fetchKeyword) => {
         fetchKeyword.forEach(kwd => {
+          console.log("type of kwd =======>", typeof kwd, kwd)
           const kwdName = kwd.get(Fields.KWD_NAME)
-
           if (!R.isNil(kwdName)) {
             acc[kwdName] = kwd
           }
         })
         return acc
       }, {})
-      console.log("fetchKeywordMapping ===>", fetchKeywordMapping)
       const testMapCollection = test_result.reduce((acc, testcase, tcId) => {
         testcase.tc_id = tcId + 1
         const { kwd_list } = testcase
@@ -92,9 +92,10 @@ export default class TestController extends BaseController {
         console.log("saved bookshelf results ===> ", results.length)
         return results
       })
-      this.success(res, { ...data, "upload_result": uploadFiles })
+      // this.success(res, { ...data, "upload_result": uploadFiles })
+      this.success(res, { ...testMapCollection })
     } catch (error) {
-      console.log(error) 
+      console.log(error)
       this.failure(res, error)
     }
   }
@@ -143,6 +144,7 @@ export default class TestController extends BaseController {
   convertToTestMapping (kwd, test_id, testcase, keyword) {
     let kwd_id = null
     let kwdName = null
+    let kwd_status = null
     const { tc_id, tc_name, tc_passed, tc_starttime, tc_endtime, tc_elapsed } = testcase
     const { kwd_name, kwd_starttime, kwd_endtime, kwd_elapsed, kwd_passed } = keyword
     if (R.isNil(kwd)) {
@@ -150,6 +152,7 @@ export default class TestController extends BaseController {
     } else if (kwd.get(Fields.KWD_NAME) != null) {
       kwdName = kwd.get(Fields.KWD_NAME)
       kwd_id = kwd.get(Fields.KWD_ID)
+      kwd_status = kwd.related("review")[0].get("kwd_status")
     }
     return TestMapping.forge({
       kwd_id,
@@ -165,6 +168,7 @@ export default class TestController extends BaseController {
       kwd_endtime,
       kwd_elapsed,
       kwd_passed,
+      kwd_status,
     })
   }
 
@@ -174,7 +178,8 @@ export default class TestController extends BaseController {
     let tcPassed = testMapping.get(Fields.TEST_MAP_TC_PASSED)
     let tcKwdId = testMapping.get(Fields.KWD_ID)
     let tcKwdName = testMapping.get(Fields.TEST_KWD_NAME)
+    let tcKwdStatus = testMapping.get(Fields.TEST_KWD_STATUS)
 
-    console.log(`testMapping => id:${tcId}, name:${tcName}, passed:${tcPassed}, kwdId:${tcKwdId}, kwdName:${tcKwdName}`)
+    console.log(`testMapping => id:${tcId}, name:${tcName}, passed:${tcPassed}, kwdId:${tcKwdId}, kwdName:${tcKwdName}, tcKwdStatus${tcKwdStatus}`)
   }
 }

@@ -1,6 +1,7 @@
 import { Fields, Tables } from "../utilities/constants"
 import Review, { Reviews } from "../models/review.model"
 import User from "../models/user.model"
+import TestMapping, { TestMappings } from "../models/testMapping.model"
 
 import BaseController from "./base.controller"
 import bookshelf from "../config/bookshelf"
@@ -8,6 +9,7 @@ import bookshelf from "../config/bookshelf"
 export default class ReviewController extends BaseController {
   async getReview (req, res) {
     try {
+      // const { team_id } = req.currentUser.toJSON()
       const usr_id = req.params.userId
       const { team_id } = (await bookshelf.knex(Tables.USER).select(Fields.TEAM_ID).where({ usr_id })).pop()
       const leaderId = (await bookshelf.knex(Tables.USER).where({ team_id, role_id: 2 })).pop().usr_id

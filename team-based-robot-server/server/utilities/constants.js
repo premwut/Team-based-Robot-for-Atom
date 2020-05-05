@@ -77,6 +77,7 @@ export const Fields = Object.freeze({
   TEST_KWD_STARTTIME: 'kwd_starttime',
   TEST_KWD_ENDTIME: 'kwd_endtime',
   TEST_KWD_ELAPSED: 'kwd_elapsed',
+  TEST_KWD_STATUS: 'kwd_status',
 
   TEST_ID: 'test_id',
   TEST_TC_NO: 'test_tc_no',
