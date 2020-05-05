@@ -22,7 +22,6 @@ export default class StoreView {
     this.keywordNames = []
     this.sharingNames = []
     this.localNames = []
-    this.temp = []
 
   }
 
@@ -81,7 +80,7 @@ export default class StoreView {
         </div>
         <div class="container">
           <div className="sharing-container">
-            <h2>sharing</h2>
+            <h2>Global</h2>
             <atom-panel className="sharing-content">
               <div>
                 {this.sharingNames.map((name, index) => {
@@ -91,7 +90,7 @@ export default class StoreView {
             </atom-panel>
           </div>
             <div className="local-container">
-            <h2>local</h2>
+            <h2>Local</h2>
               <atom-panel className="local-content">
                 <div>
                   {this.localNames.map((name, index) => {
