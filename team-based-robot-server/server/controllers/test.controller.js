@@ -63,11 +63,23 @@ export default class TestController extends BaseController {
         .map(({kwd_list}) => R.uniq(kwd_list.map(kwd => kwd[Fields.TEST_KWD_NAME])))
         .map(keywordName => q => q.where(Fields.KWD_NAME, "in", R.uniq(keywordName)))
         .map((queryKeyword) => Keywords.query(queryKeyword).fetch({require: false, withRelated: ["review"]}))
+
       const fetchKeywords = await Promise.all(promiseKeywords)
+
+      const reviews = fetchKeywords.reduce((acc, fetchKWD) => {
+        fetchKWD.forEach((kwd, idx) => {
+          const review = kwd.related("review")
+          const kwdName = kwd.get(Fields.KWD_NAME)
+          // acc[idx] = review
+          if (!R.isNil(kwdName)) {
+            acc[kwdName] = review
+          }
+        })
+        return acc
+      }, {})
 
       const fetchKeywordMapping = fetchKeywords.reduce((acc, fetchKeyword) => {
         fetchKeyword.forEach(kwd => {
-          console.log("type of kwd =======>", typeof kwd, kwd)
           const kwdName = kwd.get(Fields.KWD_NAME)
           if (!R.isNil(kwdName)) {
             acc[kwdName] = kwd
@@ -75,13 +87,15 @@ export default class TestController extends BaseController {
         })
         return acc
       }, {})
+
       const testMapCollection = test_result.reduce((acc, testcase, tcId) => {
         testcase.tc_id = tcId + 1
         const { kwd_list } = testcase
         const testMap = R.flatten(kwd_list.map((keyword) => {
           const { kwd_name } = keyword
+          const rw = reviews[kwd_name]
           const kwd = fetchKeywordMapping[kwd_name]
-          return this.convertToTestMapping(kwd, testId, testcase, keyword)
+          return this.convertToTestMapping(kwd, rw, testId, testcase, keyword, kwd_name)
         }))
         return acc.push(testMap)
       }, TestMappings.forge())
@@ -93,7 +107,7 @@ export default class TestController extends BaseController {
         return results
       })
       // this.success(res, { ...data, "upload_result": uploadFiles })
-      this.success(res, { ...testMapCollection })
+      this.success(res, { ...data })
     } catch (error) {
       console.log(error)
       this.failure(res, error)
@@ -141,34 +155,37 @@ export default class TestController extends BaseController {
     }
   }
 
-  convertToTestMapping (kwd, test_id, testcase, keyword) {
-    let kwd_id = null
+  convertToTestMapping (kwd, rw, test_id, testcase, keyword, name) {
+    let kwdId = null
     let kwdName = null
     let kwd_status = null
+
     const { tc_id, tc_name, tc_passed, tc_starttime, tc_endtime, tc_elapsed } = testcase
-    const { kwd_name, kwd_starttime, kwd_endtime, kwd_elapsed, kwd_passed } = keyword
+    const { kwd_starttime, kwd_endtime, kwd_elapsed, kwd_passed } = keyword
+
     if (R.isNil(kwd)) {
-      kwdName = kwd_name
+      kwdName = name
     } else if (kwd.get(Fields.KWD_NAME) != null) {
       kwdName = kwd.get(Fields.KWD_NAME)
-      kwd_id = kwd.get(Fields.KWD_ID)
-      kwd_status = kwd.related("review")[0].get("kwd_status")
+      kwdId = kwd.get(Fields.KWD_ID)
+      kwd_status = rw.get(Fields.RW_STATUS)
     }
+
     return TestMapping.forge({
-      kwd_id,
-      test_id,
-      tc_id,
-      tc_name,
-      tc_passed,
-      tc_starttime,
-      tc_endtime,
-      tc_elapsed,
+      kwd_id: kwdId,
+      test_id: test_id,
+      tc_id: tc_id,
+      tc_name: tc_name,
+      tc_passed: tc_passed,
+      tc_starttime: tc_starttime,
+      tc_endtime: tc_endtime,
+      tc_elapsed: tc_elapsed,
       kwd_name: kwdName,
-      kwd_starttime,
-      kwd_endtime,
-      kwd_elapsed,
-      kwd_passed,
-      kwd_status,
+      kwd_starttime: kwd_starttime,
+      kwd_endtime: kwd_endtime,
+      kwd_elapsed: kwd_elapsed,
+      kwd_passed: kwd_passed,
+      kwd_status: kwd_status,
     })
   }
 

@@ -11,7 +11,7 @@ Desktop - Login by admin success
     Fill Input Login Form     ${USERNAME_ADMIN}     ${PASSWORD_ADMIN}
     Verify Admin Page Is Visible
 
-Desktop - Login by admin failurea
+Desktop - Login by admin failure
     [Tags]    login     regression     high     desktop
     Open Browser To Landing Page
     Change Resolution To Desktop

@@ -21,7 +21,7 @@
                 <tr @click="onKeywordClick(props.item)">
                   <td class="text-xs-center">{{ props.item.kwd_id || "No ID" }}</td>
                   <td class="text-xs-center">{{ props.item.kwd_name || "No Name"}}</td>
-                  <td class="text-xs-center">{{ props.item.kwd_id ? props.item.kwd_status : "No Status"}}</td>
+                  <td class="text-xs-center">{{ props.item.kwd_id ? kwdStatus[props.item.kwd_status] : "No Status" }}</td>
                   <td class="text-xs-center">{{ props.item.kwd_starttime.split(" ")[1] }}</td>
                   <td class="text-xs-center">{{ props.item.kwd_endtime.split(" ")[1] }}</td>
                   <td class="text-xs-center">{{ props.item.kwd_elapsed }}</td>
@@ -72,6 +72,7 @@ export default {
     isLoading: false,
     showError: false,
     errorMessage: "",
+    kwdStatus: { pending: "Pending", approved: "Approved", refused: "Refused" },
     breadcrumbs: [
       { text: "Executed result", disabled: false, tableName: "TestTable" },
       { text: "Testcase List", disabled: true, tableName: "TestcaseTable" },

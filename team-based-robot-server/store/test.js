@@ -53,8 +53,9 @@ export const mutations = {
         kwd_endtime,
         kwd_elapsed,
         kwd_passed,
+        kwd_status,
       } = cur
-      const kwdTemp = { kwd_id, kwd_name: kwd_name, kwd_starttime, kwd_endtime, kwd_elapsed, kwd_passed }
+      const kwdTemp = { kwd_id, kwd_name, kwd_starttime, kwd_endtime, kwd_elapsed, kwd_passed, kwd_status }
       acc.kwd_list = [...acc.kwd_list, kwdTemp]
       if (idx === src.length - 1 || tc_id !== src[idx + 1].tc_id) {
         const tcTemp = {
@@ -83,6 +84,7 @@ export const mutations = {
     state.keywords = {
       list: keywordList,
     }
+    console.log("kwdList ====>", keywordList)
   },
 }
 // get tests from database then [setTests]

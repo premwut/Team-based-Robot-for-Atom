@@ -168,7 +168,7 @@ export default class Connection {
       }
       console.log(body)
       // return [ {...response.data} ]
-      return [{}]
+      return [{ ...body.data}]
     })
     } catch (e) {
       console.log(e)
