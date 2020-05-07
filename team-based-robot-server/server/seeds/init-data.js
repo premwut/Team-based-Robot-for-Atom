@@ -28,10 +28,10 @@ const userData = [
     email: 'pndskuchte40@gmail.com',
   },
   {
-    username: 'narospol2',
+    username: 'narospol',
     password: '$2a$10$u3tvNXYvjWb6jjKIO0sH7e1TvyM06bTT7XzPpNCCvVAvyZVi9CQLK',  // narospol
-    usr_fname: 'narospol2',
-    usr_lname: 'pathong2',
+    usr_fname: 'narospol',
+    usr_lname: 'pathong',
     email: 'naros.develop2@gmail.com',
   },
   {
