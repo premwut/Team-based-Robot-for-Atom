@@ -24,7 +24,7 @@
                   <td class="text-xs-center">{{ props.item.tc_starttime.split(" ")[1] }}</td>
                   <td class="text-xs-center">{{ props.item.tc_endtime.split(" ")[1] }}</td>
                   <td class="text-xs-center">{{ props.item.tc_elapsed }}</td>
-                  <td class="text-xs-center">{{ props.item.tc_passed }}</td>
+                  <td class="text-xs-center">{{ props.item.tc_passed ? "Pass" : "Fail" }}</td>
                 </tr>
               </template>
               <template slot="no-data">
@@ -83,10 +83,10 @@ export default {
     headers: [
       { text: "Testcase ID", align: "center", sortable: false },
       { text: "Testcase Name", align: "center", sortable: false },
-      { text: "Start Time", align: "center", sortable: false },
-      { text: "End Time", align: "center", sortable: false },
+      { text: "Start", align: "center", sortable: false },
+      { text: "End", align: "center", sortable: false },
       { text: "Elapsed", align: "center", sortable: false },
-      { text: "Executed Result", align: "center", sortable: false },
+      { text: "Pass/Fail", align: "center", sortable: false },
     ],
     pagination: { rowsPerPage },
     editedItem: undefined,
