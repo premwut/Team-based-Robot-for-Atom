@@ -14,11 +14,18 @@ const userData = [
     email: 'naros.pol@gmail.com',
   },
   {
-    username: 'narospol',
-    password: '$2a$10$u3tvNXYvjWb6jjKIO0sH7e1TvyM06bTT7XzPpNCCvVAvyZVi9CQLK',  // narospol
-    usr_fname: 'narospol',
-    usr_lname: 'pathong',
-    email: 'naros.develop@gmail.com',
+    username: 'premwut',
+    password: '$2a$10$QJ6fRmtaVf4tjadKTyv.FOErh8K0X3Z/EV5moSdl0.K4qCr/3avAi',  // premwut
+    usr_fname: 'Premwut',
+    usr_lname: 'Klaychim',
+    email: 'premwut.k@gmail.com',
+  },
+  {
+    username: 'panudet',
+    password: '$2a$10$UiVs93ZCRlopYrORLj93L.vKV1z.fiXpSzs0hnFfwVtxZdHj29CrS',  // panudet
+    usr_fname: 'Panudet',
+    usr_lname: 'Sukontasuchot',
+    email: 'pndskuchte40@gmail.com',
   },
   {
     username: 'narospol2',
@@ -232,7 +239,8 @@ exports.seed = function (knex, Promise) {
           knex(user).where({ username: 'admin' }).update('role_id', 1),
           knex(user).where({ username: 'somchai' }).update({ role_id: 2, team_id: 1 }),
           knex(user).where({ username: 'narospol' }).update({ role_id: 3, team_id: 1 }),
-          knex(user).where({ username: 'narospol2' }).update({ role_id: 3, team_id: 1 }), // another member
+          knex(user).where({ username: 'panudet' }).update({ role_id: 3, team_id: 1 }),
+          knex(user).where({ username: 'premwut' }).update({ role_id: 3, team_id: 1 }),
           knex(user).where({ username: 'somsak' }).update({ role_id: 2, team_id: 3 }),
           knex(user).where({ username: 'puwadon' }).update({ role_id: 3, team_id: 3 }),
         ])
