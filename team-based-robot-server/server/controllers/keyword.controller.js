@@ -1,13 +1,14 @@
 import Keyword, { Keywords } from "../models/keyword.model"
 import KeywordMapping, { KeywordMappings } from "../models/keywordMapping.model"
 import Team, { Teams } from "../models/team.model"
+import User, { Users } from "../models/user.model"
+import Review, { Reviews } from "../models/review.model"
 import { getPagination, isPagination } from "../utilities/utils"
 
 import BaseController from "./base.controller"
 import { Fields } from "../utilities/constants"
 import { Projects } from "../models/project.model"
 import R from "ramda"
-import { Users } from "../models/user.model"
 import bookshelf from "../config/bookshelf"
 
 export default class KeywordController extends BaseController {
@@ -149,6 +150,7 @@ export default class KeywordController extends BaseController {
     const mappingTeams = []
     const mappingUsers = []
     const mappingOwner = []
+    const mappingReviews = []
     keywordCollection.each(kw => {
       const kwd_id = kw.get(Fields.KWD_ID)
       const kwd_name = kw.get(Fields.KWD_NAME)
@@ -157,15 +159,19 @@ export default class KeywordController extends BaseController {
       const kmt = teamIds.map(id => KeywordMapping.forge({ kwd_id, team_id: id }))
       const kmu = userIds.map(id => KeywordMapping.forge({ kwd_id, usr_id: id }))
       const kmo = [KeywordMapping.forge({ kwd_id, usr_id: owner.get(Fields.USR_ID), kwd_is_owner: true })]
+      const rw = { usr_id: owner.get(Fields.USR_ID), kwd_id, rw_status: "Pending", rw_comment: "" }
       mappingProjects.push(...kmp)
       mappingTeams.push(...kmt)
       mappingUsers.push(...kmu)
       mappingOwner.push(...kmo)
+      mappingReviews.push(rw)
     })
     const combineMapping = R.reduce(R.concat, [], [mappingOwner, mappingUsers, mappingTeams, mappingProjects])
     const mappingCollection = KeywordMappings.forge(combineMapping)
+    const mappingCollection2 = Reviews.forge(mappingReviews)
     const savedKeywordMapping = await mappingCollection.invokeThen("save", null, {transacting: tx})
-    return savedKeywordMapping
+    const savedReviewMapping = await mappingCollection2.invokeThen("save", null, {transacting: tx})
+    return { savedKeywordMapping, savedReviewMapping }
   }
 
   async getTargetMappings ({teamIds, projectIds, userIds}) {

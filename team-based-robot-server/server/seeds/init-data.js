@@ -204,7 +204,7 @@ exports.seed = function (knex, Promise) {
 
           // team leader
           knex(featureRole).where({ fea_role_id: 2 }).update({ role_id: 2, fea_id:  7, pms_id: 2 }),   // write keyword
-          knex(featureRole).where({ fea_role_id: 3 }).update({ role_id: 3, fea_id: 10, pms_id: 2 }),   // write review
+          knex(featureRole).where({ fea_role_id: 3 }).update({ role_id: 2, fea_id: 10, pms_id: 2 }),   // write review
           knex(featureRole).where({ fea_role_id: 4 }).update({ role_id: 2, fea_id:  9, pms_id: 2 }),   // write test
           knex(featureRole).where({ fea_role_id: 5 }).update({ role_id: 2, fea_id:  6, pms_id: 2 }),   // write team member
           knex(featureRole).where({ fea_role_id: 6 }).update({ role_id: 2, fea_id:  2, pms_id: 1 }),   // read user
@@ -215,12 +215,13 @@ exports.seed = function (knex, Promise) {
 
           // team member
           knex(featureRole).where({ fea_role_id: 10 }).update({ role_id: 3, fea_id:  7, pms_id: 2 }),   // write keyword
-          knex(featureRole).where({ fea_role_id: 11 }).update({ role_id: 3, fea_id: 10, pms_id: 2 }),   // write review
-          knex(featureRole).where({ fea_role_id: 12 }).update({ role_id: 3, fea_id:  9, pms_id: 2 }),   // write test
+          knex(featureRole).where({ fea_role_id: 11 }).update({ role_id: 3, fea_id:  9, pms_id: 2 }),   // write test
+          knex(featureRole).where({ fea_role_id: 12 }).update({ role_id: 3, fea_id: 10, pms_id: 1 }),   // read review
           knex(featureRole).where({ fea_role_id: 13 }).update({ role_id: 3, fea_id:  2, pms_id: 1 }),   // read user
           knex(featureRole).where({ fea_role_id: 14 }).update({ role_id: 3, fea_id:  3, pms_id: 1 }),   // read project
           knex(featureRole).where({ fea_role_id: 15 }).update({ role_id: 3, fea_id:  4, pms_id: 1 }),   // read team
           knex(featureRole).where({ fea_role_id: 16 }).update({ role_id: 3, fea_id:  8, pms_id: 1 }),   // read role
+
           
         ])
       })

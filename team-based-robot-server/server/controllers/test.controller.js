@@ -70,7 +70,6 @@ export default class TestController extends BaseController {
         fetchKWD.forEach((kwd, idx) => {
           const review = kwd.related("review")
           const kwdName = kwd.get(Fields.KWD_NAME)
-          // acc[idx] = review
           if (!R.isNil(kwdName)) {
             acc[kwdName] = review
           }
