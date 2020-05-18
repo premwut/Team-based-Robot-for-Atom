@@ -18,14 +18,14 @@ import Review, { Reviews } from "../models/review.model"
 export default class TestController extends BaseController {
   async create (req, res) {
     try {
-      // const { files } = req
-      // const { bucketName } = config
-      // const googleStorage = new GoogleStorage(bucketName)
-      // let promises = []
-      // files.forEach(file => {
-      //   promises.push(googleStorage.uploadFileToGoogleStoragePromise(file))
-      // })
-      // const uploadFiles = await Promise.all(promises)
+      const { files } = req
+      const { bucketName } = config
+      const googleStorage = new GoogleStorage(bucketName)
+      let promises = []
+      files.forEach(file => {
+        promises.push(googleStorage.uploadFileToGoogleStoragePromise(file))
+      })
+      const uploadFiles = await Promise.all(promises)
 
       const json = JSON.parse(req.body.json)
       const {
@@ -39,13 +39,13 @@ export default class TestController extends BaseController {
       } = json
       const usr_id = req.currentUser.get(Fields.USR_ID)
 
-      // // concat googlePubLink
-      // const concatUrlReducer = (acc, { file }) => {
-      //   fs.removeSync(file.path)
-      //   return acc.concat(" ", file.cloudStoragePublicUrl)
-      // }
-      // const test_file_link = uploadFiles.reduce(concatUrlReducer, "").trim()
-      const test_file_link = "google.com"
+      // concat googlePubLink
+      const concatUrlReducer = (acc, { file }) => {
+        fs.removeSync(file.path)
+        return acc.concat(" ", file.cloudStoragePublicUrl)
+      }
+      const test_file_link = uploadFiles.reduce(concatUrlReducer, "").trim()
+      // const test_file_link = "google.com"
       const testData = {
         test_tc_no,
         test_passed,
@@ -105,8 +105,8 @@ export default class TestController extends BaseController {
         console.log("saved bookshelf results ===> ", results.length)
         return results
       })
-      // this.success(res, { ...data, "upload_result": uploadFiles })
-      this.success(res, { ...data })
+      this.success(res, { ...data, "upload_result": uploadFiles })
+      // this.success(res, { ...data })
     } catch (error) {
       console.log(error)
       this.failure(res, error)
