@@ -5,6 +5,7 @@ export const state = () => ({
 export const mutations = {
   // set keywords into store
   setKeywords (state, data) {
+    console.log("data.keywords ===>", data.keywords)
     state.keywords = {
       ...data,
       list: [...data.keywords],

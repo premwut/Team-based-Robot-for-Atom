@@ -32,10 +32,9 @@ export default {
     showError: false,
     errorMessage: "",
     statusIcon: {
-      test: "hello",
-      Pending: { color: "yellow lighten-2", icon: "watch_later" },
-      Approved: { color: "blue lighten-2", icon: "thumb_up" },
-      Refused: { color: "red lighten-2", icon: "thumb_down" },
+      "Pending": { color: "yellow lighten-2", icon: "watch_later" },
+      "Approved": { color: "blue lighten-2", icon: "thumb_up" },
+      "Refused": { color: "red lighten-2", icon: "thumb_down" },
     },
     breadcrumbs: [
       { text: "Keyword Management", disabled: false },

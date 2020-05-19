@@ -42,8 +42,8 @@ export default class KeywordController extends BaseController {
         const reviews = await Review.forge().where({ usr_id: leaderId }).fetchAll()
         const pureKeywords = await (isPaging ? Keyword.forge().fetchPage({ page, pageSize }) : Keyword.forge().fetchAll())
         const keywords = pureKeywords.map(kwd => {
-          const { kwd_id } = kwd
-          let kwd_review = reviews.filter(rw => rw.kwd_id === kwd_id).pop()
+          const kwd_id = kwd.get(Fields.KWD_ID)
+          let kwd_review = reviews.filter(rw => rw.get(Fields.KWD_ID) === kwd_id).pop()
           kwd.set("kwd_review", kwd_review)
           return kwd
         })
