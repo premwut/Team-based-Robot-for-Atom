@@ -32,7 +32,7 @@ export default {
     showError: false,
     errorMessage: "",
     statusIcon: {
-      "Pending": { color: "yellow lighten-2", icon: "watch_later" },
+      "Pending": { color: "yellow darken-2", icon: "watch_later" },
       "Approved": { color: "blue lighten-2", icon: "thumb_up" },
       "Refused": { color: "red lighten-2", icon: "thumb_down" },
     },
