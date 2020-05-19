@@ -31,6 +31,12 @@ export default {
     isLoading: false,
     showError: false,
     errorMessage: "",
+    statusIcon: {
+      test: "hello",
+      Pending: { color: "yellow lighten-2", icon: "watch_later" },
+      Approved: { color: "blue lighten-2", icon: "thumb_up" },
+      Refused: { color: "red lighten-2", icon: "thumb_down" },
+    },
     breadcrumbs: [
       { text: "Keyword Management", disabled: false },
       { text: "Keyword List", disabled: true },
@@ -147,10 +153,9 @@ export default {
           <td class="text-xs-left">{{ props.item.kwd_name }}</td>
           <td class="text-xs-left">{{ props.item.kwd_desc }}</td>
           <td class="text-xs-center">
-          <v-icon class="ma-2" color="teal" v-if="(props.item.kwd_is_approved)">thumb_up</v-icon>
-            <v-btn class="ma-2" text icon v-if="!(props.item.kwd_is_approved)">
-              <v-icon color="red">thumb_down</v-icon>
-            </v-btn>
+          <v-icon class="ma-2" :color="statusIcon[props.item.kwd_review.rw_status].color">
+            {{ statusIcon[props.item.kwd_review.rw_status].icon }}
+          </v-icon>
           </td>
           <td class="justify-center layout px-0">
             <v-btn :id="'edit-row-' + props.index" icon class="mx-0" @click="onInfoItemClicked(props.item)"

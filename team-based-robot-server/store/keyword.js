@@ -26,7 +26,8 @@ export const mutations = {
 export const actions = {
   async fetchKeywords ({ commit, dispatch }, { page = 1, limit = 10 } = {}) {
     try {
-      const { data } = await this.$axios.$get(`/api/keyword/list?page=${page}&limit=${limit}`)
+      let review = true
+      const { data } = await this.$axios.$get(`/api/keyword/list?page=${page}&limit=${limit}&review=${review}`)
       commit("setKeywords", data)
       const keywordNames = data.keywords.map(x => x.kwd_name)
       await dispatch("verifyKeywords", keywordNames)

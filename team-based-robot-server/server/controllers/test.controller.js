@@ -135,10 +135,8 @@ export default class TestController extends BaseController {
 
   async getTestcases (req, res) {
     try {
-      console.log("[Controller] Hello, I'm in getTestcases")
       const { id: test_id } = req.params
       const { page, limit: pageSize } = req.query
-      console.log("test_id ===>", test_id)
       const test = await Test.forge({test_id}).fetch()
       const test_tc_no = test.get(Fields.TEST_TC_NO)
       const tcIds = Array.apply(null, Array(test_tc_no)).map((x, idx) => idx + 1)

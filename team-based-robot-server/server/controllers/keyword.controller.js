@@ -30,6 +30,37 @@ export default class KeywordController extends BaseController {
     try {
       console.log("I'm in getList")
       const isPaging = isPagination(req)
+      const { page, limit: pageSize, review } = req.query
+      console.log("review ===>", review)
+      if (review === "true") {
+        const { role_id, team_id, usr_id } = req.currentUser.toJSON()
+        let leaderId = usr_id
+        if (role_id !== 2) {
+          const leader = await User.forge({ team_id, role_id: 2 }).fetch()
+          leaderId = leader.get(Fields.USR_ID)
+        }
+        const reviews = await Review.forge().where({ usr_id: leaderId }).fetchAll()
+        const pureKeywords = await (isPaging ? Keyword.forge().fetchPage({ page, pageSize }) : Keyword.forge().fetchAll())
+        const keywords = pureKeywords.map(kwd => {
+          const { kwd_id } = kwd
+          let kwd_review = reviews.filter(rw => rw.kwd_id === kwd_id).pop()
+          kwd.set("kwd_review", kwd_review)
+          return kwd
+        })
+        this.success(res, { keywords, ...getPagination(keywords) })
+      } else {
+        const keywords = await (isPaging ? Keyword.forge().fetchPage({ page, pageSize }) : Keyword.forge().fetchAll())
+        this.success(res, { keywords, ...getPagination(keywords) })
+      }
+    } catch (error) {
+      this.failure(res, error)
+    }
+  }
+
+  async getListWithReview (req, res) {
+    try {
+      console.log("I'm in getList")
+      const isPaging = isPagination(req)
       const { page, limit: pageSize } = req.query
       const keywords = await (isPaging ? Keyword.forge().fetchPage({ page, pageSize }) : Keyword.forge().fetchAll())
       this.success(res, { keywords, ...getPagination(keywords) })
