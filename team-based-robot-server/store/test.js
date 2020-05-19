@@ -102,11 +102,8 @@ export const actions = {
   },
   async fetchTestcases ({ commit, dispatch }, { test_id, page = 1, limit = 10 } = {}) {
     try {
-      console.log(`[test store] In action - fetchTestcase\ntest_id ===> ${test_id}`)
-      console.log("test_id ===>", test_id)
-      test_id = 1
+      console.log(`test_id ===>${test_id}`)
       const { data } = await this.$axios.$get(`/api/test/${test_id}/testcases?page=${page}&limit=${limit}`)
-      console.log("[store->testcase->action] :\n", data)
       commit("setTestcases", data)
     } catch (error) {
       throw error

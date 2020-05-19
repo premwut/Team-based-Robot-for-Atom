@@ -51,22 +51,22 @@ export default {
   components: {
     LoadingFailModal,
   },
-  // async fetch ({ store }) {
-  //   try {
-  //     this.isLoading = true
-  //     const process = []
-  //     const isTestcaseEmpty = store.state.test.testcases.list.length === 0
-  //     console.log("isTestcaseEmpty", isTestcaseEmpty)
-  //     console.log(this.isLoading, "isLoading")
-  //     isTestcaseEmpty && process.push(store.dispatch("test/fetchTestcases", { page: 1, limit: rowsPerPage }))
-  //     await Promise.all(process)
-  //     this.isLoading = false
-  //     console.log("isLoading ===>", this.isLoading)
-  //   } catch (error) {
-  //     this.isLoading = false
-  //     this.isLoadingFail = true
-  //   }
-  // },
+  async fetch ({ store }) {
+    try {
+      this.isLoading = true
+      const process = []
+      const isTestcaseEmpty = store.state.test.testcases.list.length === 0
+      console.log("isTestcaseEmpty", isTestcaseEmpty)
+      console.log(this.isLoading, "isLoading")
+      isTestcaseEmpty && process.push(store.dispatch("test/fetchTestcases", { page: 1, limit: rowsPerPage }))
+      await Promise.all(process)
+      this.isLoading = false
+      console.log("isLoading ===>", this.isLoading)
+    } catch (error) {
+      this.isLoading = false
+      this.isLoadingFail = true
+    }
+  },
   data: () => ({
     isLoadingFail: false,
     isOpenKeywordDetail: false,
@@ -114,13 +114,13 @@ export default {
       testcases: "test/getTestcases",
     }),
   },
-  watch: {
-    pagination: {
-      handler (paging) {
-        this.getTestcases(paging)
-      },
-    },
-  },
+  // watch: {
+  //   pagination: {
+  //     handler (paging) {
+  //       this.getTestcases(paging)
+  //     },
+  //   },
+  // },
   methods: {
     onRefreshClicked () {
       this.getTests({ page: 1 })
@@ -130,11 +130,11 @@ export default {
       let formatted_date = moment(new Date(date)).format("L")
       return formatted_date
     },
-    async getTestcases ({ page = this.pagination.page } = {}) {
-      this.isLoading = true
-      await this.$store.dispatch("test/fetchTestcases", { page, limit: rowsPerPage })
-      this.isLoading = false
-    },
+    // async getTestcases ({ page = this.pagination.page } = {}) {
+    //   this.isLoading = true
+    //   await this.$store.dispatch("test/fetchTestcases", { page, limit: rowsPerPage })
+    //   this.isLoading = false
+    // },
     async onTestcaseClick (tc_id) {
       const page = this.pagination.page
       this.isLoading = true
