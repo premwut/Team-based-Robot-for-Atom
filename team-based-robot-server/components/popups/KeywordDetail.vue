@@ -75,7 +75,7 @@ export default {
           <v-layout row>
               <v-flex xs12 class="mx-2">
                 <v-textarea label="Keyword Review"
-                  id="keyword-review" type="text" v-model="formData.kwd_review" readonly>
+                  id="keyword-review" type="text" v-model="formData.kwd_review.rw_comment" readonly>
                 </v-textarea>
               </v-flex>
             </v-layout>
