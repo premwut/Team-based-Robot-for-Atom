@@ -45,7 +45,7 @@
     "postgres-response-codes": "1.0.1",
     "pretty-error": "2.1.1",
     "ramda": "0.25.0",
-    "socket.io": "^2.2.0",
+    "socket.io": "^2.4.0",
     "source-map-support": "^0.4.15",
     "stylus": "0.54.5",
     "stylus-loader": "3.0.1",
